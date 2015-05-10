@@ -1,0 +1,32 @@
+﻿<div class="form-area-iner scrollbar" ng-controller="citiesCtrl">
+	<div class="row">
+		<table class="table table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th>שם</th>
+					<th>מס' סניף</th>
+					<th>נהג</th>
+					<th>ראשון</th>
+					<th>שני</th>
+					<th>שלישי</th>
+					<th>רביעי</th>
+					<th>חמישי</th>
+					<th>שישי</th>
+					<th>שבת</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="city in cities">
+					<td><input type="text" class="form-control" value="{{ city.name }}"/></td>
+					<td><input type="number" class="form-control"></td>
+					<td ng-repeat="i in [1,2,3,4,5,6,7,8]">
+						<select>
+							<option>כן</option>
+							<option>לא</option>
+						</select>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

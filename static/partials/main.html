@@ -1,0 +1,31 @@
+﻿<div class="table-page-main" ng-controller="mainCtrl">
+	<div class="table-page-right-area">
+		<div class="right-area-dif">
+			<ul class="nav nav-pills nav-stacked">
+				<li ng-repeat="item in menus[currMenu]" data-link="{{ item.link }}" ng-click="goTo($event)" ng-class="{'curr': currPage == item.link}">{{ item.title }}</li>
+			</ul>
+		</div>
+	</div>
+	<div class="table-page-left-area" id="main">
+		<div class="header-date">
+			<div class="header-date-iner">
+				<div class="left-area table-header-btns">
+					<div class="function-1">
+						<img src="/static/images/finish_03.png" ng-click="goToHome()" class="img-responsive" />
+						<img src="/static/images/dot_03.png" class="img-responsive" />
+					</div>
+					<div class="function-2">
+						<a href="#"><img src="/static/images/minimize_03.png" class="img-responsive" /></a>
+					</div>
+				</div>
+				<div class="right-area">
+					<h1>{{ currTable }}</h1>
+				</div>
+			</div>
+		</div>
+		
+		<div class="form-area" ui-view>
+			
+		</div>
+	</div>
+</div>

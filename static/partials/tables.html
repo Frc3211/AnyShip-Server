@@ -1,0 +1,14 @@
+<div class="form-area-iner scrollbar" ng-controller="tablesCtrl">
+	<table>
+		<thead>
+			<tr>
+				<th ng-repeat="field in currTable.fields">{{ field }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="row in rows">
+				<td><input type="text" class="form-control" value="{{ row.name }}"></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

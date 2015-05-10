@@ -1,0 +1,183 @@
+﻿<div class="table-page-main">
+	<div class="table-page-right-area">
+		<div class="right-area-dif">
+			<ul class="nav nav-pills nav-stacked">
+				<li>משלוחים</li>
+			</ul>
+		</div>
+	</div>
+	<div class="table-page-left-area" id="main">
+		<div class="header-date">
+			<div class="header-date-iner">
+				<div class="left-area">
+					<div class="function-1">
+						<a href="#"><img src="/static/images/finish_03.png" class="img-responsive" /></a>
+						<a href="#"><img src="/static/images/dot_03.png" class="img-responsive" /></a>
+					</div>
+					<div class="function-2">
+						<a href="#"><img src="/static/images/minimize_03.png" class="img-responsive" /></a>
+					</div>
+				</div>
+				<div class="right-area">
+					<h1>משלוח חדש</h1>
+				</div>
+			</div>
+		</div>
+		<form ng-submit="sendForm()">
+			<div class="form-area scrollbar">
+				<div class="form-area-iner">
+					<div class="row">
+						<div class="col-lg-2">
+							<div class="form-field">
+								<input type="text" ng-model="delivery.id"><label>מס. משלוח</label>
+							</div>
+						</div>
+						<div class="col-lg-2">
+							<div class="form-field">
+								<input type="text" ng-model="delivery.time"><label>שעה</label>
+							</div>
+						</div>
+						<div class="col-lg-2">
+							<div class="form-field">
+								<input type="text" ng-model="delivery.basicPrice"><label>תאריך</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-5">
+							<div class="form-field">
+								<!--<input type="text" ng-model="delivery.customer"><label>לקוח</label>-->
+								<select>
+									<option>בחר לקוח</option>
+									<option ng-repeat="customer in customers" data-id="{{customer.id}}" ng-model="delivery.customer">{{customer.name}}</option>
+								</select>
+								<label>לקוח</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-1">
+							<label class="form-title">
+								מ
+							</label>
+						</div>
+						<div class="col-lg-2">
+							<div class="form-field">
+								<select ng-model="delivery.sender">
+									<option ng-repeat="customer in customers" value="{{customer.id}}">{{customer.name}}</option>
+								</select>
+								<label>שם חברה</label>
+							</div>
+						</div>
+						<div class="col-lg-7">
+							<div class="col-lg-4">
+								<div class="form-field">
+									<select ng-model="delivery.sourceCity">
+										<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
+									</select>
+									<label>עיר</label>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="form-field">
+									<input type="text" ng-model="delivery.sourceStreet"><label>רחוב</label>
+								</div>
+							</div>
+							<div class="col-lg-2">
+								<div class="form-field">
+									<input type="text" ng-model="delivery.sourceStreetNum"><label>מספר</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-1">
+							<label class="form-title">
+								ל
+							</label>
+						</div>
+						<div class="col-lg-2">
+							<div class="form-field">
+								<select ng-model="delivery.receiver">
+									<option ng-repeat="customer in customers" value="{{customer.id}}">{{customer.name}}</option>
+								</select>
+								<label>שם חברה</label>
+							</div>
+						</div>
+						<div class="col-lg-7">
+							<div class="col-lg-4">
+								<div class="form-field">
+									<select ng-model="delivery.destCity">
+										<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
+									</select>
+									<label>עיר</label>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="form-field">
+									<input type="text" ng-model="delivery.destStreet"><label>רחוב</label>
+								</div>
+							</div>
+							<div class="col-lg-2">
+								<div class="form-field">
+									<input type="text" ng-model="delivery.destStreetNum"><label>מספר</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-lg-1">
+							<div class="form-field">
+								<input type="text" ng-model="delivery.urgency"><label>דחף</label>
+							</div>
+						</div>
+						<div class="col-lg-1">
+							<div class="form-field">
+								<input type="text" ng-model="delivery.isDouble"><label>כפול?</label>
+							</div>
+						</div>
+						<div class="col-lg-2">
+							<div class="form-field">
+								<input type="text" ng-model="delivery.contactMan"><label>שם אוסף</label>
+							</div>
+						</div>
+						<div class="col-lg-2">
+							<div class="form-field">
+								<input type="text" ng-model="delivery.status"><label>סטטוס</label>
+							</div>
+						</div>
+						<div class="col-lg-2">
+							<div class="form-field">
+								<input type="text" ng-model="delivery.exeTime"><label>שעת סטטוס</label>
+							</div>
+						</div>
+					</div>
+					<!--
+					<div class="row">
+						<div class="col-lg-2 col-sm-12 col-md-12 col-xs-12">
+							<div class="gli"><label>?</label><input type="text" /></div>
+							<div class="gli-2"><label>?</label><input type="text" /></div>
+						</div>
+						<div class="col-lg-2 col-sm-12 col-md-12 col-xs-12">
+							<div class="internet"><input type="text" /><input type="text" placeholder="INTERNET" /></div>
+							<div class="internet-2"><input type="radio" /><input type="text" placeholder="????" /></div>
+						</div>
+						<div class="col-lg-4 col-sm-12 col-md-12 col-xs-12">
+							<div class="firstname"><label>?</label><input type="text" placeholder="...?????? ?????? ???? ??" /></div>
+						</div>
+						<div class="col-lg-4 col-sm-12 col-md-12 col-xs-12">
+							<div class="firstname"><label>?</label><input type="text" placeholder="???? ????" /></div>
+						</div>
+						<div class="col-lg-8 col-sm-12 col-md-12 col-xs-12">
+							<div class="date"><textarea placeholder=" 03-5591364 : ???????? ?????"></textarea></div>
+						</div>
+						
+					</div>
+					-->
+					<button type="submit" class="btn btn-primary submit-btn">שלח</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

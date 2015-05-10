@@ -1,0 +1,85 @@
+﻿<div class="table-page-main">
+	<div class="table-page-right-area">
+		<div class="right-area-dif">
+			<ul class="nav nav-pills nav-stacked">
+				<li>משלוחים</li>
+				<li>לקוחות</li>
+			</ul>
+		</div>
+	</div>
+	<div class="table-page-left-area" id="main">
+		<div class="header-date">
+			<div class="header-date-iner">
+				<div class="left-area">
+					<div class="function-1">
+						<a href="#"><img src="/static/images/finish_03.png" class="img-responsive" /></a>
+						<a href="#"><img src="/static/images/dot_03.png" class="img-responsive" /></a>
+					</div>
+					<div class="function-2">
+						<a href="#"><img src="/static/images/minimize_03.png" class="img-responsive" /></a>
+					</div>
+				</div>
+				<div class="right-area">
+					<h1>{{ table.name }}</h1>
+				</div>
+			</div>
+		</div>
+		
+		<div class="form-area">
+			<div class="form-area-iner3">
+				<div class="row">
+					<div class="col-lg-5 col-sm-12 col-md-12 col-xs-12">
+						<div class="col-lg-6 col-sm-12 col-md-12 col-xs-12">
+							<div class="form-field"><input type="text" ng-model="currRecord.sender.name" disabled><label>מוצא</label></div>
+						</div>
+						<div class="col-lg-6 col-sm-12 col-md-12 col-xs-12 aaaa">
+							<div class="form-field"><input type="text" ng-model="currRecord.receiver.name" disabled><label>יעד</label></div>
+						</div>	
+						
+						<div class="col-lg-12 col-sm-12 col-md-12 col-xs-12">
+							<div class="form-field"><textarea ng-model="currRecord.comment" disabled></textarea><label>הערות</label></div>
+						</div>
+					</div>
+					
+					<div class="col-lg-3 col-sm-12 col-md-12 col-xs-12">
+						<div class="col-lg-12 col-sm-12 col-md-12 col-xs-12">
+							<div class="form-field"><input type="text" ng-model="currRecord.firstDeliver.name" disabled><label>מקבל1</label></div>
+							<div class="form-field"><input type="text" ng-model="currRecord.secondDeliver.name" disabled><label>מקבל2</label></div>
+						</div>
+						
+						<div class="col-lg-6 col-sm-12 col-md-12 col-xs-12">
+						</div>
+					</div>
+					<div class="col-lg-3 col-sm-12 col-md-12 col-xs-12">
+					
+					</div>
+				</div>
+			</div>
+			
+			<div class="form-area-iner2 scrollbar">
+				<div class="col-lg-12 col-sm-12 col-xs-12 col-md-12">
+					<div id="content-1">
+						<div class="tracking-header">
+							<div class="clock"><img src="/static/images/clock.png" /></div>
+							<div ng-class="{'table-header-column-first': $first}" class="table-header-column" ng-repeat="column in table.columns">
+								<h1 style="width: {{ column.width }}%;">{{ column.name }}</h1>
+							</div>
+						</div>
+						<div class="tracking-list" ng-repeat="record in records" data-id="{{ $index }}" ng-click="selectRecord($index)">
+							<div class="timing"><h1>6E +<br />07</h1></div>
+							<div class="second-1"><h1>{{ record.time | time }}</h1></div>
+							<div class="third-1"><h1 title="{{ record.sender.name }}" ng-mouseover="tooltip($event)">{{ record.sender.name }}</h1></div>
+							<div class="third-1-2"><h1>{{ record.sourceStreet }} {{ record.sourceStreetNum }}</h1></div>
+							<div class="third-1-3"><h1>{{ record.destStreet }} {{ record.destStreetNum }}</h1></div>
+							<div class="fourth-1"><h1>{{ record.urgency | urgency}}</h1></div>
+							<div class="fourth-1-2"><h1>{{ record.isDouble | isDouble }}</h1></div>
+							<div class="five-1"><h1>{{ record.contactMan }}</h1></div>
+							<div class="last-timer"><h1>{{ record.status }}</h1></div>
+							<div class="last-timer-1"><h1>{{ record.exeTime | time }}</h1></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,138 @@
+﻿<div class="form-area-iner scrollbar" ng-controller="newCustomerCtrl">
+	<div class="row">
+		<div class="col-lg-4">
+			<div class="form-field">
+				<input type="text" ng-model="customer.name">
+				<label>שם לקוח</label>
+			</div>
+		</div>
+		<div class="col-lg-2">
+			<div class="form-field">
+				<input type="text" ng-model="customer.id" disabled>
+				<label>מס' לקוח</label>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-2">
+			<div class="form-field">
+				<input type="text" ng-model="customer.streetName">
+				<label>רחוב</label>
+			</div>
+		</div>
+		<div class="col-lg-2">
+			<div class="form-field">
+				<input type="number" ng-model="customer.streetNum">
+				<label>מס'</label>
+			</div>
+		</div>
+		<div class="col-lg-2">
+			<div class="form-field">
+				<select ng-model="customer.city">
+					<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
+				</select>
+				<label>עיר</label>
+			</div>
+		</div>
+		<div class="col-lg-2">
+			<div class="form-field">
+				<input type="number" ng-model="customer.zipCode">
+				<label>מיקוד</label>
+			</div>
+		</div>
+		<div class="col-lg-2">
+			<div class="form-field">
+				<input type="number" ng-model="customer.postBox">
+				<label>ת.ד.</label>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="form-field">
+				<input type="phone" ng-model="customer.phone1">
+				<label>מס' טלפון</label>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="form-field">
+				<input type="phone" ng-model="customer.phone2"> 
+				<label>מס' טלפון נוסף</label>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="form-field">
+				<input type="phone" ng-model="customer.fax"> 
+				<label>פקס</label>
+			</div>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-lg-2">
+			<div class="form-field">
+				<input type="number" ng-model="customer.pcNum">
+				<label>ת.ז / ח.פ</label>
+			</div>
+		</div>
+		<div class="col-lg-2">
+			<div class="form-field">
+				<select ng-model="customer.status">
+					<option ng-repeat="status in Statuses" value="{{status.id}}">{{ status.name }}</option>
+				</select>
+				<label>סטטוס</label>
+			</div>
+		</div>
+		<div class="col-lg-2">
+			<div class="form-field">
+				<select ng-model="customer.customerType">
+					<option ng-repeat="type in customerTypes" value="{{type.id}}">{{ type.name }}</option>
+				</select>
+				<label>סוג לקוח</label>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-4">
+			<div class="form-field">
+				<input type="text" ng-model="customer.physicalAddress"> 
+				<label>כתובת לדואר</label>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="form-field">
+				<input class="left" type="email" ng-model="customer.email"> 
+				<label>דואר אלקטרוני</label>
+			</div>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-lg-3">
+			<div class="form-field">
+				<ui-select ng-model="customer.priceList" theme="bootstrap">
+					<ui-select-match>{{$select.selected.name}}</ui-select-match>
+					<ui-select-choices repeat="priceList.id as priceList in priceLists | propsFilter: {name: $select.search, id: $select.search}">
+						<div ng-bind-html="priceList.name | highlight: $select.search"></div>
+					</ui-select-choices>
+				</ui-select>
+				<label>מחירון</label>
+			</div>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="form-field">
+				<textarea ng-model="customer.comment"></textarea>
+				<label>הערות</label>
+			</div>
+		</div>
+		<div class="col-lg-12">
+			<div class="form-field">
+				<textarea ng-model="customer.comment"></textarea>
+				<label>הודעה לרכז</label>
+			</div>
+		</div>
+	</div>
+	<hr>
+	<button ng-click="submitCustomer()" class="btn btn-primary submit-btn">שלח</button>
+</div>

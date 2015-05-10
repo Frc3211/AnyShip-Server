@@ -1,0 +1,91 @@
+﻿<div class="form-area-iner scrollbar" ng-controller="priceListCtrl">
+	<div class="row">
+		<div class="form-header">
+			<input class="price-name" type="text" ng-model="priceLists[currPriceList].name">
+			<span class="header-edit-btn"></span>
+			<ul class="buttons pull-left">
+				<li ng-click="addList()" class="plus"></li>
+				<li ng-click="backList()" ng-class="{'disabled': currPriceList==0}" class="back"></li>
+				<li ng-click="nextList()" ng-class="{'disabled': currPriceList==priceLists.length-1}" class="next"></li>
+				<li ng-click="removeList()" class="remove"></li>
+				<li ng-click="submitPriceList()" class="send"></li>
+			</ul>
+		</div>
+	</div>
+	<div class="row">
+		<table class="table table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th><span class="button plus" ng-click="addEntry()"></span></th>
+					<th>מוצא</th>
+					<th>יעד א'</th>
+					<th>יעד ב'</th>
+					<th>יעד ג'</th>
+					<th>זמן ביצוע</th>
+					<th>מחיר משלוח</th>
+					<th>המתנה</th>
+					<th>מוסיף חבילה</th>
+					<th>מכפיל חבילה</th>
+					<th>מוסיף קרטון</th>
+					<th>מכפיל קרטון</th>
+					<th>% לאוסף</th>
+					<th>% למוסר</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="row in priceLists[currPriceList].entries">
+					<td style="width: 40px;">
+						<span class="button minus" ng-click="deleteEntry($index)"></span>
+					</td>
+					<td style="min-width: 90px;">
+						<ui-select ng-model="row.sourceCity" theme="bootstrap">
+							<ui-select-match>{{$select.selected.name}}</ui-select-match>
+							<ui-select-choices repeat="city.id as city in cities | propsFilter: {name: $select.search, id: $select.search}">
+								<div ng-bind-html="city.name | highlight: $select.search"></div>
+							</ui-select-choices>
+						</ui-select>
+					</td>
+					<td style="min-width: 90px;">
+						<ui-select ng-model="row.dest1" theme="bootstrap">
+							<ui-select-match>{{$select.selected.name}}</ui-select-match>
+							<ui-select-choices repeat="city.id as city in cities | propsFilter: {name: $select.search, id: $select.search}">
+								<div ng-bind-html="city.name | highlight: $select.search"></div>
+							</ui-select-choices>
+						</ui-select>
+					</td>
+					<td style="min-width: 90px;">
+						<ui-select ng-model="row.dest2" theme="bootstrap">
+							<ui-select-match>{{$select.selected.name}}</ui-select-match>
+							<ui-select-choices repeat="city.id as city in cities | propsFilter: {name: $select.search, id: $select.search}">
+								<div ng-bind-html="city.name | highlight: $select.search"></div>
+							</ui-select-choices>
+						</ui-select>
+					</td>
+					<td style="min-width: 90px;">
+						<ui-select ng-model="row.dest3" theme="bootstrap">
+							<ui-select-match>{{$select.selected.name}}</ui-select-match>
+							<ui-select-choices repeat="city.id as city in cities | propsFilter: {name: $select.search, id: $select.search}">
+								<div ng-bind-html="city.name | highlight: $select.search"></div>
+							</ui-select-choices>
+						</ui-select>
+					</td>
+					<td><input type="text" class="form-control" ng-model="row.exeTime"></td>
+					<td><input type="text" class="form-control" ng-model="row.price"></td>
+					<td><input type="text" class="form-control" ng-model="row.waiting"></td>
+					<td><input type="text" class="form-control" ng-model="row.addForPackage"></td>
+					<td><input type="text" class="form-control" ng-model="row.multiForPackage"></td>
+					<td><input type="text" class="form-control" ng-model="row.addForBox"></td>
+					<td><input type="text" class="form-control" ng-model="row.multiForBox"></td>
+					<td><input type="text" class="form-control" ng-model="row.percentForGetter"></td>
+					<td><input type="text" class="form-control" ng-model="row.percentForGiver"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="bottom-buttons">
+		<ul>
+			<li><span class="send" ng-click="submitPriceList()"></span></li>
+			<li><span class="cancel"></span></li>
+		</ul>
+	</div>
+</div>
