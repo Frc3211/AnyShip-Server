@@ -705,8 +705,8 @@ input:focus{
 .form-area-iner3{
 	margin:auto;
 	width:85%;
-	height: 140px;
-	padding:25px 0px 20px 0px;
+	height: 95px;
+	padding: 5px 0px 0px 0px;
 }
 .scrollbar{
 	overflow: scroll;
@@ -1431,4 +1431,21 @@ table .button.plus{
 }
 .show-popup{
 	display: block;
+}
+.table td{
+	padding: 0 !important;
+	vertical-align: middle !important;
+}
+.table input{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+	background: none;
+}
+.table select{
+	border: none !important;
+}
+.form-area-filters{
+	
 }

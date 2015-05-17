@@ -106,6 +106,10 @@ app.run(['$state', '$rootScope', '$http', function($state, $rootScope, $http){
 		$rootScope.jobs = data;
 	})
 	
+	$http.get('/api/Banks').success(function(data){
+		$rootScope.banks = data; 
+	})
+	
 	$rootScope.showLoader = false;
 	
 	$rootScope.goToHome = function(){

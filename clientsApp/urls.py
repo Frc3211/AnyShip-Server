@@ -19,5 +19,10 @@ urlpatterns = [
 	url(r'^UrgencyList/$', views.UrgencyList.as_view()),
 	url(r'^DoubleTypeList/$', views.DoubleTypeList.as_view()),
 	url(r'^Employee/$', views.EmployeeList.as_view()),
-	url(r'^Jobs/$', views.JobList.as_view())
+	url(r'^Employee/(?P<pk>[0-9]+)$', views.EmployeeUpdate.as_view()),
+	url(r'^Jobs/$', views.JobList.as_view()),
+	#url(r'^ContactMan/(?P<pk>[0-9]+)$', views.ContactManList.as_view()),
+	url(r'^ContactMan/$', views.ContactManList.as_view()),
+	url(r'^ContactMan/(?P<pk>[0-9]+)$', views.ContactManUpdate.as_view()),
+	url(r'^Banks/$', views.BankList.as_view())
 ] 

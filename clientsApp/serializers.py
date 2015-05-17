@@ -38,14 +38,17 @@ class DeliverySerializer(serializers.ModelSerializer):
 class DeliveryStatusSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = DeliveryStatus
+		
+				
+class ContactManSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = ContactMan
 
 class CustomersSerializer(serializers.ModelSerializer):
-	
+	contact_man = ContactManSerializer(many=True, read_only=True)
 	class Meta:
 		model = Customer
 		#depth = 1
-		#fields = ('name', 'city', 'status', 'arriveID', 'address1', 'address2', 'customerType', 'term', 'priceListName',
-		#	'phone1', 'phone2', 'fax', 'postBox', 'zipCode', 'openingDate', 'email', 'discount', 'companyNum')
 		
 class UrgencySerializer(serializers.ModelSerializer):
 	class Meta:

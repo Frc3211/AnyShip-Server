@@ -187,11 +187,6 @@ class DeliveryCreate(generics.CreateAPIView):
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
 	
-	def perform_create(self, serializer):
-		user = self.request.user
-		client = Client.objects.get(anyshipuser=user.anyshipuser)
-		serializer.save(client=client)
-	
 class DeliveryStatusList(generics.ListCreateAPIView):
 	serializer_class = DeliveryStatusSerializer
 	
@@ -207,6 +202,38 @@ class DeliveryStatusList(generics.ListCreateAPIView):
 		except:
 			return None
 		return DeliveryStatus.objects.filter(client=client)
+		
+class ContactManList(generics.ListCreateAPIView):
+	serializer_class = ContactManSerializer
+	
+	def perform_create(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+		
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return ContactMan.objects.filter(client=client)
+		
+class ContactManUpdate(generics.RetrieveUpdateDestroyAPIView):
+	serializer_class = ContactManSerializer
+	
+	def perform_update(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+	
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return ContactMan.objects.filter(client=client)
 	
 class StatusList(generics.ListCreateAPIView):
 	serializer_class = StatusSerializer
@@ -232,6 +259,22 @@ class EmployeeList(generics.ListCreateAPIView):
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
 	
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return Employee.objects.filter(client=client)
+		
+class EmployeeUpdate(generics.RetrieveUpdateDestroyAPIView):
+	serializer_class = EmployeeSerializer
+	
+	def perform_update(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+		
 	def get_queryset(self):
 		user = self.request.user
 		try:
@@ -272,6 +315,10 @@ class DeliveryDetail(generics.RetrieveUpdateDestroyAPIView):
 		except:
 			return None
 		return Delivery.objects.filter(client=client)
+		
+class BankList(generics.ListCreateAPIView):
+	serializer_class = BankSerializer
+	queryset = Bank.objects.all()
 
 class CustomerList(generics.ListCreateAPIView):
 	serializer_class = CustomersSerializer

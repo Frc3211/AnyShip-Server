@@ -1,5 +1,18 @@
 <div class="form-area-iner scrollbar" ng-controller="newEmployeeCtrl">
 	<div class="row">
+		<div class="col-lg-6 col-lg-offset-3 form-field">
+			<select ng-change="selectEmployee()" ng-options="employee.name for employee in employees" ng-model="selectedEmployee"></select>
+			<label>חיפוש עובד קיים</label>
+		</div>
+		<div class="col-lg-1">
+			<button ng-click="newEmployee()" class="btn btn-primary">חדש</button>
+		</div>
+		<div class="col-lg-1">		
+			<button ng-click="deleteEmployee()" class="btn btn-danger" ng-class="{'disabled': !employee.id}">מחק</button>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
 		<div class="col-lg-4 form-field">
 			<input type="text" ng-model="employee.name">
 			<label>שם</label>
@@ -8,6 +21,8 @@
 			<input type="text" ng-model="employee.id">
 			<label>מספר עובד</label>
 		</div>
+	</div>
+	<div class="row">
 		<div class="col-lg-2 form-field">
 			<input type="text" ng-model="employee.idNum">
 			<label>ת.ז.</label>
@@ -133,5 +148,11 @@
 		</div>
 	</div>
 	<hr>
+	<div class="row">
+		<div class="col-lg-12 form-field">
+			<textarea ng-model="employee.comment"></textarea>
+			<label>הערות</label>
+		</div>	
+	</div>
 	<button class="btn btn-primary" ng-click="submit()">שמור עובד</button>
 </div>

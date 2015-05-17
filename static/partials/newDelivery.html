@@ -1,11 +1,20 @@
-﻿
-<div class="form-area-iner scrollbar" ng-controller="newDeliveryCtrl">
+﻿<div class="form-area-iner scrollbar" ng-controller="newDeliveryCtrl">
+	<div class="row">
+		<div class="col-lg-4 col-lg-offset-4 form-field">
+			<select ng-change="selectDelivery()" ng-options="delivery.id for delivery in deliveries" ng-model="selectedDelivery"></select>
+			<label>בחר מספר משלוח קיים</label>
+		</div>
+		<div class="col-lg-1">
+			<button ng-click="newDelivery()" class="btn btn-primary">חדש</button>
+		</div>
+	</div>
+	<hr>
 	<div class="row">
 		<div class="col-lg-2 form-field">
 			<input type="text" ng-model="delivery.id"><label>מס. משלוח</label>
 		</div>
 		<div class="col-lg-2 form-field">
-			<input type="time" ng-model="delivery.time"><label>שעה</label>
+			<input type="time" ng-model="delivery.time" value="{{ delivery.time | date: 'HH:mm:ss'}}"><label>שעה</label>
 		</div>
 		<div class="col-lg-2 form-field">
 			<input type="date" ng-model="delivery.date"><label>תאריך</label>
@@ -20,7 +29,7 @@
 				</ui-select-choices>
 			</ui-select>-->
 			<select ng-model="delivery.customer">
-				<option ng-repeat="customer in customers" value="customer.id">{{ customer.name }}</option>
+				<option ng-repeat="customer in customers" value="{{ customer.id }}" data-index="{{$index}}">{{ customer.name }}</option>
 			</select>
 			<label>לקוח</label>
 		</div>
@@ -31,7 +40,10 @@
 	</div>
 	<div class="row">
 		<div class="col-lg-4 form-field">
-			<input type="text" ng-model="delivery.ContactMan">
+			<select ng-model="delivery.contactMan">
+				<option ng-repeat="item in customers[7].contact_man" value="{{ item.id }}">{{ item.name }}</option>
+			</select>
+			<!--<input type="text" ng-model="delivery.ContactMan">-->
 			<label>איש קשר</label>
 		</div>
 		<div class="col-lg-2 form-field">
@@ -68,23 +80,23 @@
 			<input type="text" ng-model="delivery.sourceStreet"><label>רחוב</label>
 		</div>
 		<div class="col-lg-2 form-field">
-			<input type="text" ng-model="delivery.phone1">
+			<input type="text" ng-model="delivery.sourcePhone">
 			<label>טלפון</label>
 		</div>
 		<div class="col-lg-1 form-field">
-			<input type="text">
+			<input type="text" ng-model="delivery.sourceHomeNum">
 			<label>מס' בית</label>
 		</div>
 		<div class="col-lg-1 form-field">
-			<input type="text">
+			<input type="text" ng-model="delivery.sourceHomeEnter">
 			<label>כניסה</label>
 		</div>
 		<div class="col-lg-1 form-field">
-			<input type="text">
+			<input type="text" ng-model="delivery.sourceFloor">
 			<label>קומה</label>
 		</div>
 		<div class="col-lg-1 form-field">
-			<input type="text">
+			<input type="text" ng-model="delivery.sourceApart">
 			<label>דירה</label>
 		</div>
 		<div class="col-lg-2 form-field">
@@ -124,23 +136,23 @@
 			<input type="text" ng-model="delivery.destStreet"><label>רחוב</label>
 		</div>
 		<div class="col-lg-2 form-field">
-			<input type="text">
+			<input type="text" ng-model="delivery.destPhone">
 			<label>טלפון</label>
 		</div>
 		<div class="col-lg-1 form-field">
-			<input type="text">
+			<input type="text" ng-model="delivery.destHomeNum">
 			<label>מס' בית</label>
 		</div>
 		<div class="col-lg-1 form-field">
-			<input type="text">
+			<input type="text" ng-model="delivery.destHomeEnter">
 			<label>כניסה</label>
 		</div>
 		<div class="col-lg-1 form-field">
-			<input type="text">
+			<input type="text" ng-model="delivery.destFloor">
 			<label>קומה</label>
 		</div>
 		<div class="col-lg-1 form-field">
-			<input type="text">
+			<input type="text" ng-model="delivery.destApart">
 			<label>דירה</label>
 		</div>
 		<div class="col-lg-2 form-field">
@@ -207,22 +219,52 @@
 			<label>מקבל2</label>
 		</div>
 		<div class="col-lg-2 form-field">
-			<select ng-model="delivery.deliver1" class="combobox">
+			<select ng-model="delivery.firstDeliver" class="combobox">
 				
 			</select>
 			<label>שליח אוסף</label>
 		</div>
 		<div class="col-lg-2 form-field">
-			<select ng-model="delivery.deliver2" class="combobox">
+			<select ng-model="delivery.secondDeliver" class="combobox">
 				
 			</select>
 			<label>שליח מוסר</label>
 		</div>
 		<div class="col-lg-2 form-field">
-			<select ng-model="delivery.deliver2" class="combobox">
+			<select ng-model="delivery.thirdDeliver" class="combobox">
 				
 			</select>
 			<label>שליח שלישי</label>
+		</div>
+		<div class="col-lg-2 form-field">
+			<input type="number" ng-model="delivery.certNum">
+			<label>מספר תעודה</label>
+		</div>
+		<div class="col-lg-2 form-field">
+			<input type="time" ng-model="delivery.rakazTime">
+			<label>זמן רכז</label>
+		</div>
+		<div class="col-lg-2 form-field">
+			<input type="time" ng-model="delivery.exeTime">
+			<label>ביצוע בפועל</label>
+		</div>
+		<div class="col-lg-2 form-field">
+			<input type="time" ng-model="delivery.estTime">
+			<label>ביצוע משוער</label>
+		</div>
+		<div class="col-lg-2 form-field">
+			<select ng-model="delivery.isTomorrow">
+				<option value="false">לא</option>
+				<option value="true">כן</option>
+			</select>
+			<label>מהיום למחר</label>
+		</div>
+		<div class="col-lg-2 form-field">
+			<select ng-model="delivery.signCert">
+				<option value="false">לא</option>
+				<option value="true">כן</option>
+			</select>
+			<label>תעודה חתומה</label>
 		</div>
 		<div class="col-lg-2 form-field">
 			<input type="number" ng-model="delivery.numOfPackages">
@@ -231,6 +273,31 @@
 		<div class="col-lg-2 form-field">
 			<input type="number" ng-model="delivery.numOfBoxes">
 			<label>קרטונים</label>
+		</div>
+		<div class="col-lg-2 form-field">
+			<!-- TODO -->
+			<input type="number">
+			<label>ת. טלפוני</label>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-lg-2 form-field">
+			<input type="number" ng-model="delivery.basicPrice">
+			<label>מחיר בסיס</label>
+		</div>
+		<div class="col-lg-2 form-field">
+			<input type="number" ng-model="delivery.totalPrice">
+			<label>סה"כ ללקוח</label>
+		</div>
+		<div class="col-lg-2 form-field">
+			<!-- TODO -->
+			<input type="number">
+			<label>הוצאות</label>
+		</div>
+		<div class="col-lg-2 form-field">
+			<input type="number">
+			<label>גוביינא</label>
 		</div>
 	</div>
 	<hr>
