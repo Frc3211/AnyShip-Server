@@ -495,6 +495,35 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state){
 		width: 14
 	}]
 	
+	$scope.filters = [{
+		title: 'הכל',
+		icon: '',
+		method: function(){
+			console.log('all')
+		}
+	}, {
+		title: 'דחופים',
+		icon: 'urgent.png',
+		method: function(){
+			console.log('urgent')
+		}
+	}, {
+		title: 'כפול',
+		icon: 'doubles.png'
+	}, {
+		title: 'עתידיות',
+		icon: 'future.png	'
+	}, {
+		title: 'מיוחד',
+		icon: 'special.png'
+	}, {
+		title: 'מבוצעות',
+		icon: 'ended.png'
+	}, {
+		title: 'באיחור',
+		icon: 'lates.png'
+	}]
+	
 	//functions
 	$scope.tooltip = function($event){
 		if($event.target.offsetWidth < $event.target.scrollWidth){

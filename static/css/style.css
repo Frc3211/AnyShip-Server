@@ -1447,5 +1447,16 @@ table .button.plus{
 	border: none !important;
 }
 .form-area-filters{
-	
+	margin: 10px 0 10px 0;
+}
+.filter-btn{
+	height: 30px;
+	background-size: 30px auto !important;
+	background-position-x: right !important;
+	background-position-y: center;
+	padding-right: 35px;
+	display: inline-block;
+	cursor: pointer;
+	line-height: 30px;
+	margin-left: 18px;
 }

@@ -30,8 +30,10 @@
 </div>
 <div class="form-area-filters">
 	<div class="row">
-		<div ng-repeat="filter in filters" class="filter-btn">
-			
+		<div class="col-lg-12">
+			<div ng-repeat="filter in filters" ng-click="filter.method()" class="filter-btn" style="background:url('/static/images/icons/filters/{{ filter.icon }}') no-repeat;">
+				{{ filter.title }}
+			</div>
 		</div>
 	</div>
 </div>
