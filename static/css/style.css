@@ -704,7 +704,7 @@ input:focus{
 }
 .form-area-iner3{
 	margin:auto;
-	width:85%;
+	width:95%;
 	height: 95px;
 	padding: 5px 0px 0px 0px;
 }
@@ -1451,12 +1451,7 @@ table .button.plus{
 }
 .filter-btn{
 	height: 30px;
-	background-size: 30px auto !important;
-	background-position-x: right !important;
-	background-position-y: center;
-	padding-right: 35px;
-	display: inline-block;
-	cursor: pointer;
-	line-height: 30px;
+	background-size: auto 80% !important;
+	padding-right: 32px !important;
 	margin-left: 18px;
 }

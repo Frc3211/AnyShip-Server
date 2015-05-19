@@ -519,7 +519,7 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state){
 		}
 	}, {
 		title: 'עתידיות',
-		icon: 'future.png',
+		icon: 'futures.png',
 		method: function(){
 			$scope.zeroFilters()
 		}
@@ -534,6 +534,7 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state){
 		icon: 'ended.png',
 		method: function(){
 			$scope.zeroFilters()
+			$scope.filterDones = true;
 		}
 	}, {
 		title: 'באיחור',
@@ -548,14 +549,18 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state){
 		if(!item.status){
 			return false;
 		}
-		return (!$scope.filterUrgency || (item.urgency.name != 'רגיל')) && (!$scope.filterDoubles || (item.doubleType.name != 'לא'))
+		return (!$scope.filterUrgency || item.urgency.name != 'רגיל') &&
+			(!$scope.filterDoubles || item.doubleType.name != 'לא') 	&&
+			//(!$scope.filterFutures || ) &&
+			//(!$scope.filterTomorrow ||) &&
+			(!$scope.filterDones || item.status.name == 'בוצע')
 	}
 	
 	$scope.zeroFilters = function(){
 		$scope.filterUrgency 	= false;
 		$scope.filterDoubles 	= false;
 		$scope.filterFutures 	= false;
-		$scope.filterTommorow 	= false;
+		$scope.filterTomorrow 	= false;
 		$scope.filterSpecial 	= false;
 		$scope.filterDones 		= false;
 		$scope.filterLates 		= false;
