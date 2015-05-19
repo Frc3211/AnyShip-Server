@@ -460,9 +460,11 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state){
 	$rootScope.currMenu = 'commands';
 	$rootScope.showLoader = true;
 	$rootScope.currPage = 'main.deliveries'
+	
 	$http.get('/api/Delivery/').success(function(data){
 		$scope.records = data
 		$rootScope.showLoader = false;
+		console.log(data);
 	})
 	
 	$rootScope.currTable = "מעקב משלוחים - מוצא / יעד"
@@ -499,32 +501,69 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state){
 		title: 'הכל',
 		icon: '',
 		method: function(){
-			console.log('all')
+			$scope.zeroFilters()
 		}
 	}, {
 		title: 'דחופים',
 		icon: 'urgent.png',
 		method: function(){
-			console.log('urgent')
+			$scope.zeroFilters()
+			$scope.filterUrgency = !$scope.filterUrgency;
 		}
 	}, {
 		title: 'כפול',
-		icon: 'doubles.png'
+		icon: 'doubles.png',
+		method: function(){
+			$scope.zeroFilters()
+			$scope.filterDoubles = true;
+		}
 	}, {
 		title: 'עתידיות',
-		icon: 'future.png	'
+		icon: 'future.png',
+		method: function(){
+			$scope.zeroFilters()
+		}
 	}, {
 		title: 'מיוחד',
-		icon: 'special.png'
+		icon: 'special.png',
+		method: function(){
+			$scope.zeroFilters()
+		}
 	}, {
 		title: 'מבוצעות',
-		icon: 'ended.png'
+		icon: 'ended.png',
+		method: function(){
+			$scope.zeroFilters()
+		}
 	}, {
 		title: 'באיחור',
-		icon: 'lates.png'
+		icon: 'lates.png',
+		method: function(){
+			$scope.zeroFilters()
+		}
 	}]
 	
 	//functions
+	$scope.filterDeliveries = function(item){
+		if(!item.status){
+			return false;
+		}
+		return (!$scope.filterUrgency || (item.urgency.name != 'רגיל')) && (!$scope.filterDoubles || (item.doubleType.name != 'לא'))
+	}
+	
+	$scope.zeroFilters = function(){
+		$scope.filterUrgency 	= false;
+		$scope.filterDoubles 	= false;
+		$scope.filterFutures 	= false;
+		$scope.filterTommorow 	= false;
+		$scope.filterSpecial 	= false;
+		$scope.filterDones 		= false;
+		$scope.filterLates 		= false;
+		$scope.filterInTransit 	= false;
+		// קבלנים
+		// זהב
+	}
+	
 	$scope.tooltip = function($event){
 		if($event.target.offsetWidth < $event.target.scrollWidth){
 			angular.element($event.target).addClass('tooltip')

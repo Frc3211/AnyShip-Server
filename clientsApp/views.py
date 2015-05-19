@@ -185,6 +185,7 @@ class DeliveryCreate(generics.CreateAPIView):
 	def perform_create(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		print client
 		serializer.save(client=client)
 	
 class DeliveryStatusList(generics.ListCreateAPIView):

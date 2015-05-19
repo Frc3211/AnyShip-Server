@@ -46,7 +46,7 @@
 					<h1 style="width: {{ column.width }}%;">{{ column.name }}</h1>
 				</div>
 			</div>
-			<div class="tracking-list" ng-repeat="record in records"  data-id="{{ record.id }}" ng-click="selectRecord($index)" ng-dblclick="showRecord($event)">
+			<div class="tracking-list" ng-repeat="record in records | filter:filterDeliveries" data-id="{{ record.id }}" ng-click="selectRecord($index)" ng-dblclick="showRecord($event)">
 				<div class="timing"><h1>6E +<br />07</h1></div>
 				<div class="second-1"><h1>{{ record.time | time }}</h1></div>
 				<div class="third-1"><h1 title="{{ record.sender.name }}" ng-mouseover="tooltip($event)">{{ record.sender.name }}</h1></div>

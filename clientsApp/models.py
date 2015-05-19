@@ -150,7 +150,7 @@ class DoubleType(models.Model):
 		return self.name
 	
 class Delivery(models.Model):
-	client = models.ForeignKey('Client', related_name='deliveries')
+	client = models.ForeignKey('Client', related_name='deliveries', null=True, blank=True)
 	time = models.TimeField(auto_now=True, null=True, blank=True)
 	date = models.DateField(auto_now=True, null=True, blank=True)
 	#deliveryNumber = models.IntegerField(unique=True, null=True, blank=True)
