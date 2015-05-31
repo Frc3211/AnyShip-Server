@@ -8,6 +8,14 @@
 				</div>
 			</div>
 			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+			<select class="combobox">
+			  <option></option>
+			  <option value="PA">Pennsylvania</option>
+			  <option value="CT">Connecticut</option>
+			  <option value="NY">New York</option>
+			  <option value="MD">Maryland</option>
+			  <option value="VA">Virginia</option>
+			</select>
 				<div class="friend-list2">
 					<ul>
 						<li><a href="#"><img src="/static/images/flag.png" style="width:100%" /></a></li>
@@ -61,7 +69,15 @@
 			</div>
 			<div class="right-area-dash"><h1> התראות משלוחים</h1></div>
 		</div>
-		<div class="dash-iner">
+		<div class="dash-iner scrollbar">
+			<div ng-repeat="delivery in deliveries | limitTo: 5" class="deliveries-list-item" data-id="{{delivery.id}}" ng-dblclick="showRecord($event)">
+				<div class="list-time" ng-class-odd="'odd'"><span>{{ delivery.created | date:'HH:mm'}}</span></div>
+				<div class="list-customer"><span>{{ delivery.customer.name }}</span></div>
+				<div class="list-dest"><span>{{ delivery.destCity.name }}</span></div>
+				<div class="list-status"><span>{{ delivery.status.name }}</span></div>
+			</div>
+			
+			<!--
 			<div class="list-1">
 				<div class="list-part4"><h1>6E +<br />07</h1></div>
 				<div class="list-part3"><h1>13 : 17</h1></div>
@@ -85,19 +101,7 @@
 				<div class="list-part3"><h1>13 : 17</h1></div>
 				<div class="list-part2"><h1>?�?? ????????</h1></div>
 				<div class="list-part1"><h1>...???? , 8 ????</h1></div>
-			</div>
-			<div class="list-1">
-				<div class="list-part4"><h1>6E +<br />07</h1></div>
-				<div class="list-part3"><h1>13 : 17</h1></div>
-				<div class="list-part2"><h1>?�?? ????????</h1></div>
-				<div class="list-part1"><h1>...???? , 8 ????</h1></div>
-			</div>
-			<div class="list-2">
-				<div class="list-part4-2"><h1>6E +<br />07</h1></div>
-				<div class="list-part3"><h1>13 : 17</h1></div>
-				<div class="list-part2"><h1>?�?? ????????</h1></div>
-				<div class="list-part1"><h1>...???? , 8 ????</h1></div>
-			</div>
+			</div>-->
 		</div>
 		<div class="dash-header-2">
 			<div class="left-area-dash table-header-btns">

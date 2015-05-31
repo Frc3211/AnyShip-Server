@@ -1,5 +1,4 @@
-var app = angular.module('anyShip', ['ui.router', 'ngCookies', 'ngSanitize', 'ui.select']);
-
+var app = angular.module('anyShip', ['ui.bootstrap', 'ui.router', 'ngCookies', 'ngSanitize', 'ui.select', 'ngDialog']);
 
 app.config([ '$stateProvider', '$urlRouterProvider', '$httpProvider', '$interpolateProvider',
 	function($stateProvider, $urlRouterProvider, $httpProvider, $interpolateProvider){
@@ -29,9 +28,9 @@ app.config([ '$stateProvider', '$urlRouterProvider', '$httpProvider', '$interpol
 				//controller: newDeliveryCtrl
 			})
 			.state('main.delivery', {
-				url: '/delivery',
+				url: '/delivery/:id',
 				templateUrl: 'static/partials/newDelivery.html',
-				controller: deliveryCtrl
+				//controller: deliveryCtrl
 			})
 			.state('main.deliveries', {
 				url: '/deliveries',
@@ -115,10 +114,11 @@ app.run(['$state', '$rootScope', '$http', function($state, $rootScope, $http){
 	$rootScope.goToHome = function(){
 		$state.go('dashboard');
 	}
-	/*
+	
 	$http.get('/api/Customers/').success(function(data){
 		$rootScope.customers = data;
 	})
+	/*
 	$rootScope.findCustomerById = function(id){
 		angular.forEach($rootScope.customers, function(value){
 			console.log(value.id, id)
@@ -132,13 +132,13 @@ app.run(['$state', '$rootScope', '$http', function($state, $rootScope, $http){
 	}*/
 }]);
 
-app.filter('time', function(){
+/*app.filter('time', function(){
 	return function(input){
 		if(input == null)
 			return input
 		return input.split(":", 2).join(":")
 	}
-})
+})*/
 
 app.filter('urgency', function(){
 	return function(input){

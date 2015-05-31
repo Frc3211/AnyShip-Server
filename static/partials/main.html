@@ -23,7 +23,9 @@
 				</div>
 			</div>
 		</div>
-		
+		<div class="alert-area" ng-controller="alertCtrl">
+			<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{ alert.msg }}</alert>
+		</div>
 		<div class="form-area" ui-view>
 			
 		</div>

@@ -185,7 +185,28 @@ class DeliveryCreate(generics.CreateAPIView):
 	def perform_create(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
-		print client
+		serializer.save(client=client)
+		
+	def perform_update(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+		
+		
+class DeliveryUpdate(generics.RetrieveUpdateDestroyAPIView):
+	serializer_class = CreateDeliverySerializer
+	
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return Delivery.objects.filter(client=client)
+		
+	def perform_update(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
 	
 class DeliveryStatusList(generics.ListCreateAPIView):
@@ -356,3 +377,19 @@ class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
 class CityList(generics.ListAPIView):
 	queryset = City.objects.all()
 	serializer_class = CitySerializer
+	
+class CustomerTypeList(generics.ListCreateAPIView):
+	serializer_class = CustomerTypeSerializer
+	
+	def get_queryset(self):
+		user = self.request.user 
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return CustomerType.objects.filter(client=client)
+		
+	def perform_create(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)

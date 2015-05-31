@@ -31,6 +31,9 @@ class CreateDeliverySerializer(serializers.ModelSerializer):
 		
 class DeliverySerializer(serializers.ModelSerializer):
 	#destCity = serializers.SlugRelatedField(slug_field='name', queryset=City.objects.all())
+	#created_time = serializers.DateTimeField(source='created', read_only=True, format="iso-8601")
+	#created_date = serializers.DateTimeField(source='created', read_only=True, format="%d/%m/%y")
+	
 	class Meta:
 		model = Delivery
 		depth = 1

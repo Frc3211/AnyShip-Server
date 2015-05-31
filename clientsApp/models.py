@@ -120,6 +120,7 @@ class Status(models.Model):
 		return self.name
 	
 class CustomerType(models.Model):
+	client = models.ForeignKey('Client', null=True, blank=True)
 	name = models.CharField(max_length=30)
 	
 class Term(models.Model):
@@ -151,8 +152,8 @@ class DoubleType(models.Model):
 	
 class Delivery(models.Model):
 	client = models.ForeignKey('Client', related_name='deliveries', null=True, blank=True)
-	time = models.TimeField(auto_now=True, null=True, blank=True)
-	date = models.DateField(auto_now=True, null=True, blank=True)
+	created = models.DateTimeField(auto_now=True, null=True, blank=True)
+	#date = models.DateField(auto_now=True, null=True, blank=True)
 	#deliveryNumber = models.IntegerField(unique=True, null=True, blank=True)
 	customer = models.ForeignKey('Customer', null=True, blank=True)
 	contactMan = models.ForeignKey('ContactMan', blank=True, null=True)
@@ -190,9 +191,9 @@ class Delivery(models.Model):
 	secondDeliver = models.ForeignKey('AnyshipUser', null=True, blank=True, related_name='second_deliver')
 	thirdDeliver = models.ForeignKey('AnyshipUser', null=True, blank=True, related_name='third_deliver')
 	certNum = models.IntegerField(null=True, blank=True)
-	rakazTime = models.TimeField(null=True, blank=True)
-	exeTime = models.TimeField(null=True, blank=True)
-	estTime = models.TimeField(null=True, blank=True)
+	rakazTime = models.DateTimeField(null=True, blank=True)
+	exeTime = models.DateTimeField(null=True, blank=True)
+	estTime = models.DateTimeField(null=True, blank=True)
 	isTomorrow = models.BooleanField(default=False, blank=True)
 	signCert = models.BooleanField(default=False, blank=True)
 	numOfPackages = models.SmallIntegerField(null=True, blank=True)

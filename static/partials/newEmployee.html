@@ -33,8 +33,7 @@
 		</div>
 		<div class="col-lg-2 form-field">
 			<select ng-model="employee.gender">
-				<option value="0">זכר</option>
-				<option value="1">נקבה</option>
+				<option ng-repeat="gender in genderOptions" value="{{ gender }}">{{ gender.title }}</option>
 			</select>
 			<label>מין</label>
 		</div>
@@ -111,7 +110,7 @@
 		</div>
 		<div class="col-lg-2 form-field">
 			<select ng-model="employee.bank">
-			
+				<option ng-repeat="bank in banks" value="{{ bank.id }}">{{ bank.name }}</option>
 			</select>
 			<label>בנק</label>
 		</div>

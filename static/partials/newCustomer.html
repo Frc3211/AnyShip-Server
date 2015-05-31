@@ -7,6 +7,9 @@
 		<div class="col-lg-1">
 			<button ng-click="newCustomer()" class="btn btn-primary">חדש</button>
 		</div>
+		<div class="col-lg-1">		
+			<button ng-click="deleteCustomer()" class="btn btn-danger" ng-class="{'disabled': !customer.id}">מחק</button>
+		</div>
 	</div>
 	<hr>
 	<div class="row">

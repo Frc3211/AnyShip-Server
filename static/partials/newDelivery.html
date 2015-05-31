@@ -7,17 +7,20 @@
 		<div class="col-lg-1">
 			<button ng-click="newDelivery()" class="btn btn-primary">חדש</button>
 		</div>
+		<div class="col-lg-1">		
+			<button ng-click="deleteDelivery()" class="btn btn-danger" ng-class="{'disabled': !delivery.id}">מחק</button>
+		</div>
 	</div>
 	<hr>
 	<div class="row">
 		<div class="col-lg-2 form-field">
-			<input type="text" ng-model="delivery.id"><label>מס. משלוח</label>
+			<input type="text" ng-model="delivery.id" disabled><label>מס. משלוח</label>
 		</div>
 		<div class="col-lg-2 form-field">
-			<input type="time" ng-model="delivery.time" value="{{ delivery.time | date: 'HH:mm:ss'}}"><label>שעה</label>
+			<input type="time" ng-model="delivery.created" disabled><label>שעה</label>
 		</div>
 		<div class="col-lg-2 form-field">
-			<input type="date" ng-model="delivery.date"><label>תאריך</label>
+			<input type="date" ng-model="delivery.created" disabled><label>תאריך</label>
 		</div>
 	</div>
 	<div class="row">
@@ -28,7 +31,7 @@
 					<div ng-bind-html="customer.name | highlight: $select.search"></div>
 				</ui-select-choices>
 			</ui-select>-->
-			<select ng-model="delivery.customer">
+			<select ng-model="delivery.customer" ng-change="customerSelected()">
 				<option ng-repeat="customer in customers" value="{{ customer.id }}" data-index="{{$index}}">{{ customer.name }}</option>
 			</select>
 			<label>לקוח</label>
@@ -40,9 +43,12 @@
 	</div>
 	<div class="row">
 		<div class="col-lg-4 form-field">
-			<select ng-model="delivery.contactMan">
-				<option ng-repeat="item in customers[7].contact_man" value="{{ item.id }}">{{ item.name }}</option>
-			</select>
+		
+			<!--<select ng-model="delivery.contactMan">
+				<option></option>
+				<option ng-repeat="item in contactMans" value="{{ item.id }}">{{ item.name }}</option>
+			</select>-->
+			<select ng-model="delivery.contactMan" ng-options="item.name for item in contactMans"></select>
 			<!--<input type="text" ng-model="delivery.ContactMan">-->
 			<label>איש קשר</label>
 		</div>
@@ -68,12 +74,16 @@
 			</label>
 		</div>-->
 		<div class="col-lg-2 form-field">
-			<ui-select ng-model="delivery.sender" theme="bootstrap">
+			<!--<ui-select ng-model="delivery.sender" theme="bootstrap">
 				<ui-select-match>{{$select.selected.name}}</ui-select-match>
 				<ui-select-choices repeat="customer.id as customer in customers | propsFilter: {name: $select.search, id: $select.search}">
 					<div ng-bind-html="customer.name | highlight: $select.search"></div>
 				</ui-select-choices>
-			</ui-select>
+			</ui-select>-->
+			<select ng-model="delivery.sender">
+				<option></option>
+				<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
+			</select>
 			<label>שם חברה</label>
 		</div>
 		<div class="col-lg-2 form-field">
@@ -107,6 +117,7 @@
 				</ui-select-choices>
 			</ui-select>-->
 			<select class="combobox" ng-model="delivery.sourceCity">
+				<option></option>
 				<option ng-repeat="city in cities" value="{{ city.id }}">{{ city.name }}</option>
 			</select>
 			<label>עיר</label>
@@ -124,12 +135,16 @@
 			</label>
 		</div>-->
 		<div class="col-lg-2 form-field">
-			<ui-select ng-model="delivery.receiver" theme="bootstrap" ng-change="change()">
+			<!--<ui-select ng-model="delivery.receiver" theme="bootstrap" ng-change="change()">
 				<ui-select-match>{{$select.selected.name}}</ui-select-match>
 				<ui-select-choices repeat="customer.id as customer in customers | propsFilter: {name: $select.search, id: $select.search}">
 					<div ng-bind-html="customer.name | highlight: $select.search"></div>
 				</ui-select-choices>
-			</ui-select>
+			</ui-select>-->
+			<select ng-model="delivery.receiver">
+				<option></option>
+				<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
+			</select>
 			<label>שם חברה</label>
 		</div>
 		<div class="col-lg-2 form-field">
@@ -156,12 +171,16 @@
 			<label>דירה</label>
 		</div>
 		<div class="col-lg-2 form-field">
-			<ui-select ng-model="delivery.destCity" theme="bootstrap">
+			<!--<ui-select ng-model="delivery.destCity" theme="bootstrap">
 				<ui-select-match>{{$select.selected.name}}</ui-select-match>
 				<ui-select-choices repeat="city.id as city in cities | propsFilter: {name: $select.search, id: $select.search}">
 					<div ng-bind-html="city.name | highlight: $select.search"></div>
 				</ui-select-choices>
-			</ui-select>
+			</ui-select>-->
+			<select ng-model="delivery.destCity">
+				<option></option>
+				<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
+			</select>
 			<label>עיר</label>
 		</div>
 	</div>
@@ -191,7 +210,8 @@
 			<label>סוג כפולה</label>
 		</div>
 		<div class="col-lg-2 form-field">
-			<select ng-model="delivery.vehicleType" class="combobox">
+			<select ng-model="delivery.vehicleType" class="combobox aaaa">
+				<option></option>
 				<option ng-repeat="vehicle in vehicles" value="{{ vehicle.id }}">{{ vehicle.name }}</option>
 			</select>
 			<label>אמצעי הובלה</label>
@@ -220,19 +240,19 @@
 		</div>
 		<div class="col-lg-2 form-field">
 			<select ng-model="delivery.firstDeliver" class="combobox">
-				
+				<option ng-repeat="employee in employees" value="{{employee.id}}">{{ employee.name }}</option>
 			</select>
 			<label>שליח אוסף</label>
 		</div>
 		<div class="col-lg-2 form-field">
 			<select ng-model="delivery.secondDeliver" class="combobox">
-				
+				<option ng-repeat="employee in employees" value="{{employee.id}}">{{ employee.name }}</option>
 			</select>
 			<label>שליח מוסר</label>
 		</div>
 		<div class="col-lg-2 form-field">
 			<select ng-model="delivery.thirdDeliver" class="combobox">
-				
+				<option ng-repeat="employee in employees" value="{{employee.id}}">{{ employee.name }}</option>
 			</select>
 			<label>שליח שלישי</label>
 		</div>
@@ -301,85 +321,7 @@
 		</div>
 	</div>
 	<hr>
-	<button ng-click="submitDelivery()" class="btn btn-primary submit-btn">שלח</button>
-	<button ng-click="getPrice()" class="btn">קבל מחיר</button>
-</div>
-
-<div class="popup-wrap" ng-class="{'show-popup': showPopup}" ng-controller="popupCtrl">
-	<div class="popup">
-		<div class="header">
-			<div>עלות המשלוח</div> 
-			<span ng-click="close()" class="x-btn"></span>
-		</div>
-		<div class="body">
-			<div class="row">
-				<div class="col-lg-6 bold">
-					מחיר בסיס:
-				</div>
-				<div class="col-lg-6">
-					{{ price.basicPrice }}
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-6 bold">
-					מקדם דחיפות:
-				</div>
-				<div class="col-lg-6">
-					{{ price.urgency }}
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-6 bold">
-					מקדם חבילות:
-				</div>
-				<div class="col-lg-6">
-					{{ price.packages }}
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-6 bold">
-					מקדם קרטונים:
-				</div>
-				<div class="col-lg-6">
-					{{ price.boxes }}
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-6 bold">
-					מקדם אחה"צ:
-				</div>
-				<div class="col-lg-6">
-					{{ price.afternoon }}
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-6 bold">
-					המתנה:
-				</div>
-				<div class="col-lg-6">
-					{{ price.waiting }}
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-6 bold">
-					משלוח כפול:
-				</div>
-				<div class="col-lg-6">
-					{{ price.double }}
-				</div>
-			</div>
-			<hr>
-			<div class="row sum">
-				<div class="col-lg-6 bold">
-					סה"כ:
-				</div>
-				<div class="col-lg-6 bold">
-					{{ price.total }}
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="blackout">
-	
-	</div>
+	<button ng-click="submitDelivery()" class="btn btn-primary">שלח</button>
+	<button ng-click="getPrice()" class="btn">עדכן מחיר</button>
+	<button ng-click="showPriceInfo()" class="btn">הצג פירוט מחיר</button>
 </div>

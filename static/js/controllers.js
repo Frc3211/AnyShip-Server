@@ -66,6 +66,11 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', func
 	$scope.gotoPage = function(page){
 		$state.go(page)
 	}
+	
+	$scope.showRecord = function(event){
+		id = event.currentTarget.dataset['id'];
+		$state.go('main.delivery', {id: id})
+	}
 }])
 
 app.controller('mainCtrl', ['$scope', '$rootScope', '$state', function($scope, $rootScope, $state){
@@ -125,6 +130,13 @@ app.controller('newCustomerCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 		$scope.priceLists = data;
 	})	
 	
+	$http({
+		method: 'GET',
+		url: '/api/CustomerTypes/'
+	}).success(function(data){
+		$scope.customerTypes = data;
+	})
+	
 	//functions	
 	$scope.selectCustomer = function(){
 		$http({
@@ -133,6 +145,25 @@ app.controller('newCustomerCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 		}).success(function(data){
 			$scope.customer = data;
 			$scope.contactMans = data.contact_man;
+		})
+	}
+	
+	$scope.deleteCustomer = function(){
+		$http({
+			method: 'DELETE',
+			url: '/api/Customers/' + $scope.customer.id
+		}).success(function(){
+			for (var i = $scope.customers.length - 1 ; i >= 0 ; i--){
+				var obj = $scope.customers[i];
+				
+				if($scope.customer.id == $scope.customers[i].id){
+					$scope.customers.splice(i, 1);
+				}
+			}
+			$scope.customer = {}
+			$rootScope.addAlert('נמחק בהצלחה', 'success')
+		}).error(function(){
+			$rootScope.addAlert('שגיאה', 'danger')
 		})
 	}
 	
@@ -151,7 +182,8 @@ app.controller('newCustomerCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 				method: 'DELETE',
 				url: '/api/ContactMan/' + $scope.contactMans[index].id
 			}).success(function(data){
-				console.log(data);
+				//alert("נמחק בהצלחה")
+				$rootScope.addAlert('נמחק בהצלחה', 'success')
 			})
 		} 
 		$scope.contactMans.splice(index, 1)
@@ -243,6 +275,14 @@ app.controller('newEmployeeCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 		$scope.employees = data;
 	})
 	
+	$scope.genderOptions = [{
+		title: 'זכר',
+		value: 'TRUE'
+	}, {
+		title: 'נקבה',
+		value: 'FALSE'
+	}]
+	
 	//functions
 	$scope.selectEmployee = function(){
 		$http({
@@ -250,6 +290,22 @@ app.controller('newEmployeeCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 			url: '/api/Employee/' + $scope.selectedEmployee.id
 		}).success(function(data){
 			$scope.employee = data;
+		})
+	}
+	
+	$scope.deleteEmployee = function(){
+		$http({
+			method: 'DELETE',
+			url: '/api/Employee/' + $scope.employee.id
+		}).success(function(){
+			for (var i = $scope.employees.length - 1 ; i >= 0 ; i--){
+				var obj = $scope.employees[i];
+				
+				if($scope.employee.id == $scope.employees[i].id){
+					$scope.employees.splice(i, 1);
+				}
+			}
+			$scope.employee = {}
 		})
 	}
 	
@@ -295,10 +351,20 @@ app.controller('citiesCtrl', ['$scope', '$rootScope', function($scope, $rootScop
 	//functions
 }])
 
-app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', function($scope, $rootScope, $http, $filter){
+app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '$state', '$modal', function($scope, $rootScope, $http, $filter, $state, $modal){
 	//init
-	$rootScope.currMenu = 'commands';
 	$scope.delivery = {}
+	if ($state.params.id){
+		$http({
+			method: 'GET',
+			url: '/api/Delivery/' + $state.params.id
+		}).success(function(data){
+			$scope.delivery = data
+			$scope.initObjects(data)
+		})
+	}
+	
+	$rootScope.currMenu = 'commands';
 	
 	$scope.delivery.time = new Date();
 	$scope.delivery.date = new Date();
@@ -310,6 +376,10 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', f
 	
 	$http.get('/api/Delivery/').success(function(data){
 		$scope.deliveries = data;
+	})
+	
+	$http.get('/api/Employee/').success(function(data){
+		$scope.employees = data;
 	})
 	
 	$rootScope.currPage = 'main.newDelivery'
@@ -337,13 +407,85 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', f
 	$scope.delivery.status = $rootScope.deliveryStatuses[0].id;
 	
 	
-	//functions
+	//functions	
 	$scope.selectDelivery = function(){
 		$http({
 			method: 'GET',
 			url: '/api/Delivery/' + $scope.selectedDelivery.id
 		}).success(function(data){
 			$scope.delivery = data;
+			$scope.initObjects(data)
+		})
+	}
+	
+	$scope.initObjects = function(data){
+		$scope.delivery.customer = data.customer.id
+		$scope.delivery.status = data.status.id
+		$scope.delivery.sender = data.sender.id
+		$scope.delivery.destCity = data.destCity.id
+		$scope.delivery.client = data.client.id
+		$scope.delivery.sourceCity = data.sourceCity.id
+		$scope.delivery.urgency = data.urgency.id
+		$scope.delivery.doubleType = data.doubleType.id
+		$scope.delivery.receiver = data.receiver.id
+		$scope.delivery.vehicleType = data.vehicleType.id
+		$scope.delivery.contactMan = data.contactMan.id
+		$scope.delivery.firstDeliver = data.firstDeliver.id
+		
+		//dates
+		$scope.delivery.created = new Date(data.created)
+		$scope.delivery.exeTime = new Date(data.exeTime)
+		$scope.delivery.rakazTime = new Date(data.rakazTime)
+		$scope.delivery.estTime = new Date(data.estTime)
+	}
+	
+	$scope.customerSelected = function(){
+		$scope.delivery.contactMan = undefined
+		return;
+		for (i in $scope.customers){
+			if($scope.customers[i].id == $scope.delivery.customer){
+				$scope.contactMans = $scope.customers[i].contact_man
+			}
+		}
+	}
+	
+	$scope.$watch('delivery.customer', function(data){
+		for (i in $scope.customers){
+			if($scope.customers[i].id == data){
+				$scope.contactMans = $scope.customers[i].contact_man
+			}
+		}
+		
+		if($scope.delivery.contactMan){
+			//console.log($scope.delivery.contactMan)
+		}
+	})
+	
+	$scope.$watch('delivery.contactMan', function(value){
+		console.log(value)
+		$scope.delivery.contactMan = value
+	})
+	
+	$scope.$watch('contactMans', function(data){
+		console.log(data)
+	})
+	
+	$scope.deleteDelivery = function(){
+		$http({
+			method: 'DELETE',
+			url: '/api/Delivery/' + $scope.delivery.id
+		}).success(function(){
+			for (var i = $scope.deliveries.length - 1 ; i >= 0 ; i--){
+				var obj = $scope.deliveries[i];
+				
+				if($scope.delivery.id == $scope.deliveries[i].id){
+					$scope.deliveries.splice(i, 1);
+				}
+			}
+			$scope.delivery = {}
+			$rootScope.addAlert('נמחק בהצלחה', 'success')
+		}).error(function(){
+			$rootScope.addAlert('שגיאה', 'danger')
 		})
 	}
 	
@@ -353,24 +495,38 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', f
 	}
 	
 	$scope.submitDelivery = function(){
-		$scope.delivery.date = $filter('date')($scope.delivery.date, 'yyyy-MM-dd')
+		/*$scope.delivery.date = $filter('date')($scope.delivery.date, 'yyyy-MM-dd')
 		$scope.delivery.time = $filter('date')($scope.delivery.time, 'HH:mm')
 		$scope.delivery.rakazTime = $filter('date')($scope.delivery.rakazTime, 'HH:mm')
 		$scope.delivery.exeTime = $filter('date')($scope.delivery.exeTime, 'HH:mm')
 		$scope.delivery.estTime = $filter('date')($scope.delivery.estTime, 'HH:mm')
-		
-		$http({
-			method: 'POST',
-			url: '/api/newDelivery/',
-			data: $scope.delivery,
-			headers : { 'Content-Type': 'application/json' }
-		})
-		.success(function(data){
-			alert("המשלוח הוזן!")
-		})
-		.error(function(data){
-			alert("שגיאה!")
-		})
+		*/
+		if($scope.delivery.id){
+			$http({
+				method: 'PUT',
+				url: '/api/updateDelivery/' + $scope.delivery.id,
+				data: $scope.delivery,
+				headers : { 'Content-Type': 'application/json' }
+			}).success(function(data){
+				$rootScope.addAlert('משלוח עודכן בהצלחה', 'success')
+				//alert("משלוח עודכן בהצלחה")
+			})
+		} else {
+			$http({
+				method: 'POST',
+				url: '/api/newDelivery/',
+				data: $scope.delivery,
+				headers : { 'Content-Type': 'application/json' }
+			})
+			.success(function(data){
+				$rootScope.addAlert('המשלוח הוזן!', 'success')
+				//alert("המשלוח הוזן!")
+			})
+			.error(function(data){
+				$rootScope.addAlert('שגיאה', 'danger')
+				//alert("שגיאה!")
+			})
+		}
 	}
 	
 	$scope.change = function(){
@@ -387,10 +543,31 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', f
 		}
 	}
 	
+	$scope.showPriceInfo = function(){
+		$scope.getPrice();
+		var modalInstance = $modal.open({
+			animation: true,
+			templateUrl: '/static/partials/modals/price.html',
+			controller: function($scope, $modalInstance){
+				$scope.close = function(){
+					$modalInstance.close();
+				}
+			},
+			size: 'sm',
+			resolve: {
+				price: function(){
+					return $scope.price
+				}
+			}
+		});
+	}
+	
 	$scope.getPrice = function(){
+		
 		if($scope.delivery.customer == undefined | $scope.delivery.urgency == undefined | $scope.delivery.sourceCity == undefined | $scope.delivery.destCity == undefined){
-			alert("חסרים נתונים");
-			return
+			$rootScope.addAlert('נתונים חסרים', 'danger')
+			//alert("חסרים נתונים");
+			return;
 		}
 		
 		$rootScope.price = {}
@@ -404,7 +581,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', f
 			url: '/api/getPrice/' + $scope.delivery.customer + '/' + $scope.delivery.sourceCity + '/' + $scope.delivery.destCity
 		}).success(function(data){
 			$rootScope.price.multiForPackage = data[0].multiForPackage;
-			$rootScope.price.multiForBox = data[0].multiForBox;
+			$rootScope.price.multiForBox = data[0].multiForBox; 
 			$rootScope.price.addForWaiting = data[0].waiting;
 			$rootScope.price.basicPrice = data[0].price;
 			
@@ -415,19 +592,36 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', f
 			$rootScope.price.afternoon = 0;
 			
 			console.log($rootScope.price);
-			$rootScope.showPopup = true;
+			//$rootScope.showPopup = true;
+			
 			$rootScope.showLoader = false;
 			
 			$rootScope.price.total = $rootScope.price.urgency * $rootScope.price.basicPrice + ($rootScope.price.multiForPackage * $rootScope.price.packages) + ($rootScope.price.multiForBox * $rootScope.price.boxes) + ($rootScope.price.addForWaiting * $rootScope.price.waiting);
+			$scope.delivery.basicPrice = $rootScope.price.basicPrice
+			$scope.delivery.totalPrice = $rootScope.price.total;
 		}).error(function(data){
 			$rootScope.showLoader = false;
-			alert("לא הוזן מחירון למסלול זה")
+			$rootScope.addAlert('לא הוזן מחירון למסלול זה!', 'danger')
+			//alert("לא הוזן מחירון למסלול זה")
 		})
 	}
 }])
-var newDeliveryCtrl = function($scope, $rootScope, $http, $filter){
+
+app.controller('alertCtrl', ['$scope', '$rootScope', '$timeout', function($scope, $rootScope, $timeout){
+	$scope.alerts = [];
+	  
+	$scope.closeAlert = function() {
+		$scope.alerts.splice($scope.alerts.length-1, 1)
+	};
 	
-}
+	$rootScope.addAlert = function(msg, type){
+		$scope.alerts.push({msg: msg, type: type})
+		$timeout(function(){
+			$scope.closeAlert()
+			console.log("delete")
+		}, 5000)
+	}
+}])
 
 var deliveryCtrl = function($scope, $rootScope, $stateParams, $http){
 	//init
@@ -455,7 +649,7 @@ var deliveryCtrl = function($scope, $rootScope, $stateParams, $http){
 	//functions
 }
 
-var deliveriesCtrl = function($scope, $rootScope, $http, $state){
+var deliveriesCtrl = function($scope, $rootScope, $http, $state, ngDialog){
 	//init
 	$rootScope.currMenu = 'commands';
 	$rootScope.showLoader = true;
@@ -473,7 +667,7 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state){
 	$scope.table.name = 'מעקב משלוחים - מוצא / יעד'
 	$scope.table.columns = [{
 		name: 'קבלה',
-		width: 10
+		width: 8
 	}, {
 		name: 'שם הלקוח',
 		width: 13
@@ -490,7 +684,10 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state){
 		name: 'כמה',
 		width: 7
 	}, {
-		name: 'שם אוסף',
+		name: 'שליח אוסף',
+		width: 9
+	}, {
+		name: 'שליח מוסר',
 		width: 9
 	}, {
 		name: 'סטטוס',
@@ -508,7 +705,7 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state){
 		icon: 'urgent.png',
 		method: function(){
 			$scope.zeroFilters()
-			$scope.filterUrgency = !$scope.filterUrgency;
+			$scope.filterUrgency = true;
 		}
 	}, {
 		title: 'כפול',
@@ -542,9 +739,29 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state){
 		method: function(){
 			$scope.zeroFilters()
 		}
+	}, {
+		title: 'מותאם אישית',
+		icon: 'opens.png',
+		method: function(){
+			$scope.zeroFilters()
+			$scope.popup();
+		}
 	}]
 	
 	//functions
+	$scope.popup = function(){
+		ngDialog.open({
+			template: 'static/partials/popup.html',
+			scope: $scope,
+			controller: ['$scope', function($scope){
+				$scope.customFilters = [{
+					name: 'לקוח',
+					filterName: 'filterCustomer'
+				}]
+			}]
+		})
+	}
+	
 	$scope.filterDeliveries = function(item){
 		if(!item.status){
 			return false;
@@ -553,7 +770,12 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state){
 			(!$scope.filterDoubles || item.doubleType.name != 'לא') 	&&
 			//(!$scope.filterFutures || ) &&
 			//(!$scope.filterTomorrow ||) &&
-			(!$scope.filterDones || item.status.name == 'בוצע')
+			(!$scope.filterDones || item.status.name == 'בוצע') &&
+			(!$scope.filterOpenes || item.status.name == 'פתוחים') &&
+			// filterLates
+			// filterSpecial
+			// filterInTransit
+			(!$scope.filterCustomer || item.customer.id == $scope.filterCustomerData)
 	}
 	
 	$scope.zeroFilters = function(){
@@ -561,10 +783,12 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state){
 		$scope.filterDoubles 	= false;
 		$scope.filterFutures 	= false;
 		$scope.filterTomorrow 	= false;
-		$scope.filterSpecial 	= false;
 		$scope.filterDones 		= false;
+		$scope.filterOpenes 	= false;
 		$scope.filterLates 		= false;
+		$scope.filterSpecial 	= false;
 		$scope.filterInTransit 	= false;
+		$scope.filterCustomer 	= false;
 		// קבלנים
 		// זהב
 	}
@@ -580,8 +804,8 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state){
 	}
 	
 	$scope.showRecord = function(event){
-		$rootScope.idToShow = event.currentTarget.dataset['id'];
-		$state.go('main.delivery')
+		id = event.currentTarget.dataset['id'];
+		$state.go('main.delivery', {id: id})
 	}
 }
 

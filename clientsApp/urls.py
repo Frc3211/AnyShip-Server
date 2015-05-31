@@ -9,6 +9,7 @@ urlpatterns = [
 	url(r'^newDelivery/$', views.DeliveryCreate.as_view()),
 	url(r'^VehicleTypes/$', views.VehicleTypeList.as_view()),
 	url(r'^Delivery/(?P<pk>[0-9]+)$', views.DeliveryDetail.as_view()),
+	url(r'^updateDelivery/(?P<pk>[0-9]+)$', views.DeliveryUpdate.as_view()),
 	url(r'^DeliveryStatus/$', views.DeliveryStatusList.as_view()),
 	url(r'^Status/$', views.StatusList.as_view()),
 	url(r'^PriceList/$', views.PriceListList.as_view()),
@@ -24,5 +25,6 @@ urlpatterns = [
 	#url(r'^ContactMan/(?P<pk>[0-9]+)$', views.ContactManList.as_view()),
 	url(r'^ContactMan/$', views.ContactManList.as_view()),
 	url(r'^ContactMan/(?P<pk>[0-9]+)$', views.ContactManUpdate.as_view()),
-	url(r'^Banks/$', views.BankList.as_view())
+	url(r'^Banks/$', views.BankList.as_view()),
+	url(r'^CustomerTypes/$', views.CustomerTypeList.as_view())
 ] 
