@@ -1,6 +1,6 @@
 app.controller('loginCtrl', ['$scope', '$http', '$state', function($scope, $http, $state){
 	//init
-	$http.get('http://95.85.43.135/is-authenticated/')
+	$http.get('/is-authenticated/')
 		.success(function(data, status, headers, config){
 			if(data.state == 'authorized'){
 				$state.go('dashboard')
@@ -12,7 +12,7 @@ app.controller('loginCtrl', ['$scope', '$http', '$state', function($scope, $http
 	
 	//function
 	$scope.login = function(){
-		$http.post('http://95.85.43.135/rest-auth/login/', {
+		$http.post('/rest-auth/login/', {
 			'username': $scope.username,
 			'password': $scope.password
 		})
