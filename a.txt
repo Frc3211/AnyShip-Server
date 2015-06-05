@@ -1,0 +1,187 @@
+BEGIN;
+CREATE TABLE "clientsApp_client" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(30) NOT NULL
+)
+;
+CREATE TABLE "clientsApp_anyshipuser" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "client_id" integer NOT NULL REFERENCES "clientsApp_client" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "user_id" integer NOT NULL UNIQUE REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "name" varchar(30) NOT NULL
+)
+;
+CREATE TABLE "clientsApp_customer" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "client_id" integer NOT NULL REFERENCES "clientsApp_client" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "name" varchar(50) NOT NULL,
+    "created" timestamp with time zone NOT NULL,
+    "city_id" integer,
+    "status_id" integer,
+    "streetName" varchar(40),
+    "streetNum" integer,
+    "customerType_id" integer,
+    "term_id" integer,
+    "priceListName" varchar(50),
+    "phone1" varchar(20),
+    "phone2" varchar(20),
+    "fax" varchar(20),
+    "postBox" integer,
+    "zipCode" integer,
+    "openingDate" date,
+    "email" varchar(75),
+    "discount" smallint,
+    "pcNum" integer,
+    "minPrice" integer,
+    "exportCode" integer,
+    "comments" varchar(500),
+    "bank_id" integer,
+    "branchNum" smallint,
+    "accountNum" smallint,
+    "guarantee" integer,
+    "obligo" integer,
+    "fromPackageNum" smallint CHECK ("fromPackageNum" >= 0),
+    "fromWaiting" smallint CHECK ("fromWaiting" >= 0),
+    "endDate" date,
+    "fromBoxNum" smallint CHECK ("fromBoxNum" >= 0),
+    "physicalAddress" varchar(100),
+    "balance" double precision,
+    "paymentMethod_id" integer
+)
+;
+CREATE TABLE "clientsApp_paymentmethod" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(20) NOT NULL
+)
+;
+ALTER TABLE "clientsApp_customer" ADD CONSTRAINT "paymentMethod_id_refs_id_c5bf9a9c" FOREIGN KEY ("paymentMethod_id") REFERENCES "clientsApp_paymentmethod" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE TABLE "clientsApp_city" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(50) NOT NULL
+)
+;
+ALTER TABLE "clientsApp_customer" ADD CONSTRAINT "city_id_refs_id_95eceb0d" FOREIGN KEY ("city_id") REFERENCES "clientsApp_city" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE TABLE "clientsApp_customersstatus" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(50) NOT NULL
+)
+;
+ALTER TABLE "clientsApp_customer" ADD CONSTRAINT "status_id_refs_id_f05b2bb3" FOREIGN KEY ("status_id") REFERENCES "clientsApp_customersstatus" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE TABLE "clientsApp_customertype" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(30) NOT NULL
+)
+;
+ALTER TABLE "clientsApp_customer" ADD CONSTRAINT "customerType_id_refs_id_43381e71" FOREIGN KEY ("customerType_id") REFERENCES "clientsApp_customertype" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE TABLE "clientsApp_term" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(30) NOT NULL
+)
+;
+ALTER TABLE "clientsApp_customer" ADD CONSTRAINT "term_id_refs_id_e9c84136" FOREIGN KEY ("term_id") REFERENCES "clientsApp_term" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE TABLE "clientsApp_bank" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(30) NOT NULL,
+    "num" smallint NOT NULL
+)
+;
+ALTER TABLE "clientsApp_customer" ADD CONSTRAINT "bank_id_refs_id_f76d1674" FOREIGN KEY ("bank_id") REFERENCES "clientsApp_bank" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE TABLE "clientsApp_salesman" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "client_id" integer NOT NULL REFERENCES "clientsApp_client" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "name" varchar(50) NOT NULL
+)
+;
+CREATE TABLE "clientsApp_urgency" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(30) NOT NULL,
+    "multiplier" double precision NOT NULL
+)
+;
+CREATE TABLE "clientsApp_delivery" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "client_id" integer NOT NULL REFERENCES "clientsApp_client" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "created" timestamp with time zone NOT NULL,
+    "customer_id" integer REFERENCES "clientsApp_customer" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "urgency" integer,
+    "firstDeliver_id" integer REFERENCES "clientsApp_anyshipuser" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "secondDeliver_id" integer REFERENCES "clientsApp_anyshipuser" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "thirdDeliver_id" integer REFERENCES "clientsApp_anyshipuser" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "employee_id" integer REFERENCES "clientsApp_anyshipuser" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "vehicleType_id" integer,
+    "destCity_id" integer REFERENCES "clientsApp_city" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "destStreet" varchar(50),
+    "sourceCity_id" integer REFERENCES "clientsApp_city" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "sourceStreet" varchar(50),
+    "date" date,
+    "time" time,
+    "exeTime" time,
+    "waiting" smallint,
+    "numOfPackages" smallint,
+    "numOfBoxes" smallint,
+    "isBoxToDirections" boolean NOT NULL,
+    "isTwoDirections" boolean NOT NULL,
+    "isAfternoon" boolean NOT NULL,
+    "isDouble" smallint,
+    "destStreetNum" smallint CHECK ("destStreetNum" >= 0),
+    "sourceStreetNum" smallint CHECK ("sourceStreetNum" >= 0),
+    "status_id" integer,
+    "transTime" timestamp with time zone,
+    "basicPrice" smallint CHECK ("basicPrice" >= 0),
+    "totalPrice" smallint CHECK ("totalPrice" >= 0),
+    "totalPriceForEmp" smallint CHECK ("totalPriceForEmp" >= 0),
+    "totalPriceForDelEmp" smallint CHECK ("totalPriceForDelEmp" >= 0),
+    "contactMan_id" integer,
+    "type" smallint CHECK ("type" >= 0),
+    "receiver_id" integer REFERENCES "clientsApp_customer" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "sender_id" integer REFERENCES "clientsApp_customer" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "comment" varchar(300),
+    "firstReceiverName" varchar(30),
+    "secondReceiverName" varchar(30),
+    "empPercent" double precision,
+    "secEmpPercent" double precision
+)
+;
+CREATE TABLE "clientsApp_customerconatctman" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(30) NOT NULL,
+    "customer_id" integer NOT NULL REFERENCES "clientsApp_customer" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "job_id" integer NOT NULL,
+    "phone1" varchar(20) NOT NULL,
+    "phone2" varchar(20) NOT NULL,
+    "email" varchar(75) NOT NULL,
+    "comment" varchar(255) NOT NULL
+)
+;
+ALTER TABLE "clientsApp_delivery" ADD CONSTRAINT "contactMan_id_refs_id_f3fc4a01" FOREIGN KEY ("contactMan_id") REFERENCES "clientsApp_customerconatctman" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE TABLE "clientsApp_employee" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(50) NOT NULL
+)
+;
+CREATE TABLE "clientsApp_deliverystatus" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(30) NOT NULL
+)
+;
+ALTER TABLE "clientsApp_delivery" ADD CONSTRAINT "status_id_refs_id_523a1107" FOREIGN KEY ("status_id") REFERENCES "clientsApp_deliverystatus" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE TABLE "clientsApp_empjob" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "jobName" varchar(30) NOT NULL
+)
+;
+CREATE TABLE "clientsApp_customercontactmanjob" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(30) NOT NULL
+)
+;
+ALTER TABLE "clientsApp_customerconatctman" ADD CONSTRAINT "job_id_refs_id_c88fcddb" FOREIGN KEY ("job_id") REFERENCES "clientsApp_customercontactmanjob" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE TABLE "clientsApp_vehicletype" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(20),
+    "price" integer
+)
+;
+ALTER TABLE "clientsApp_delivery" ADD CONSTRAINT "vehicleType_id_refs_id_c2535fc5" FOREIGN KEY ("vehicleType_id") REFERENCES "clientsApp_vehicletype" ("id") DEFERRABLE INITIALLY DEFERRED;
+
+COMMIT;
