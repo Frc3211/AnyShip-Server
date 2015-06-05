@@ -236,6 +236,49 @@ class CustomerConatctMan(models.Model):
 	#webPass
 """
 
+class RegularDelivery(models.Model):
+	client = models.ForeignKey('Client', null=True, blank=True)
+	
+	created = models.DateTimeField(auto_now=True)
+	customer = models.ForeignKey('Customer', null=True, blank=True)
+	contactMan = models.ForeignKey('ContactMan', null=True, blank=True)
+	type = models.IntegerField(null=True, blank=True)
+	firstDeliver = models.ForeignKey('Employee', null=True, related_name='first_deliver')
+	secondDeliver = models.ForeignKey('Employee', null=True, related_name='second_deliver')
+	thirdDeliver = models.ForeignKey('Employee', null=True, related_name='third_deliver')
+	lastUpdate = models.DateField(null=True, blank=True)
+	startDate = models.DateField(null=True, blank=True)
+	endDate = models.DateField(null=True, blank=True)
+	
+	sourceCustomer = models.ForeignKey('Customer', null=True, related_name='sourceCustomer')
+	sourceStreet = models.CharField(max_length=40, null=True)
+	sourceHomeNum = models.IntegerField(null=True)
+	sourceHomeEnter = models.IntegerField(null=True)
+	sourceApart = models.IntegerField(null=True)
+	destCustomer = models.ForeignKey('Customer', null=True, related_name='destCustomer')
+	destStreet = models.CharField(max_length=40, null=True)
+	destHomeNum = models.IntegerField(null=True)
+	destHomeEnter = models.IntegerField(null=True)
+	destApart = models.IntegerField(null=True)
+	
+	urgency = models.ForeignKey('Urgency', null=True)
+	doubleType = models.ForeignKey('DoubleType', null=True)
+	vehicleType = models.ForeignKey('VehicleType', null=True)
+	
+	basicPrice = models.IntegerField(null=True)
+	totalPrice = models.IntegerField(null=True)
+	firstDeliverPrice = models.IntegerField(null=True)
+	secondDeliverPrice = models.IntegerField(null=True)
+	
+	isSunday = models.BooleanField(default=False, blank=True)
+	isMonday = models.BooleanField(default=False, blank=True)
+	isTuesday = models.BooleanField(default=False, blank=True)
+	isWednesday = models.BooleanField(default=False, blank=True)
+	isThursday = models.BooleanField(default=False, blank=True)
+	isFriday = models.BooleanField(default=False, blank=True)
+	isSaturday = models.BooleanField(default=False, blank=True)
+	
+	
 	
 class Employee(models.Model):
 	client = models.ForeignKey('Client', null=True, blank=True)
