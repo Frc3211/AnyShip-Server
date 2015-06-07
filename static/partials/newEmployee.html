@@ -1,37 +1,37 @@
 <div class="form-area-iner scrollbar" ng-controller="newEmployeeCtrl">
 	<div class="row">
-		<div class="col-lg-6 col-lg-offset-3 form-field">
+		<div class="col-sm-6 col-sm-offset-3 form-field">
 			<select ng-change="selectEmployee()" ng-options="employee.name for employee in employees" ng-model="selectedEmployee"></select>
 			<label>חיפוש עובד קיים</label>
 		</div>
-		<div class="col-lg-1">
+		<div class="col-sm-1">
 			<button ng-click="newEmployee()" class="btn btn-primary">חדש</button>
 		</div>
-		<div class="col-lg-1">		
+		<div class="col-sm-1">		
 			<button ng-click="deleteEmployee()" class="btn btn-danger" ng-class="{'disabled': !employee.id}">מחק</button>
 		</div>
 	</div>
 	<hr>
 	<div class="row">
-		<div class="col-lg-4 form-field">
+		<div class="col-sm-4 form-field">
 			<input type="text" ng-model="employee.name">
 			<label>שם</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<input type="text" ng-model="employee.id">
 			<label>מספר עובד</label>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<input type="text" ng-model="employee.idNum">
 			<label>ת.ז.</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<input type="date" ng-model="employee.birthDate">
 			<label>תאריך לידה</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<select ng-model="employee.gender">
 				<!--<option ng-repeat="gender in genderOptions" value="{{ gender.value }}">{{ gender.title }}</option>-->
 				<option></option>
@@ -40,11 +40,11 @@
 			</select>
 			<label>מין</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<input type="text" ng-model="employee.address">
 			<label>כתובת</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<ui-select ng-model="employee.city" theme="bootstrap">
 				<ui-select-match>{{$select.selected.name}}</ui-select-match>
 				<ui-select-choices repeat="city.id as city in cities | propsFilter: {name: $select.search, id: $select.search}">
@@ -53,7 +53,7 @@
 			</ui-select>
 			<label>עיר</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<select ng-model="employee.maritalStatus">
 				<option value="0">רווק</option>
 				<option value="1">נשוי</option>
@@ -65,22 +65,22 @@
 	</div>
 	<hr>
 	<div class="row">
-		<div class="col-lg-4 form-field">
+		<div class="col-sm-4 form-field">
 			<input type="text" ng-model="employee.email">
 			<label>דוא"ל</label>
 		</div>
-		<div class="col-lg-4 form-field">
+		<div class="col-sm-4 form-field">
 			<input type="text" ng-model="employee.phone1">
 			<label>טלפון ראשי</label>
 		</div>
-		<div class="col-lg-4 form-field">
+		<div class="col-sm-4 form-field">
 			<input type="text" ng-model="employee.phone2">
 			<label>טלפון נוסף</label>
 		</div>
 	</div>
 	<hr>
 	<div class="row">
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<select ng-model="employee.licenseType">
 				<option value="0">A</option>
 				<option value="1">A1</option>
@@ -92,66 +92,66 @@
 			</select>
 			<label>סוג רישיון</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<input type="date" ng-model="employee.licenseExp">
 			<label>תוקף רישיון</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<input type="text" ng-model="employee.licenseNum">
 			<label>מספר רישיון</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<select ng-model="employee.type">
 				<option value="0">שכיר</option>
 				<option value="1">עצמאי</option>
 			</select>
 			<label>מעמד</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<input type="text" ng-model="employee.tax">
 			<label>מס במקור</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<select ng-model="employee.bank">
 				<option ng-repeat="bank in banks" value="{{ bank.id }}">{{ bank.name }}</option>
 			</select>
 			<label>בנק</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<input ng-model="employee.branchNum">
 			<label>מספר סניף</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<input ng-model="employee.accountNum">
 			<label>מספר חשבון</label>
 		</div>
 	</div>
 	<hr>
 	<div class="row">
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<select ng-model="employee.status">
 				<option ng-repeat="status in Statuses" value="{{ status.id }}">{{ status.name }}</option>
 			</select>
 			<label>סטטוס</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<select ng-model="employee.job">
 				<option ng-repeat="job in jobs" value="{{ job.id }}">{{ job.name }}</option>
 			</select>
 			<label>תפקיד</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<input type="date" ng-model="employee.startDate">
 			<label>תאריך התחלה</label>
 		</div>
-		<div class="col-lg-2 form-field">
+		<div class="col-sm-2 form-field">
 			<input type="date" ng-model="employee.endDate">
 			<label>תאריך סיום</label>
 		</div>
 	</div>
 	<hr>
 	<div class="row">
-		<div class="col-lg-12 form-field">
+		<div class="col-sm-12 form-field">
 			<textarea ng-model="employee.comment"></textarea>
 			<label>הערות</label>
 		</div>	

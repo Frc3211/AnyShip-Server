@@ -90,3 +90,8 @@ class BankSerializer(serializers.ModelSerializer):
 class VehicleTypeSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = VehicleType
+
+
+class RegularDeliverySerializer(serializers.ModelSerializer):
+	class Meta:
+		model = RegularDelivery	

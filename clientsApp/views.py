@@ -208,6 +208,9 @@ class DeliveryUpdate(generics.RetrieveUpdateDestroyAPIView):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
+
+class RegularDeliveryList(generics.ListCreateAPIView):
+	serializer_class = RegularDeliverySerializer	
 	
 class DeliveryStatusList(generics.ListCreateAPIView):
 	serializer_class = DeliveryStatusSerializer

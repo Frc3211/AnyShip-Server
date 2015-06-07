@@ -264,6 +264,10 @@ class RegularDelivery(models.Model):
 	urgency = models.ForeignKey('Urgency', null=True)
 	doubleType = models.ForeignKey('DoubleType', null=True)
 	vehicleType = models.ForeignKey('VehicleType', null=True)
+
+	numOfPackages = models.IntegerField(null=True)
+	numOfBoxes = models.IntegerField(null=True)
+	comment = models.CharField(max_length=300, null=True)
 	
 	basicPrice = models.IntegerField(null=True)
 	totalPrice = models.IntegerField(null=True)
@@ -277,7 +281,7 @@ class RegularDelivery(models.Model):
 	isThursday = models.BooleanField(default=False, blank=True)
 	isFriday = models.BooleanField(default=False, blank=True)
 	isSaturday = models.BooleanField(default=False, blank=True)
-	
+	endTime = models.TimeField(null=True)
 	
 	
 class Employee(models.Model):

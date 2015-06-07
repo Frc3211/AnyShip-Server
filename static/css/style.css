@@ -73,7 +73,9 @@ input:focus{
 	height: 100%;
 }
 .deliveries-list-item > div > span{
-	
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .list-dest{
 	width: 32%;

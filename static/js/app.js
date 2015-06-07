@@ -53,6 +53,10 @@ app.config([ '$stateProvider', '$urlRouterProvider', '$httpProvider', '$interpol
 				url: '/priceList',
 				templateUrl: 'static/partials/priceList.html'
 			})
+			.state('main.regularDelivery', {
+				url: '/regularDelivery',
+				templateUrl: 'static/partials/regularDelivery.html'
+			})
 			.state('main-small', {
 				url: '/main-small',
 				templateUrl: 'static/partials/main-small.html'

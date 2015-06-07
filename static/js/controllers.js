@@ -55,6 +55,10 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', func
 		name: 'טבלאות',
 		link: 'main-small.tables',
 		icon: 'tables.png'
+	}, {
+		name: 'משלוחים קבועים',
+		link: 'main.regularDelivery',
+		icon: 'regularDelivery.png'
 	}]
 	
 	$http.get('/api/Delivery/').success(function(data){
@@ -68,6 +72,7 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', func
 	}
 	
 	$scope.showRecord = function(event){
+		$rootScope.showLoader = true;
 		id = event.currentTarget.dataset['id'];
 		$state.go('main.delivery', {id: id})
 	}
@@ -80,8 +85,8 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$state', function($scope, $
 			title: 'מחירונים',
 			link: 'main.priceList'
 		}, {
-			title: 'ערים',
-			link: 'main.cities'
+			title: 'סבבים קבועים',
+			link: 'main.regularDelivery'
 		}],
 		commands: [{
 			title: 'משלוחים',
@@ -384,6 +389,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 	
 	$rootScope.currPage = 'main.newDelivery'
 	$rootScope.currTable = "משלוח חדש"
+	$rootScope.showLoader = false;
 	
 	$http({
 		method: 'GET',
@@ -622,32 +628,6 @@ app.controller('alertCtrl', ['$scope', '$rootScope', '$timeout', function($scope
 		}, 5000)
 	}
 }])
-
-var deliveryCtrl = function($scope, $rootScope, $stateParams, $http){
-	//init
-	$http({
-		method: 'GET',
-		url: '/api/Delivery/' + $rootScope.idToShow
-	}).success(function(data){
-		$scope.delivery = data
-	})
-	
-	$http({
-		method: 'GET',
-		url: '/api/UrgencyList/'
-	}).success(function(){
-		$scope.urgs = data;
-	})
-	
-	$http({
-		method: 'GET',
-		url: '/api/DoubleTypeList/'
-	}).success(function(data){
-		$scope.doubles = data;
-	})
-	
-	//functions
-}
 
 var deliveriesCtrl = function($scope, $rootScope, $http, $state, ngDialog){
 	//init
@@ -981,4 +961,48 @@ app.controller('tablesCtrl', ['$scope', '$rootScope', '$http', function($scope, 
 	
 	
 	//functions
+}])
+
+app.controller('regularDeliveryCtrl', ['$scope', '$http', '$rootScope', function($scope, $http, $rootScope){
+	//init
+	$rootScope.currPage = 'main.regularDelivery';
+	$rootScope.currMenu = 'main'
+	$rootScope.currTable = 'סבבים קבועים'
+	$rootScope.showLoader = true;
+
+	$http.get('/api/Customers/').success(function(data){
+		$scope.customers = data;
+	})
+
+	$http.get('/api/VehicleTypes').success(function(data){
+		$scope.vehicles = data;
+	})
+
+	$http.get('/api/UrgencyList').success(function(data){
+		$scope.urgs = data;
+	})
+
+	$http.get('/api/DoubleTypeList').success(function(data){
+		$scope.doubles = data;
+	})
+
+	$http.get('/api/Employee').success(function(data){
+		$scope.employees = data;
+	})
+
+	$rootScope.showLoader = false;
+
+
+	//functions
+
+	$scope.customerSelected = function(){
+		$scope.contactMans = undefined;
+
+		for (i in $scope.customers){
+			if($scope.customers[i].id == $scope.regularDelivery.customer){
+				$scope.contactMans = $scope.customers[i].contact_man
+				//console.log($scope.customers[i])
+			}
+		}
+	}
 }])
