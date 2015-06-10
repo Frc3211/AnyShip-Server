@@ -1481,3 +1481,9 @@ table .button.plus{
 	z-index: 10;
 	margin-top: 10px;
 }
+.weekdays label{
+	margin-left: 20px;
+}
+.weekdays input{
+	margin-left: 6px !important;
+}

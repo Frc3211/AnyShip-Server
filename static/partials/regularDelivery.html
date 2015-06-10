@@ -1,5 +1,20 @@
 <div class="form-area-iner scrollbar" ng-controller="regularDeliveryCtrl">
 	<div class="row">
+		<div class="col-sm-4 col-sm-offset-4 form-field">
+			<select ng-change="selectRegularDelivery()" ng-model="selectedRegularDelivery">
+				<option ng-repeat="item in regularDeliveries" value="{{item.id}}">{{ item.id }}</option>
+			</select>
+			<label>בחר סבב קיים</label>
+		</div>
+		<div class="col-sm-1">
+			<button ng-click="newRegularDelivery()" class="btn btn-primary">חדש</button>
+		</div>
+		<div class="col-sm-1">
+			<button ng-click="deleteRegularDelivery()" class="btn btn-danger" ng-class="{'disabled': !regularDelivery.id}">מחק</button>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
 		<div class="col-sm-2 form-field">
 			<input ng-model="regularDelivery.id" disabled>
 			<label>מספר סבב</label>
@@ -157,5 +172,30 @@
 		</div>
 	</div>
 	<hr>
-	<button class="btn btn-primary">שלח</button>
+	<div class="row">
+		<div class="col-sm-12 weekdays">
+			<label>
+				<input type="checkbox" ng-model="regularDelivery.isSunday">יום ראשון
+			</label>
+			<label>
+				<input type="checkbox" ng-model="regularDelivery.isMonday">יום שני
+			</label>
+			<label>
+				<input type="checkbox" ng-model="regularDelivery.isTuesday">יום שלישי
+			</label>
+			<label>
+				<input type="checkbox" ng-model="regularDelivery.isWednesday">יום רביעי
+			</label>
+			<label>
+				<input type="checkbox" ng-model="regularDelivery.isThursday">יום חמישי
+			</label>
+			<label>
+				<input type="checkbox" ng-model="regularDelivery.isFriday">יום חמישי
+			</label>
+			<label>
+				<input type="checkbox" ng-model="regularDelivery.isStaurday">יום שבת
+			</label>
+		</div>
+	</div>
+	<button class="btn btn-primary" ng-click="submit()">שלח</button>
 </div>

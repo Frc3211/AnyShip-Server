@@ -210,7 +210,36 @@ class DeliveryUpdate(generics.RetrieveUpdateDestroyAPIView):
 		serializer.save(client=client)
 
 class RegularDeliveryList(generics.ListCreateAPIView):
-	serializer_class = RegularDeliverySerializer	
+	serializer_class = RegularDeliverySerializer
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return RegularDelivery.objects.filter(client=client)
+
+	def perform_create(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+
+class RegularDeliveryUpdate(generics.RetrieveUpdateDestroyAPIView):
+	serializer_class = RegularDeliverySerializer
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return RegularDelivery.objects.filter(client=client)
+
+	def perform_update(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
 	
 class DeliveryStatusList(generics.ListCreateAPIView):
 	serializer_class = DeliveryStatusSerializer

@@ -51,7 +51,7 @@ class Customer(models.Model):
 	
 	status = models.ForeignKey('Status', blank=True, null=True)
 	customerType = models.ForeignKey('CustomerType', blank=True, null=True)
-	openingDate = models.DateTimeField(blank=True, null=True)
+	openingDate = models.DateField(blank=True, null=True)
 	endDate = models.DateField(blank=True, null=True)
 	
 	priceList = models.ForeignKey('PriceList', null=True, blank=True)
@@ -187,9 +187,9 @@ class Delivery(models.Model):
 	barcode = models.CharField(max_length=15, null=True, blank=True)
 	firstReceiverName = models.CharField(max_length=30, null=True, blank=True)
 	secondReceiverName = models.CharField(max_length=30, null=True, blank=True)
-	firstDeliver = models.ForeignKey('AnyshipUser', null=True, blank=True, related_name='first_deliver')
-	secondDeliver = models.ForeignKey('AnyshipUser', null=True, blank=True, related_name='second_deliver')
-	thirdDeliver = models.ForeignKey('AnyshipUser', null=True, blank=True, related_name='third_deliver')
+	firstDeliver = models.ForeignKey('Employee', null=True, blank=True, related_name='delivery_first_deliver')
+	secondDeliver = models.ForeignKey('Employee', null=True, blank=True, related_name='delivery_second_deliver')
+	thirdDeliver = models.ForeignKey('Employee', null=True, blank=True, related_name='delivery_third_deliver')
 	certNum = models.IntegerField(null=True, blank=True)
 	rakazTime = models.DateTimeField(null=True, blank=True)
 	exeTime = models.DateTimeField(null=True, blank=True)
@@ -203,7 +203,7 @@ class Delivery(models.Model):
 	basicPrice = models.IntegerField(null=True, blank=True)
 	totalPrice = models.IntegerField(null=True, blank=True)
 	
-	employee = models.ForeignKey('AnyshipUser', null=True, blank=True, related_name='employee')
+	employee = models.ForeignKey('Employee', null=True, blank=True, related_name='delivery_employee')
 	
 	"""
 	date = models.DateField(null=True, blank=True)
@@ -246,12 +246,12 @@ class RegularDelivery(models.Model):
 	firstDeliver = models.ForeignKey('Employee', null=True, related_name='first_deliver')
 	secondDeliver = models.ForeignKey('Employee', null=True, related_name='second_deliver')
 	thirdDeliver = models.ForeignKey('Employee', null=True, related_name='third_deliver')
-	lastUpdate = models.DateField(null=True, blank=True)
-	startDate = models.DateField(null=True, blank=True)
-	endDate = models.DateField(null=True, blank=True)
+	lastUpdate = models.DateTimeField(null=True, blank=True)
+	startDate = models.DateTimeField(null=True, blank=True)
+	endDate = models.DateTimeField(null=True, blank=True)
 	
 	sourceCustomer = models.ForeignKey('Customer', null=True, related_name='sourceCustomer')
-	sourceStreet = models.CharField(max_length=40, null=True)
+	sourceStreet = models.CharField(max_length=40, null=True, blank=True)
 	sourceHomeNum = models.IntegerField(null=True)
 	sourceHomeEnter = models.IntegerField(null=True)
 	sourceApart = models.IntegerField(null=True)

@@ -259,9 +259,11 @@ app.controller('newCustomerCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 						console.log(data);
 					})
 				})
+
+				$rootScope.addAlert('לקוח נשמר בהצלחה', 'success')
 			})
 			.error(function(data){
-				console.log(data)
+				$rootScope.addAlert('התרחשה שגיאה, נסה שוב מאוחר יותר', 'danger')
 			})
 		}
 	}
@@ -311,6 +313,10 @@ app.controller('newEmployeeCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 				}
 			}
 			$scope.employee = {}
+
+			$rootScope.addAlert('עובד נמחק בהצלחה', 'success')
+		}).error(function(){
+			$rootScope.addAlert('התרחשה שגיאה, נסה שוב מאוחר יותר', 'danger')
 		})
 	}
 	
@@ -334,6 +340,8 @@ app.controller('newEmployeeCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 				url: '/api/Employee/' + $scope.employee.id,
 				data: $scope.employee,
 				headers : { 'Content-Type': 'application/json' }
+			}).success(function(){
+				$rootScope.addAlert('עובד נשמר בהצלחה', 'success')
 			})
 		} else {
 			$http({
@@ -341,6 +349,8 @@ app.controller('newEmployeeCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 				url: '/api/Employee/',
 				data: $scope.employee,
 				headers : { 'Content-Type': 'application/json' }
+			}).success(function(){
+				$rootScope.addAlert('עובד נשמר בהצלחה', 'success')
 			})
 
 		}
@@ -425,18 +435,20 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 	}
 	
 	$scope.initObjects = function(data){
-		$scope.delivery.customer = data.customer.id
-		$scope.delivery.status = data.status.id
-		$scope.delivery.sender = data.sender.id
-		$scope.delivery.destCity = data.destCity.id
-		$scope.delivery.client = data.client.id
-		$scope.delivery.sourceCity = data.sourceCity.id
-		$scope.delivery.urgency = data.urgency.id
-		$scope.delivery.doubleType = data.doubleType.id
-		$scope.delivery.receiver = data.receiver.id
-		$scope.delivery.vehicleType = data.vehicleType.id
-		$scope.delivery.contactMan = data.contactMan.id
-		$scope.delivery.firstDeliver = data.firstDeliver.id
+		$scope.delivery.customer = (data.customer == undefined) ? undefined : data.customer.id
+		$scope.delivery.status = (data.status == undefined) ? undefined : data.status.id
+		$scope.delivery.sender = (data.sender == undefined) ? undefined : data.sender.id
+		$scope.delivery.destCity = (data.destCity == undefined) ? undefined : data.destCity.id
+		$scope.delivery.client = (data.client == undefined) ? undefined : data.client.id
+		$scope.delivery.sourceCity = (data.sourceCity == undefined) ? undefined : data.sourceCity.id
+		$scope.delivery.urgency = (data.urgency == undefined) ? undefined : data.urgency.id
+		$scope.delivery.doubleType = (data.doubleType == undefined) ? undefined : data.doubleType.id
+		$scope.delivery.receiver = (data.receiver == undefined) ? undefined : data.receiver.id
+		$scope.delivery.vehicleType = (data.vehicleType == undefined) ? undefined : data.vehicleType.id
+		$scope.delivery.contactMan = (data.contactMan == undefined) ? undefined : data.contactMan.id
+		$scope.delivery.firstDeliver = (data.firstDeliver == undefined) ? undefined : data.firstDeliver.id
+		$scope.delivery.secondDeliver = (data.secondDeliver == undefined) ? undefined : data.secondDeliver.id
+		$scope.delivery.thirdDeliver = (data.thirdDeliver == undefined) ? undefined : data.thirdDeliver.id
 		
 		//dates
 		$scope.delivery.created = new Date(data.created)
@@ -467,13 +479,11 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 		}
 	})
 	
-	$scope.$watch('delivery.contactMan', function(value){
-		console.log(value)
-		$scope.delivery.contactMan = value
-	})
+	/*$scope.$watch('delivery.contactMan', function(value){
+		$scope.delivery.contactMan = (value == undefined) ? undefined : value
+	})*/
 	
 	$scope.$watch('contactMans', function(data){
-		console.log(data)
 	})
 	
 	$scope.deleteDelivery = function(){
@@ -526,11 +536,9 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			})
 			.success(function(data){
 				$rootScope.addAlert('המשלוח הוזן!', 'success')
-				//alert("המשלוח הוזן!")
 			})
 			.error(function(data){
 				$rootScope.addAlert('שגיאה', 'danger')
-				//alert("שגיאה!")
 			})
 		}
 	}
@@ -538,13 +546,15 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 	$scope.change = function(){
 		switch($scope.delivery.type){
 			case '0':
+				$scope.delivery.receiver = $scope.delivery.sender;
 				$scope.delivery.sender = $scope.delivery.customer;
 				break;
 			case '1':
+				$scope.delivery.sender = $scope.delivery.receiver;
 				$scope.delivery.receiver = $scope.delivery.customer;
 				break;
 			case '2':
-				console.log(2)
+				$scope.delivery.sender = undefined;
 				break;
 		}
 	}
@@ -747,7 +757,7 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state, ngDialog){
 			return false;
 		}
 		return (!$scope.filterUrgency || item.urgency.name != 'רגיל') &&
-			(!$scope.filterDoubles || item.doubleType.name != 'לא') 	&&
+			(!$scope.filterDoubles || item.doubleType.name != 'רגיל')	&&
 			//(!$scope.filterFutures || ) &&
 			//(!$scope.filterTomorrow ||) &&
 			(!$scope.filterDones || item.status.name == 'בוצע') &&
@@ -990,8 +1000,12 @@ app.controller('regularDeliveryCtrl', ['$scope', '$http', '$rootScope', function
 		$scope.employees = data;
 	})
 
-	$rootScope.showLoader = false;
+	$http.get('/api/RegularDelivery/').success(function(data){
+		$scope.regularDeliveries = data;
+	})
 
+	$rootScope.showLoader = false;
+	//$scope.selectedRegularDelivery = undefined;
 
 	//functions
 
@@ -1004,5 +1018,51 @@ app.controller('regularDeliveryCtrl', ['$scope', '$http', '$rootScope', function
 				//console.log($scope.customers[i])
 			}
 		}
+	}
+
+	$scope.newRegularDelivery = function(){
+		$scope.regularDelivery = {}
+		$scope.selectedRegularDelivery = 0;
+	}
+
+	$scope.deleteRegularDelivery = function(){
+		$http({
+			method: 'DELETE',
+			url: '/api/RegularDelivery/' + $scope.regularDelivery.id
+		}).success(function(){
+			//TODO: remove from list
+			$scope.regularDelivery = {}
+			$scope.selectedRegularDelivery = 0;
+
+			$rootScope.addAlert('נמחק בהצלחה', 'success')
+		}).error(function(data){
+			$rootScope.addAlert('התרחשה שגיאה! נסה שוב מאוחר יותר', 'danger')
+		})
+	}
+
+	$scope.submit = function(){
+		$http({
+			method: 'POST',
+			url: '/api/RegularDelivery/',
+			data: $scope.regularDelivery,
+			headers : { 'Content-Type': 'application/json' }
+		})
+		.success(function(data){
+			$rootScope.addAlert('סבב קבוע הוזן בהצלחה!', 'success')
+			//alert("המשלוח הוזן!")
+		})
+		.error(function(data){
+			$rootScope.addAlert('שגיאה', 'danger')
+			//alert("שגיאה!")
+		})	
+	}
+
+	$scope.selectRegularDelivery = function(){
+		$http({
+			method: 'GET',
+			url: '/api/RegularDelivery/' + $scope.selectedRegularDelivery
+		}).success(function(data){
+			$scope.regularDelivery = data;
+		})
 	}
 }])
