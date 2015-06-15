@@ -390,6 +390,17 @@ class CustomerList(generics.ListCreateAPIView):
 			return None
 		return Customer.objects.filter(client=client)
 
+class MinCustomerList(generics.ListAPIView):
+	serializer_class = MinCustomersSerializer
+
+	def get_queryset(self):
+		user = self.request.user 
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return Customer.objects.filter(client=client)
+
 class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = CustomersSerializer
 	
@@ -421,6 +432,22 @@ class CustomerTypeList(generics.ListCreateAPIView):
 			return None
 		return CustomerType.objects.filter(client=client)
 		
+	def perform_create(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+
+class RegularSiteList(generics.ListCreateAPIView):
+	serializer_class = RegularSiteSerializer
+
+	def get_queryset(self):
+		user = self.request.user 
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return RegularSite.objects.filter(client=client)
+
 	def perform_create(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)

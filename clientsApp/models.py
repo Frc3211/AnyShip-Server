@@ -249,6 +249,7 @@ class RegularDelivery(models.Model):
 	lastUpdate = models.DateTimeField(null=True, blank=True)
 	startDate = models.DateTimeField(null=True, blank=True)
 	endDate = models.DateTimeField(null=True, blank=True)
+	startTime = models.TimeField(null=True, blank=True)
 	
 	sourceCustomer = models.ForeignKey('Customer', null=True, related_name='sourceCustomer')
 	sourceStreet = models.CharField(max_length=40, null=True, blank=True)
@@ -394,5 +395,11 @@ class VehicleType(models.Model):
 	def __unicode__(self):
 		return self.name
 		
-
-	
+class RegularSite(models.Model):
+	client = models.ForeignKey('Client', null=True)
+	name = models.CharField(max_length=75, null=True)
+	customer = models.ForeignKey('Customer', null=True)
+	street = models.CharField(max_length=25, null=True)
+	streetNum = models.IntegerField(null=True)
+	city = models.ForeignKey('City', null=True)
+	toll = models.IntegerField(null=True)

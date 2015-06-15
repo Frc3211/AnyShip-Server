@@ -52,6 +52,11 @@ class CustomersSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Customer
 		#depth = 1
+
+class MinCustomersSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Customer
+		fields = ('id', 'name')
 		
 class UrgencySerializer(serializers.ModelSerializer):
 	class Meta:
@@ -95,3 +100,7 @@ class VehicleTypeSerializer(serializers.ModelSerializer):
 class RegularDeliverySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = RegularDelivery	
+
+class RegularSiteSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = RegularSite

@@ -57,6 +57,10 @@ app.config([ '$stateProvider', '$urlRouterProvider', '$httpProvider', '$interpol
 				url: '/regularDelivery',
 				templateUrl: 'static/partials/regularDelivery.html'
 			})
+			.state('main.regularSites', {
+				url: '/regularSites',
+				templateUrl: 'static/partials/regularSites.html'
+			})
 			.state('main-small', {
 				url: '/main-small',
 				templateUrl: 'static/partials/main-small.html'
@@ -119,8 +123,8 @@ app.run(['$state', '$rootScope', '$http', function($state, $rootScope, $http){
 		$state.go('dashboard');
 	}
 	
-	$http.get('/api/Customers/').success(function(data){
-		$rootScope.customers = data;
+	$http.get('/api/MinCustomers/').success(function(data){
+		$rootScope.customersList = data;
 	})
 	/*
 	$rootScope.findCustomerById = function(id){

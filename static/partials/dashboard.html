@@ -1,13 +1,13 @@
-﻿<div ng-controller="dashboardCtrl">
-	<div class="col-lg-8 col-sm-12 col-xs-12 col-md-6">
-		<div class="row">
-			<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+﻿<div ng-controller="dashboardCtrl" class="full-height">
+	<div class="col-lg-8 col-sm-12 col-xs-12 col-md-6 full-height">
+		<div class="row dashboard-top">
+			<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 ">
 				<div class="profile-area">
 					<div class="profile-picture"><a href="#"><img src="/static/images/profile.png" /></a></div>
 					<h1>{{ user.name }}</h1>
 				</div>
 			</div>
-			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+			<!--<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
 				<div class="friend-list2">
 					<ul>
 						<li><a href="#"><img src="/static/images/flag.png" style="width:100%" /></a></li>
@@ -23,19 +23,20 @@
 						<li><a href="#"><img src="/static/images/2.png"/></a></li>
 					</ul>
 				</div>
-			</div>
+			</div>-->
 		</div>
-		
-		<div class="col-lg-10">
-			<div class="row">
-				<div class="col-lg-3" ng-repeat="menu in menus">
-					<div class="menu-item" style="background: url('/static/images/icons/{{ menu.icon }}') no-repeat center 50px;" ng-click="gotoPage(menu.link)">
-						{{ menu.name }}
+		<div class="row dashboard-menu">
+			<div class="col-lg-10">
+				<div class="row">
+					<div class="col-lg-3" ng-repeat="menu in menus">
+						<div class="menu-item" style="background: url('/static/images/icons/{{ menu.icon }}') no-repeat center 50px;" ng-click="gotoPage(menu.link)">
+							{{ menu.name }}
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<!--<div class="row dashboard-bottom">
 			<div class="col-lg-offset-3 col-xs-offset-3 col-md-offset-3 col-sm-offset-3 col-lg-6 col-xm-6 col-md-6 col-sm-6">
 				<div class="notepad">
 					<div class="left-click"><a href="#"><img src="/static/images/up.png"  /></a></div>
@@ -49,16 +50,16 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div>-->
 	</div>
 	<div class="col-lg-4 col-sm-12 col-xs-12 col-md-6">
 		<div class="dash-header">
-			<div class="left-area-dash table-header-btns">
+			<!--<div class="left-area-dash table-header-btns">
 				<div class="function-1-dash">
 					<img src="/static/images/dot_03.png" class="img-responsive" />
 					<img src="/static/images/finish_03.png" class="img-responsive" />
 				</div>
-			</div>
+			</div>-->
 			<div class="right-area-dash"><h1> התראות משלוחים</h1></div>
 		</div>
 		<div class="dash-iner scrollbar">
@@ -95,27 +96,33 @@
 				<div class="list-part1"><h1>...???? , 8 ????</h1></div>
 			</div>-->
 		</div>
-		<div class="dash-header-2">
-			<div class="left-area-dash table-header-btns">
-				<div class="function-1-dash">
-					<img src="/static/images/dot_03.png" class="img-responsive" />
-					<img src="/static/images/finish_03.png" class="img-responsive" />
+		<div id="notificationsTable">
+			<div class="dash-header-2">
+				<div class="left-area-dash table-header-btns">
+					<!--<div class="function-1-dash">
+						<img src="/static/images/dot_03.png" class="img-responsive" />
+						<img src="/static/images/finish_03.png" class="img-responsive" />
+					</div>-->
 				</div>
+				<div class="right-area-dash"><h1>התראות מערכת</h1></div>
 			</div>
-			<div class="right-area-dash"><h1>התראות מערכת</h1></div>
-		</div>
-		<div class="dash-iner">
-			<div class="list-1">
-				<div class="list-part4-4"><h1>???</h1></div>
-				<div class="list-part2-2"><h1>???  ??? ????? ? ?????? ????? ??????</h1></div>
-			</div>
-			<div class="list-2">
-				<div class="list-part4-3"><h1>???? ???</h1></div>
-				<div class="list-part2-2"><h1>???? ?????? ????? ?? ???</h1></div>
-			</div>
-			<div class="list-2">
-				<div class="list-part4-5"><h1>???? ???</h1></div>
-				<div class="list-part2-2"><h1>???? ?????? ????? ?? ???</h1></div>
+			<div class="dash-iner">
+				<div class="list" ng-class-odd="'odd'" ng-repeat="item in notifications">
+					<div class="notif-type"><h1 style="background-color:{{item.color}};">{{ item.type }}</h1></div>
+					<div class="notif-content"><h1>{{ item.content }}</h1></div>
+				</div>
+				<!--<div class="list-1">
+					<div class="list-part4-4"><h1>???</h1></div>
+					<div class="list-part2-2"><h1>???  ??? ????? ? ?????? ????? ??????</h1></div>
+				</div>
+				<div class="list-2">
+					<div class="list-part4-3"><h1>???? ???</h1></div>
+					<div class="list-part2-2"><h1>???? ?????? ????? ?? ???</h1></div>
+				</div>
+				<div class="list-2">
+					<div class="list-part4-5"><h1>???? ???</h1></div>
+					<div class="list-part2-2"><h1>???? ?????? ????? ?? ???</h1></div>
+				</div>-->
 			</div>
 		</div>
 	</div>

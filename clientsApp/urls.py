@@ -4,6 +4,7 @@ from clientsApp import views
 urlpatterns = [
     url(r'^Customers/$', views.CustomerList.as_view()),
 	url(r'^Customers/(?P<pk>[0-9]+)$', views.CustomerDetail.as_view()),
+	url(r'^MinCustomers/$', views.MinCustomerList.as_view()),
 	url(r'^Cities/$', views.CityList.as_view()),
 	url(r'^Delivery/$', views.DeliveryList.as_view()),
 	url(r'^newDelivery/$', views.DeliveryCreate.as_view()),
@@ -28,5 +29,6 @@ urlpatterns = [
 	url(r'^Banks/$', views.BankList.as_view()),
 	url(r'^CustomerTypes/$', views.CustomerTypeList.as_view()),
 	url(r'^RegularDelivery/$', views.RegularDeliveryList.as_view()),
-	url(r'^RegularDelivery/(?P<pk>[0-9]+)$', views.RegularDeliveryUpdate.as_view())
+	url(r'^RegularDelivery/(?P<pk>[0-9]+)$', views.RegularDeliveryUpdate.as_view()),
+	url(r'^RegularSite/$', views.RegularSiteList.as_view())
 ] 

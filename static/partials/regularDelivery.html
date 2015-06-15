@@ -20,12 +20,11 @@
 			<label>מספר סבב</label>
 		</div>
 		<div class="col-sm-2 form-field">
-			<input type="time">
+			<input type="time" ng-model="regularDelivery.startTime">
 			<label>שעת קבלה</label>
 		</div>
 		<div class="col-sm-2 form-field">
 			<select ng-model="regularDelivery.customer" ng-change="customerSelected()">
-				<option></option>
 				<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
 			</select>
 			<label>לקוח</label>
@@ -33,9 +32,12 @@
 	</div>
 	<div class="row">
 		<div class="col-sm-2 form-field">
-			<select ng-model="regularDelivery.contactMan">
-				<option ng-repeat="contactMan in contactMans" value="{{contactMan.id}}">{{ contactMan.name }}</option>
+			<select ng-options="item.id as item.name for item in contactMans" ng-model="regularDelivery.contactMan">
+
 			</select>
+			<!--<select ng-model="regularDelivery.contactMan">
+				<option ng-repeat="contactMan in contactMans" value="{{contactMan.id}}">{{ contactMan.name }}</option>
+			</select>-->
 			<label>מזמין</label>
 		</div>
 		<div class="col-sm-2 form-field">
@@ -190,7 +192,7 @@
 				<input type="checkbox" ng-model="regularDelivery.isThursday">יום חמישי
 			</label>
 			<label>
-				<input type="checkbox" ng-model="regularDelivery.isFriday">יום חמישי
+				<input type="checkbox" ng-model="regularDelivery.isFriday">יום שישי
 			</label>
 			<label>
 				<input type="checkbox" ng-model="regularDelivery.isStaurday">יום שבת

@@ -48,7 +48,7 @@
 				<option></option>
 				<option ng-repeat="item in contactMans" value="{{ item.id }}">{{ item.name }}</option>
 			</select>-->
-			<select ng-model="delivery.contactMan" ng-options="item.name for item in contactMans"></select>
+			<select ng-model="delivery.contactMan" ng-options="item.id as item.name for item in contactMans"></select>
 			<!--<input type="text" ng-model="delivery.ContactMan">-->
 			<label>איש קשר</label>
 		</div>

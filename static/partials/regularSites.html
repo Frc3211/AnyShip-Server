@@ -1,0 +1,51 @@
+<div class="form-area-iner scrollbar" ng-controller="regularSitesCtrl">
+	<div class="row">
+		<table class="table table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th><span class="button plus" ng-click="addEntry()"></span></th>
+					<th>שם אתר</th>
+					<th>שם לקוח</th>
+					<th>רחוב</th>
+					<th>מס'</th>
+					<th>ישוב</th>
+					<th>אגרה</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="row in regularSites">
+					<td style="width: 40px;">
+						<span class="button minus" ng-click="deleteEntry($index)"></span>
+					</td>
+					<td style="min-width: 90px;">
+						<input type="text" ng-model="row.name">
+					</td>
+					<td style="min-width: 90px;">
+						<select ng-model="row.customer" ng-options="customer.id as customer.name for customer in customersList">
+							<option></option>
+						</select>
+					</td>
+					<td style="min-width: 90px;">
+						<!--<ui-select ng-model="row.dest2" theme="bootstrap">
+							<ui-select-match>{{$select.selected.name}}</ui-select-match>
+							<ui-select-choices repeat="city.id as city in cities | propsFilter: {name: $select.search, id: $select.search}">
+								<div ng-bind-html="city.name | highlight: $select.search"></div>
+							</ui-select-choices>
+						</ui-select>-->
+						<input ng-model="row.street">
+					</td>
+					<td>
+						<input ng-model="row.streetNum">
+					</td>
+					<td style="min-width: 90px;">
+						<select ng-options="city.id as city.name for city in cities" ng-model="row.city">
+						</select>
+					</td>
+					<td>
+						<input ng-model="row.toll">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
