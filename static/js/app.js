@@ -1,4 +1,4 @@
-var app = angular.module('anyShip', ['ui.bootstrap', 'ui.router', 'ngCookies', 'ngSanitize', 'ui.select', 'ngDialog']);
+var app = angular.module('anyShip', ['ui.bootstrap', 'ui.router', 'ngCookies', 'ngSanitize', 'ngDialog']);
 
 app.config([ '$stateProvider', '$urlRouterProvider', '$httpProvider', '$interpolateProvider',
 	function($stateProvider, $urlRouterProvider, $httpProvider, $interpolateProvider){
@@ -35,7 +35,7 @@ app.config([ '$stateProvider', '$urlRouterProvider', '$httpProvider', '$interpol
 			.state('main.deliveries', {
 				url: '/deliveries',
 				templateUrl: 'static/partials/deliveries.html',
-				controller: deliveriesCtrl
+				//controller: deliveriesCtrl
 			})
 			.state('main.newCustomer', {
 				url: '/newCustomer',
@@ -53,8 +53,12 @@ app.config([ '$stateProvider', '$urlRouterProvider', '$httpProvider', '$interpol
 				url: '/priceList',
 				templateUrl: 'static/partials/priceList.html'
 			})
+			.state('main.newRegularDelivery',{
+				url: '/newRegularDelivery',
+				templateUrl: 'static/partials/regularDelivery.html'
+			})
 			.state('main.regularDelivery', {
-				url: '/regularDelivery',
+				url: '/regularDelivery/:id',
 				templateUrl: 'static/partials/regularDelivery.html'
 			})
 			.state('main.regularSites', {
@@ -101,9 +105,9 @@ app.run(['$state', '$rootScope', '$http', function($state, $rootScope, $http){
 		$rootScope.vehicles = data;
 	})
 	
-	$http.get('/api/DeliveryStatus/').success(function(data){
+	/*$http.get('/api/DeliveryStatus/').success(function(data){
 		$rootScope.deliveryStatuses = data;
-	})
+	})*/
 	
 	$http.get('/api/Status/').success(function(data){
 		$rootScope.Statuses = data;
@@ -126,6 +130,32 @@ app.run(['$state', '$rootScope', '$http', function($state, $rootScope, $http){
 	$http.get('/api/MinCustomers/').success(function(data){
 		$rootScope.customersList = data;
 	})
+
+	$rootScope.deliveryStatuses = [{
+		id: 0,
+		name: 'בוצע'
+	}, {
+		id: 1,
+		name: 'הועבר לשליח'
+	}, {
+		id: 2,
+		name: 'חזר מכפולה'
+	}, {
+		id: 3,
+		name: 'מבוטל'
+	}, {
+		id: 4,
+		name: 'בהמתנה'
+	}, {
+		id: 5,
+		name: 'נאסף'
+	}, {
+		id: 6,
+		name: 'פתוח'
+	}, {
+		id: 7,
+		name: 'שליח שני'
+	}]
 	/*
 	$rootScope.findCustomerById = function(id){
 		angular.forEach($rootScope.customers, function(value){

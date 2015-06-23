@@ -100,6 +100,11 @@ class VehicleTypeSerializer(serializers.ModelSerializer):
 class RegularDeliverySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = RegularDelivery	
+		depth = 1
+
+class CreateRegularDeliverySerializer(serializers.ModelSerializer):
+	class Meta:
+		model = RegularDelivery	
 
 class RegularSiteSerializer(serializers.ModelSerializer):
 	class Meta:

@@ -183,7 +183,8 @@ class Delivery(models.Model):
 	doubleType = models.ForeignKey('DoubleType', blank=True, null=True)
 	vehicleType = models.ForeignKey('VehicleType', null=True, blank=True)
 	waiting = models.SmallIntegerField(null=True, blank=True)
-	status = models.ForeignKey('DeliveryStatus', null=True, blank=True)
+	#status = models.ForeignKey('DeliveryStatus', null=True, blank=True)
+	status = models.IntegerField(null=True, blank=True)
 	barcode = models.CharField(max_length=15, null=True, blank=True)
 	firstReceiverName = models.CharField(max_length=30, null=True, blank=True)
 	secondReceiverName = models.CharField(max_length=30, null=True, blank=True)
@@ -193,7 +194,7 @@ class Delivery(models.Model):
 	certNum = models.IntegerField(null=True, blank=True)
 	rakazTime = models.DateTimeField(null=True, blank=True)
 	exeTime = models.DateTimeField(null=True, blank=True)
-	estTime = models.DateTimeField(null=True, blank=True)
+	endTime = models.DateTimeField(null=True, blank=True)
 	isTomorrow = models.BooleanField(default=False, blank=True)
 	signCert = models.BooleanField(default=False, blank=True)
 	numOfPackages = models.SmallIntegerField(null=True, blank=True)
@@ -249,7 +250,8 @@ class RegularDelivery(models.Model):
 	lastUpdate = models.DateTimeField(null=True, blank=True)
 	startDate = models.DateTimeField(null=True, blank=True)
 	endDate = models.DateTimeField(null=True, blank=True)
-	startTime = models.TimeField(null=True, blank=True)
+	startTime = models.DateTimeField(null=True, blank=True)
+	endTime = models.DateTimeField(null=True)
 	
 	sourceCustomer = models.ForeignKey('Customer', null=True, related_name='sourceCustomer')
 	sourceStreet = models.CharField(max_length=40, null=True, blank=True)
@@ -282,7 +284,12 @@ class RegularDelivery(models.Model):
 	isThursday = models.BooleanField(default=False, blank=True)
 	isFriday = models.BooleanField(default=False, blank=True)
 	isSaturday = models.BooleanField(default=False, blank=True)
-	endTime = models.TimeField(null=True)
+
+	"""
+	status = models.IntegerField(null=True, blank=True)
+	statusDate = models.DateTimeField(null=True)
+	"""
+	
 	
 	
 class Employee(models.Model):

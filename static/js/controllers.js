@@ -57,7 +57,7 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', func
 		icon: 'tables.png'
 	}, {
 		name: 'משלוחים קבועים',
-		link: 'main.regularDelivery',
+		link: 'main.newRegularDelivery',
 		icon: 'regularDelivery.png'
 	}, {
 		name: 'אתרים קבועים',
@@ -104,7 +104,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$state', function($scope, $
 			link: 'main.priceList'
 		}, {
 			title: 'סבבים קבועים',
-			link: 'main.regularDelivery'
+			link: 'main.newRegularDelivery'
 		}],
 		commands: [{
 			title: 'משלוחים',
@@ -454,7 +454,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 	
 	$scope.initObjects = function(data){
 		$scope.delivery.customer = (data.customer == undefined) ? undefined : data.customer.id
-		$scope.delivery.status = (data.status == undefined) ? undefined : data.status.id
+		//$scope.delivery.status = (data.status == undefined) ? undefined : data.status.id
 		$scope.delivery.sender = (data.sender == undefined) ? undefined : data.sender.id
 		$scope.delivery.destCity = (data.destCity == undefined) ? undefined : data.destCity.id
 		$scope.delivery.client = (data.client == undefined) ? undefined : data.client.id
@@ -643,7 +643,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 
 app.controller('alertCtrl', ['$scope', '$rootScope', '$timeout', function($scope, $rootScope, $timeout){
 	$scope.alerts = [];
-	  
+	
 	$scope.closeAlert = function() {
 		$scope.alerts.splice($scope.alerts.length-1, 1)
 	};
@@ -652,21 +652,31 @@ app.controller('alertCtrl', ['$scope', '$rootScope', '$timeout', function($scope
 		$scope.alerts.push({msg: msg, type: type})
 		$timeout(function(){
 			$scope.closeAlert()
-			console.log("delete")
 		}, 5000)
 	}
 }])
 
-var deliveriesCtrl = function($scope, $rootScope, $http, $state, ngDialog){
+app.controller('deliveriesCtrl', ['$scope', '$rootScope', '$http', '$state', 'ngDialog', function($scope, $rootScope, $http, $state, ngDialog){
 	//init
 	$rootScope.currMenu = 'commands';
 	$rootScope.showLoader = true;
 	$rootScope.currPage = 'main.deliveries'
-	
-	$http.get('/api/Delivery/').success(function(data){
-		$scope.records = data
+	$scope.records = [];
+
+	$http.get('/api/LastDeliveries/').success(function(data){
+		$scope.records = $scope.records.concat(data);
+		console.log($scope.records)
 		$rootScope.showLoader = false;
-		console.log(data);
+	})
+
+	$http.get('/api/RegularDelivery/').success(function(data){
+		$scope.records = $scope.records.concat(data);
+		console.log($scope.records)
+	})
+
+	$http.get('/api/Employee/').success(function(data){
+		$scope.employees = data;
+		console.log("getting employees")
 	})
 	
 	$rootScope.currTable = "מעקב משלוחים - מוצא / יעד"
@@ -748,6 +758,13 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state, ngDialog){
 			$scope.zeroFilters()
 		}
 	}, {
+		title: 'למחר',
+		icon: 'isTomorrow',
+		method: function(){
+			$scope.zeroFilters();
+			$scope.filterTomorrow = true;
+		}
+	}, {
 		title: 'מותאם אישית',
 		icon: 'opens.png',
 		method: function(){
@@ -769,17 +786,43 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state, ngDialog){
 			}]
 		})
 	}
+
+	$scope.change = function(record, fieldName, id){
+		console.log('changing', record, fieldName)
+		var data = {}
+		data[fieldName] = id
+		if(record.hasOwnProperty('isSunday')){
+			$http({
+				method: 'PUT',
+				url: '/api/RegularDelivery/' + record.id,
+				data: data,
+				headers : { 'Content-Type': 'application/json' }
+			}).success(function(data){
+				console.log(data)
+			})
+		} else {
+			$http({
+				method: 'PUT',
+				url: '/api/Delivery/' + record.id,
+				data: data,
+				headers : { 'Content-Type': 'application/json' }
+			}).success(function(data){
+				console.log(data)
+			})
+		}
+	}
 	
 	$scope.filterDeliveries = function(item){
 		if(!item.status){
-			return false;
+		//	return false;
 		}
+		console.log(item)
 		return (!$scope.filterUrgency || item.urgency.name != 'רגיל') &&
 			(!$scope.filterDoubles || item.doubleType.name != 'רגיל')	&&
 			//(!$scope.filterFutures || ) &&
-			//(!$scope.filterTomorrow ||) &&
-			(!$scope.filterDones || item.status.name == 'בוצע') &&
-			(!$scope.filterOpenes || item.status.name == 'פתוחים') &&
+			(!$scope.filterTomorrow || item.isTomorrow == true) &&
+			(!$scope.filterDones || item.status == 0) &&
+			(!$scope.filterOpenes || item.status == 6) &&
 			// filterLates
 			// filterSpecial
 			// filterInTransit
@@ -811,12 +854,18 @@ var deliveriesCtrl = function($scope, $rootScope, $http, $state, ngDialog){
 		$scope.currRecord = $scope.records[id]
 	}
 	
-	$scope.showRecord = function(event){
+	$scope.showRecord = function(event, record){
 		id = event.currentTarget.dataset['id'];
-		$state.go('main.delivery', {id: id})
+		console.log(id)
+		if(record.hasOwnProperty('isSunday')){
+			$state.go('main.regularDelivery', {id: id})
+		} else {
+			$state.go('main.delivery', {id: id})
+		}
+		
+		
 	}
-}
-
+}])
 
 
 app.controller('priceListCtrl', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http){
@@ -991,9 +1040,20 @@ app.controller('tablesCtrl', ['$scope', '$rootScope', '$http', function($scope, 
 	//functions
 }])
 
-app.controller('regularDeliveryCtrl', ['$scope', '$http', '$rootScope', function($scope, $http, $rootScope){
+app.controller('regularDeliveryCtrl', ['$scope', '$http', '$rootScope', '$state', function($scope, $http, $rootScope, $state){
 	//init
-	$rootScope.currPage = 'main.regularDelivery';
+	$scope.regularDelivery = {}
+	if ($state.params.id){
+		$http({
+			method: 'GET',
+			url: '/api/RegularDelivery/' + $state.params.id
+		}).success(function(data){
+			$scope.regularDelivery = data
+			//$scope.initObjects(data)
+		})
+	}
+
+	$rootScope.currPage = 'main.newRegularDelivery';
 	$rootScope.currMenu = 'main'
 	$rootScope.currTable = 'סבבים קבועים'
 	$rootScope.showLoader = true;
@@ -1084,7 +1144,7 @@ app.controller('regularDeliveryCtrl', ['$scope', '$http', '$rootScope', function
 		} else {
 			$http({
 				method: 'POST',
-				url: '/api/RegularDelivery/',
+				url: '/api/newRegularDelivery/',
 				data: $scope.regularDelivery,
 				headers : { 'Content-Type': 'application/json' }
 			})

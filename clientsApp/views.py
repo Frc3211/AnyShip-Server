@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFou
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from itertools import chain
 from rest_framework.decorators import api_view
 from rest_framework import generics, status
 from rest_framework.views import APIView
@@ -12,7 +13,7 @@ from rest_framework.response import Response
 from clientsApp.permissions import *
 from rest_auth.views import *
 import json
-
+from django.core import serializers
 
 
 def index(request):
@@ -50,6 +51,21 @@ def getPrice(request, pk, city1, city2):
 	entry['waiting'] = e[0].waiting
 	
 	return HttpResponse(json.dumps([entry]))
+
+
+def getLastDeliveries(request):
+	user = request.user
+	try:
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+	except:
+		return None
+
+	deliveries = Delivery.objects.filter(client=client).filter(status=0)
+	regularDeliveries = RegularDelivery.objects.filter(client=client)
+
+	results = list(deliveries) + list(regularDeliveries)
+	results = serializers.serialize("json", results)
+	return HttpResponse(results)
 
 class PriceListList(generics.ListCreateAPIView):
 	serializer_class = PriceListSerializer
@@ -178,6 +194,17 @@ class DeliveryList(generics.ListCreateAPIView):
 		except:
 			return None
 		return Delivery.objects.filter(client=client)
+
+class LastDeliveryList(generics.ListAPIView):
+	serializer_class = DeliverySerializer
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return Delivery.objects.filter(client=client).exclude(status=0)
 		
 class DeliveryCreate(generics.CreateAPIView):
 	serializer_class = CreateDeliverySerializer
@@ -225,8 +252,24 @@ class RegularDeliveryList(generics.ListCreateAPIView):
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
 
+class RegularDeliveryCreate(generics.ListCreateAPIView):
+	serializer_class = CreateRegularDeliverySerializer
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return RegularDelivery.objects.filter(client=client)
+
+	def perform_create(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+
 class RegularDeliveryUpdate(generics.RetrieveUpdateDestroyAPIView):
-	serializer_class = RegularDeliverySerializer
+	serializer_class = CreateRegularDeliverySerializer
 
 	def get_queryset(self):
 		user = self.request.user

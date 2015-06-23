@@ -28,7 +28,9 @@ urlpatterns = [
 	url(r'^ContactMan/(?P<pk>[0-9]+)$', views.ContactManUpdate.as_view()),
 	url(r'^Banks/$', views.BankList.as_view()),
 	url(r'^CustomerTypes/$', views.CustomerTypeList.as_view()),
+	url(r'^newRegularDelivery/$', views.RegularDeliveryCreate.as_view()),
 	url(r'^RegularDelivery/$', views.RegularDeliveryList.as_view()),
 	url(r'^RegularDelivery/(?P<pk>[0-9]+)$', views.RegularDeliveryUpdate.as_view()),
-	url(r'^RegularSite/$', views.RegularSiteList.as_view())
+	url(r'^RegularSite/$', views.RegularSiteList.as_view()),
+	url(r'^LastDeliveries/$', views.LastDeliveryList.as_view())
 ] 
