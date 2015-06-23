@@ -285,11 +285,7 @@ class RegularDelivery(models.Model):
 	isFriday = models.BooleanField(default=False, blank=True)
 	isSaturday = models.BooleanField(default=False, blank=True)
 
-	"""
 	status = models.IntegerField(null=True, blank=True)
-	statusDate = models.DateTimeField(null=True)
-	"""
-	
 	
 	
 class Employee(models.Model):
