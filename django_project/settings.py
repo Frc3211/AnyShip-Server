@@ -43,7 +43,8 @@ INSTALLED_APPS = (
 	'allauth.account',
 	'rest_auth.registration',
 	'clientsApp',
-	'corsheaders'
+	'corsheaders',
+    'django_cron'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -80,7 +81,8 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+#TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Jerusalem'
 
 USE_I18N = True
 
@@ -135,3 +137,7 @@ REST_FRAMEWORK = {
     ),
 	'DATETIME_FORMAT': 'iso-8601'
 }
+
+CRON_CLASSES = [
+    'clientsApp.crons.RegularDeliveryCron',
+]
