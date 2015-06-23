@@ -60,7 +60,7 @@ def getLastDeliveries(request):
 	except:
 		return None
 
-	deliveries = Delivery.objects.filter(client=client).filter(status=0)
+	deliveries = Delivery.objects.filter(client=client)#.filter(status=0)
 	regularDeliveries = RegularDelivery.objects.filter(client=client)
 
 	results = list(deliveries) + list(regularDeliveries)
