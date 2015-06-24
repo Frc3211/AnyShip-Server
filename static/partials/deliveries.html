@@ -79,8 +79,8 @@
 					<!--<div class="timing"><h1>6E +<br />07</h1></div>-->
 					<div class="second-1"><h1 popover="{{record.created| date : 'HH:mm'}}" popover-trigger="mouseenter">{{ record.created | date : 'HH:mm' }}</h1></div>
 					<div class="third-1"><h1 popover="{{record.customer.name}}" popover-trigger="mouseenter">{{ record.customer.name }}</h1></div>
-					<div class="third-1-2"><h1 popover="{{ record.sourceStreet }} {{ record.sourceStreetNum }}" popover-trigger="mouseenter">{{ record.sourceStreet }} {{ record.sourceStreetNum }}</h1></div>
-					<div class="third-1-3"><h1 popover="{{record.destStreet}}" popover-trigger="mouseenter">{{ record.destStreet }} {{ record.destStreetNum }}</h1></div>
+					<div class="third-1-2"><h1 popover="{{ record.sourceStreet }} {{ record.sourceHomeNum }}, {{ record.sourceCity.name }}" popover-trigger="mouseenter">{{ record.sourceStreet }} {{ record.sourceHomeNum }}, {{ record.sourceCity.name }}</h1></div>
+					<div class="third-1-3"><h1 popover="{{record.destStreet}} {{ record.destHomeNum }}, {{ record.destCity.name }}" popover-trigger="mouseenter">{{ record.destStreet }} {{ record.destHomeNum }}, {{ record.destCity.name }}</h1></div>
 					<div class="fourth-1"><h1 popover="{{record.urgency.name}}" popover-trigger="mouseenter">{{ record.urgency.name }}</h1></div>
 					<div class="fourth-1-2"><h1 popover="{{record.doubleType.name}}" popover-trigger="mouseenter">{{ record.doubleType.name }}</h1></div>
 					<div class="five-1">

@@ -32,5 +32,8 @@ urlpatterns = [
 	url(r'^RegularDelivery/$', views.RegularDeliveryList.as_view()),
 	url(r'^RegularDelivery/(?P<pk>[0-9]+)$', views.RegularDeliveryUpdate.as_view()),
 	url(r'^RegularSite/$', views.RegularSiteList.as_view()),
-	url(r'^LastDeliveries/$', views.LastDeliveryList.as_view())
+	url(r'^RegularSite/(?P<pk>[0-9]+)$', views.RegularSiteUpdate.as_view()),
+	url(r'^LastDeliveries/$', views.LastDeliveryList.as_view()),
+	url(r'^LastRegularDeliveries/$', views.LastRegularDeliveries.as_view()),
+	url(r'^RegularSitesForCustomer/(?P<customer>[0-9]+)$', views.RegularSitesForCustomer.as_view()),
 ] 

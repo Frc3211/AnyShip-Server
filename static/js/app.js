@@ -1,4 +1,4 @@
-var app = angular.module('anyShip', ['ui.bootstrap', 'ui.router', 'ngCookies', 'ngSanitize', 'ngDialog']);
+var app = angular.module('anyShip', ['ui.bootstrap', 'ui.router', 'ngCookies', 'ngSanitize', 'ngDialog', 'ui.select']);
 
 app.config([ '$stateProvider', '$urlRouterProvider', '$httpProvider', '$interpolateProvider',
 	function($stateProvider, $urlRouterProvider, $httpProvider, $interpolateProvider){
@@ -133,7 +133,7 @@ app.run(['$state', '$rootScope', '$http', function($state, $rootScope, $http){
 
 	$rootScope.deliveryStatuses = [{
 		id: 0,
-		name: 'בוצע'
+		name: 'פתוח'
 	}, {
 		id: 1,
 		name: 'הועבר לשליח'
@@ -151,7 +151,7 @@ app.run(['$state', '$rootScope', '$http', function($state, $rootScope, $http){
 		name: 'נאסף'
 	}, {
 		id: 6,
-		name: 'פתוח'
+		name: 'בוצע'
 	}, {
 		id: 7,
 		name: 'שליח שני'

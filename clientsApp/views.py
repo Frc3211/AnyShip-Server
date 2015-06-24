@@ -60,9 +60,8 @@ def getLastDeliveries(request):
 	except:
 		return None
 
-	deliveries = Delivery.objects.filter(client=client)#.filter(status=0)
+	deliveries = Delivery.objects.filter(client=client).filter(status=6)
 	regularDeliveries = RegularDelivery.objects.filter(client=client)
-
 	results = list(deliveries) + list(regularDeliveries)
 	results = serializers.serialize("json", results)
 	return HttpResponse(results)
@@ -204,7 +203,7 @@ class LastDeliveryList(generics.ListAPIView):
 			client = Client.objects.get(anyshipuser=user.anyshipuser)
 		except:
 			return None
-		return Delivery.objects.filter(client=client).exclude(status=0)
+		return Delivery.objects.filter(client=client).exclude(status=6)
 		
 class DeliveryCreate(generics.CreateAPIView):
 	serializer_class = CreateDeliverySerializer
@@ -251,6 +250,17 @@ class RegularDeliveryList(generics.ListCreateAPIView):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
+
+class LastRegularDeliveries(generics.ListAPIView):
+	serializer_class = RegularDeliverySerializer
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return RegularDelivery.objects.filter(client=client).exclude(status=6)
 
 class RegularDeliveryCreate(generics.ListCreateAPIView):
 	serializer_class = CreateRegularDeliverySerializer
@@ -495,3 +505,31 @@ class RegularSiteList(generics.ListCreateAPIView):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
+
+class RegularSiteUpdate(generics.RetrieveUpdateDestroyAPIView):
+	serializer_class = RegularSiteSerializer
+
+	def get_queryset(self):
+		user = self.request.user 
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return RegularSite.objects.filter(client=client)
+
+	def perform_update(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+
+class RegularSitesForCustomer(generics.ListAPIView):
+	serializer_class = RegularSiteSerializer
+
+	def get_queryset(self):
+		customer = self.kwargs['customer']
+		user = self.request.user 
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return RegularSite.objects.filter(client=client).filter(customer=customer)

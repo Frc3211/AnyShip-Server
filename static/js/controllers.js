@@ -51,11 +51,11 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', func
 		name: 'מחירונים',
 		link: 'main.priceList',
 		icon: 'pricelist.png'
-	}, {
+	},/* {
 		name: 'טבלאות',
 		link: 'main-small.tables',
 		icon: 'tables.png'
-	}, {
+	}, */{
 		name: 'משלוחים קבועים',
 		link: 'main.newRegularDelivery',
 		icon: 'regularDelivery.png'
@@ -387,6 +387,12 @@ app.controller('citiesCtrl', ['$scope', '$rootScope', function($scope, $rootScop
 app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '$state', '$modal', function($scope, $rootScope, $http, $filter, $state, $modal){
 	//init
 	$scope.delivery = {}
+
+	$scope.delivery.numOfPackages = 0;
+	$scope.delivery.numOfBoxes = 0;
+	$scope.delivery.waiting = 0;
+	$scope.delivery.status = 0;
+
 	if ($state.params.id){
 		$http({
 			method: 'GET',
@@ -435,13 +441,16 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 		$scope.delivery.doubleType = $scope.doubles[0].id;
 	})
 	
-	$scope.delivery.numOfPackages = 0;
-	$scope.delivery.numOfBoxes = 0;
-	$scope.delivery.waiting = 0;
-	$scope.delivery.status = $rootScope.deliveryStatuses[0].id;
 	
-	
-	//functions	
+	//functions
+	$scope.addTaggingTo1 = function(a){
+		$scope.combo1.push({name:a})
+		//$scope.delivery.receiver = a
+	}
+	$scope.addTaggingTo2 = function(a){
+		$scope.combo2.push({name:a})
+		//$scope.delivery.receiver = a
+	}
 	$scope.selectDelivery = function(){
 		$http({
 			method: 'GET',
@@ -484,6 +493,16 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			}
 		}
 	}*/
+
+	$scope.customerSelected = function(){
+		$http({
+			method: 'GET',
+			url: '/api/RegularSitesForCustomer/' + $scope.delivery.customer
+		}).success(function(data){
+			$scope.regularSites = data;
+			$scope.combo1 = $scope.regularSites;
+		})
+	}
 	
 	$scope.$watch('delivery.customer', function(data){
 		for (i in $scope.customers){
@@ -669,7 +688,7 @@ app.controller('deliveriesCtrl', ['$scope', '$rootScope', '$http', '$state', 'ng
 		$rootScope.showLoader = false;
 	})
 
-	$http.get('/api/RegularDelivery/').success(function(data){
+	$http.get('/api/LastRegularDeliveries/').success(function(data){
 		$scope.records = $scope.records.concat(data);
 		console.log($scope.records)
 	})
@@ -803,7 +822,7 @@ app.controller('deliveriesCtrl', ['$scope', '$rootScope', '$http', '$state', 'ng
 		} else {
 			$http({
 				method: 'PUT',
-				url: '/api/Delivery/' + record.id,
+				url: '/api/updateDelivery/' + record.id,
 				data: data,
 				headers : { 'Content-Type': 'application/json' }
 			}).success(function(data){
@@ -873,6 +892,7 @@ app.controller('priceListCtrl', ['$scope', '$rootScope', '$http', function($scop
 	$rootScope.currPage = 'main.priceList';
 	$rootScope.currMenu = 'main'
 	$rootScope.showLoader = true;
+	$rootScope.currTable = 'מחירונים';
 	
 	$http.get('/api/PriceList/').success(function(data){
 		$scope.priceLists = data;
@@ -1176,15 +1196,65 @@ app.controller('regularDeliveryCtrl', ['$scope', '$http', '$rootScope', '$state'
 	}
 }])
 
-app.controller('regularSitesCtrl', ['$scope', '$http', function($scope, $http){
+app.controller('regularSitesCtrl', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http){
 	// init
+	$rootScope.currTable = 'אתרים קבועים';
 	$http.get('/api/RegularSite/').success(function(data){
 		$scope.regularSites = data;
 	})
 
-
 	// functions
-	$scope.submit = function(){
+	$scope.save = function(){
+		angular.forEach($scope.regularSites, function(obj, index){
+			if(!obj.id){
+				$http({
+					method: 'POST',
+					url: '/api/RegularSite/',
+					data: obj,
+					headers : { 'Content-Type': 'application/json' }
+				}).success(function(data){
+					$rootScope.addAlert('נשמר בהצלחה', 'success')
+					obj.id = data.id
+				}).error(function(data){
+					$rootScope.addAlert('שגיאה, נסה שוב מאוחר יותר', 'danger')
+				})
+			} else if(obj.changed){
+				$http({
+					method: 'PUT',
+					url: '/api/RegularSite/' + obj.id,
+					data: obj,
+					headers : { 'Content-Type': 'application/json' }
+				}).success(function(data){
+					obj.changed = false;
+					$rootScope.addAlert('נשמר בהצלחה', 'success')
+				}).error(function(data){
+					$rootScope.addAlert('שגיאה, נסה שוב מאוחר יותר', 'danger')
+				})
+			} else {
+				console.log(index + " not changed")
+			}
+		})
+	}
 
+	$scope.change = function(row){
+		console.log(row)
+		row.changed = true;
+	}
+
+	$scope.addEntry = function(){
+		$scope.regularSites.push({})
+	}
+
+	$scope.deleteEntry = function(index){
+		console.log($scope.regularSites[index])
+		if($scope.regularSites[index].id != undefined){
+			$http({
+				method: 'DELETE',
+				url: '/api/RegularSite/' + $scope.regularSites[index].id
+			}).success(function(data){
+				$rootScope.addAlert('נמחק בהצלחה', 'success')
+			})
+		} 
+		$scope.regularSites.splice(index, 1);
 	}
 }])

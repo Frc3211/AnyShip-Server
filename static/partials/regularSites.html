@@ -1,5 +1,12 @@
 <div class="form-area-iner scrollbar" ng-controller="regularSitesCtrl">
 	<div class="row">
+		<div class="form-header">
+			<ul class="buttons pull-left">
+				<li class="save" ng-click="save()"></li>
+			</ul>
+		</div>
+	</div>
+	<div class="row">
 		<table class="table table-bordered table-condensed">
 			<thead>
 				<tr>
@@ -18,10 +25,10 @@
 						<span class="button minus" ng-click="deleteEntry($index)"></span>
 					</td>
 					<td style="min-width: 90px;">
-						<input type="text" ng-model="row.name">
+						<input type="text" ng-model="row.name" ng-change="change(row)">
 					</td>
 					<td style="min-width: 90px;">
-						<select ng-model="row.customer" ng-options="customer.id as customer.name for customer in customersList">
+						<select ng-model="row.customer" ng-options="customer.id as customer.name for customer in customersList" ng-change="change(row)">
 							<option></option>
 						</select>
 					</td>
@@ -32,17 +39,17 @@
 								<div ng-bind-html="city.name | highlight: $select.search"></div>
 							</ui-select-choices>
 						</ui-select>-->
-						<input ng-model="row.street">
+						<input ng-model="row.street" ng-change="change(row)">
 					</td>
 					<td>
-						<input ng-model="row.streetNum">
+						<input type="number" ng-model="row.streetNum" ng-change="change(row)">
 					</td>
 					<td style="min-width: 90px;">
-						<select ng-options="city.id as city.name for city in cities" ng-model="row.city">
+						<select ng-options="city.id as city.name for city in cities" ng-model="row.city" ng-change="change(row)">
 						</select>
 					</td>
 					<td>
-						<input ng-model="row.toll">
+						<input type="number" ng-model="row.toll" ng-change="change(row)">
 					</td>
 				</tr>
 			</tbody>

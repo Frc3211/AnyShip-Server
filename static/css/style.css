@@ -70,10 +70,9 @@ input:focus{
 	width:100%;
 	clear:both;
 	display: block;
-	height: 200px;
-	border-bottom-right-radius:10px;
-	border-bottom-left-radius:10px;
+	/*height: 200px;*/
 	background: #fff;
+	height: calc(100% - 80px);
 }
 .deliveries-list-item{
 	float:right;
@@ -164,17 +163,30 @@ input:focus{
 .dash-header-2{
 	width:100%;
 	background:#31363d;
-	padding:10px 0px;
-	margin:66px auto 0px auto;
+	/*padding:10px 0px;
+	margin:66px auto 0px auto;*/
 	display:table;
 	border-top-left-radius:10px;
 	border-top-right-radius:10px;
+	height: 80px;
 }
-#notificationsTable .list{
+#deliveriesTable{
+	height: 45%;
+	position: absolute;
+	width: 90%;
+}
+#notificationsTable{
+	height: 30%;
+	position: absolute;
+	bottom: 0;
+	width: 90%;
+}
+.notification-list-item{
 	float: right;
 	width: 100%;
+	margin-right: -10px;
 }
-#notificationsTable .list.odd{
+.notification-list-item.odd{
 	background: #f5f5f5;
 }
 .notif-type h1{
@@ -1359,6 +1371,9 @@ hr{
 .form-header .buttons li.send{
 	background: url('/static/images/icons/v.png') no-repeat;
 }
+.form-header .buttons li.save{
+	background: url('/static/images/icons/save.png') no-repeat;
+}
 table .button{
 	display: block;
 	margin: auto;
@@ -1512,4 +1527,7 @@ table .button.plus{
 }
 .weekdays input{
 	margin-left: 6px !important;
+}
+.ng-invalid{
+	border: solid 1px red;
 }

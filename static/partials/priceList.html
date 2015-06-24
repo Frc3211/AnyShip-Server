@@ -44,45 +44,21 @@
 								<div ng-bind-html="city.name | highlight: $select.search"></div>
 							</ui-select-choices>
 						</ui-select>-->
-						<select ng-model="row.sourceCity">
-							<option></option>
-							<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
+						<select ng-options="city.id as city.name for city in cities" ng-model="row.sourceCity">
 						</select>
 					</td>
 					<td style="min-width: 90px;">
-						<!--<ui-select ng-model="row.dest1" theme="bootstrap">
-							<ui-select-match>{{$select.selected.name}}</ui-select-match>
-							<ui-select-choices repeat="city.id as city in cities | propsFilter: {name: $select.search, id: $select.search}">
-								<div ng-bind-html="city.name | highlight: $select.search"></div>
-							</ui-select-choices>
-						</ui-select>-->
-						<select ng-model="row.dest1">
-							<option></option>
-							<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
+						<select ng-options="city.id as city.name for city in cities" ng-model="row.dest1">
+						</select>
+						
+					</td>
+					<td style="min-width: 90px;">
+						<select ng-options="city.id as city.name for city in cities" ng-model="row.dest2">
 						</select>
 					</td>
 					<td style="min-width: 90px;">
-						<!--<ui-select ng-model="row.dest2" theme="bootstrap">
-							<ui-select-match>{{$select.selected.name}}</ui-select-match>
-							<ui-select-choices repeat="city.id as city in cities | propsFilter: {name: $select.search, id: $select.search}">
-								<div ng-bind-html="city.name | highlight: $select.search"></div>
-							</ui-select-choices>
-						</ui-select>-->
-						<select ng-model="row.dest2">
-							<option></option>
-							<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
-						</select>
-					</td>
-					<td style="min-width: 90px;">
-						<!--<ui-select ng-model="row.dest3" theme="bootstrap">
-							<ui-select-match>{{$select.selected.name}}</ui-select-match>
-							<ui-select-choices repeat="city.id as city in cities | propsFilter: {name: $select.search, id: $select.search}">
-								<div ng-bind-html="city.name | highlight: $select.search"></div>
-							</ui-select-choices>
-						</ui-select>-->
-						<select ng-model="row.dest3">
-							<option></option>
-							<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
+						<select ng-options="city.id as city.name for city in cities" ng-model="row.dest3">
+
 						</select>
 					</td>
 					<td><input type="text" class="form-control" ng-model="row.exeTime"></td>

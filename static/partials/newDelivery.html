@@ -25,12 +25,6 @@
 	</div>
 	<div class="row">
 		<div class="col-sm-6 form-field">
-			<!--<ui-select ng-model="delivery.customer" theme="bootstrap">
-				<ui-select-match>{{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="customer.id as customer in customers | propsFilter: {name: $select.search, id: $select.search}">
-					<div ng-bind-html="customer.name | highlight: $select.search"></div>
-				</ui-select-choices>
-			</ui-select>-->
 			<select ng-model="delivery.customer" ng-change="customerSelected()">
 				<option ng-repeat="customer in customers" value="{{ customer.id }}" data-index="{{$index}}">{{ customer.name }}</option>
 			</select>
@@ -68,11 +62,6 @@
 		</span>
 	</div>
 	<div class="row">
-		<!--<div class="col-sm-1">
-			<label class="form-title">
-				מוצא
-			</label>
-		</div>-->
 		<div class="col-sm-2 form-field">
 			<!--<ui-select ng-model="delivery.sender" theme="bootstrap">
 				<ui-select-match>{{$select.selected.name}}</ui-select-match>
@@ -80,10 +69,16 @@
 					<div ng-bind-html="customer.name | highlight: $select.search"></div>
 				</ui-select-choices>
 			</ui-select>-->
-			<select ng-model="delivery.sender">
+			<ui-select tagging="addTaggingTo1" tagging-tokens="ENTER|TAB" ng-model="delivery.sender" theme="bootstrap" sortable="true" ng-disabled="disabled">
+				<ui-select-match>{{$select.selected.name}}</ui-select-match>
+				<ui-select-choices repeat="item.name as item in combo1 | filter:$select.search">
+					{{item.name}}
+				</ui-select-choices>
+			</ui-select>{{delivery.sender}}
+			<!--<select ng-model="delivery.sender">
 				<option></option>
 				<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
-			</select>
+			</select>-->
 			<label>שם חברה</label>
 		</div>
 		<div class="col-sm-2 form-field">
@@ -94,28 +89,22 @@
 			<label>טלפון</label>
 		</div>
 		<div class="col-sm-1 form-field">
-			<input type="text" ng-model="delivery.sourceHomeNum">
+			<input type="number" ng-model="delivery.sourceHomeNum">
 			<label>מס' בית</label>
 		</div>
 		<div class="col-sm-1 form-field">
-			<input type="text" ng-model="delivery.sourceHomeEnter">
+			<input type="number" ng-model="delivery.sourceHomeEnter">
 			<label>כניסה</label>
 		</div>
 		<div class="col-sm-1 form-field">
-			<input type="text" ng-model="delivery.sourceFloor">
+			<input type="number" ng-model="delivery.sourceFloor">
 			<label>קומה</label>
 		</div>
 		<div class="col-sm-1 form-field">
-			<input type="text" ng-model="delivery.sourceApart">
+			<input type="number" ng-model="delivery.sourceApart">
 			<label>דירה</label>
 		</div>
 		<div class="col-sm-2 form-field">
-			<!--<ui-select ng-model="delivery.sourceCity" theme="bootstrap">
-				<ui-select-match>{{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="city.id as city in cities | propsFilter: {name: $select.search, id: $select.search}">
-					<div ng-bind-html="city.name | highlight: $select.search"></div>
-				</ui-select-choices>
-			</ui-select>-->
 			<select class="combobox" ng-model="delivery.sourceCity">
 				<option></option>
 				<option ng-repeat="city in cities" value="{{ city.id }}">{{ city.name }}</option>
@@ -129,22 +118,17 @@
 		</span>
 	</div>	
 	<div class="row">
-		<!--<div class="col-sm-1">
-			<label class="form-title">
-				יעד
-			</label>
-		</div>-->
 		<div class="col-sm-2 form-field">
-			<!--<ui-select ng-model="delivery.receiver" theme="bootstrap" ng-change="change()">
-				<ui-select-match>{{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="customer.id as customer in customers | propsFilter: {name: $select.search, id: $select.search}">
-					<div ng-bind-html="customer.name | highlight: $select.search"></div>
-				</ui-select-choices>
-			</ui-select>-->
-			<select ng-model="delivery.receiver">
+			<!--<select ng-model="delivery.receiver">
 				<option></option>
 				<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
-			</select>
+			</select>-->
+			<ui-select tagging="addTaggingTo2" tagging-tokens="ENTER|TAB" ng-model="delivery.receiver" theme="bootstrap" sortable="true" ng-disabled="disabled">
+				<ui-select-match>{{$select.selected.name}}</ui-select-match>
+				<ui-select-choices repeat="item.name in combo2 | filter:$select.search">
+					{{item.name}}
+				</ui-select-choices>
+			</ui-select>
 			<label>שם חברה</label>
 		</div>
 		<div class="col-sm-2 form-field">
@@ -155,28 +139,22 @@
 			<label>טלפון</label>
 		</div>
 		<div class="col-sm-1 form-field">
-			<input type="text" ng-model="delivery.destHomeNum">
+			<input type="number" ng-model="delivery.destHomeNum">
 			<label>מס' בית</label>
 		</div>
 		<div class="col-sm-1 form-field">
-			<input type="text" ng-model="delivery.destHomeEnter">
+			<input type="number" ng-model="delivery.destHomeEnter">
 			<label>כניסה</label>
 		</div>
 		<div class="col-sm-1 form-field">
-			<input type="text" ng-model="delivery.destFloor">
+			<input type="number" ng-model="delivery.destFloor">
 			<label>קומה</label>
 		</div>
 		<div class="col-sm-1 form-field">
-			<input type="text" ng-model="delivery.destApart">
+			<input type="number" ng-model="delivery.destApart">
 			<label>דירה</label>
 		</div>
 		<div class="col-sm-2 form-field">
-			<!--<ui-select ng-model="delivery.destCity" theme="bootstrap">
-				<ui-select-match>{{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="city.id as city in cities | propsFilter: {name: $select.search, id: $select.search}">
-					<div ng-bind-html="city.name | highlight: $select.search"></div>
-				</ui-select-choices>
-			</ui-select>-->
 			<select ng-model="delivery.destCity">
 				<option></option>
 				<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
@@ -221,13 +199,11 @@
 			<label>המתנה בדקות</label>
 		</div>
 		<div class="col-sm-2 form-field">
-			<select ng-model="delivery.status" class="combobox">
-				<option ng-repeat="status in deliveryStatuses" value="{{ status.id }}">{{ status.name }}</option>
-			</select>
+			<select ng-options="status.id as status.name for status in deliveryStatuses" ng-model="delivery.status"></select>
 			<label>סטטוס</label>
 		</div>
 		<div class="col-sm-2 form-field">
-			<input type="text" ng-model="delivery.barcode">
+			<input type="number" ng-model="delivery.barcode">
 			<label>ברקוד</label>
 		</div>
 		<div class="col-sm-2 form-field">
