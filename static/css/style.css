@@ -40,7 +40,6 @@ input:focus{
 .dash-header{
 	width:100%;
 	background:#31363d;
-	padding:15px 0px;
 	margin:auto;
 	display:table;
 }
@@ -59,6 +58,7 @@ input:focus{
 	float:right;
 }
 .right-area-dash h1{
+	line-height: 30px;
 	margin-top:20px;
 	font-size:30px;
 	color:#FFF;
@@ -72,7 +72,7 @@ input:focus{
 	display: block;
 	/*height: 200px;*/
 	background: #fff;
-	height: calc(100% - 80px);
+	height: calc(100% - 70px);
 }
 .deliveries-list-item{
 	float:right;
@@ -168,7 +168,6 @@ input:focus{
 	display:table;
 	border-top-left-radius:10px;
 	border-top-right-radius:10px;
-	height: 80px;
 }
 #deliveriesTable{
 	height: 45%;
@@ -1530,4 +1529,16 @@ table .button.plus{
 }
 .ng-invalid{
 	border: solid 1px red;
+}
+span.ui-select-match-text{
+	display: block;
+	width: 90%;
+}
+span.ui-select-match-text span{
+	display: block;
+	width: 100%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	margin-top: 4px;
+	text-align: right;
 }

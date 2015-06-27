@@ -75,7 +75,7 @@
 					</div>
 				</div>
 				<!--<div class="tracking-list" ng-repeat="record in records | filter:filterDeliveries" data-id="{{ record.id }}" ng-click="selectRecord($index)" ng-dblclick="showRecord($event)">-->
-				<div class="tracking-list" ng-repeat="record in records | filter:filterDeliveries" data-id="{{ record.id }}" ng-click="selectRecord($index)" ng-dblclick="showRecord($event, record)">
+				<div class="tracking-list" ng-repeat="record in records | orderBy:'endTime' | filter:filterDeliveries" data-id="{{ record.id }}" ng-click="selectRecord($index)" ng-dblclick="showRecord($event, record)">
 					<!--<div class="timing"><h1>6E +<br />07</h1></div>-->
 					<div class="second-1"><h1 popover="{{record.created| date : 'HH:mm'}}" popover-trigger="mouseenter">{{ record.created | date : 'HH:mm' }}</h1></div>
 					<div class="third-1"><h1 popover="{{record.customer.name}}" popover-trigger="mouseenter">{{ record.customer.name }}</h1></div>

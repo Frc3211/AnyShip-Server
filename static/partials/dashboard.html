@@ -64,7 +64,7 @@
 				<div class="right-area-dash"><h1> התראות משלוחים</h1></div>
 			</div>
 			<div class="dash-iner scrollbar">
-				<div ng-repeat="delivery in deliveries | limitTo: 5" class="deliveries-list-item" data-id="{{delivery.id}}" ng-dblclick="showRecord($event)">
+				<div ng-repeat="delivery in deliveries | limitTo: 15" class="deliveries-list-item" data-id="{{delivery.id}}" ng-dblclick="showRecord($event)">
 					<div class="list-time" ng-class-odd="'odd'"><span>{{ delivery.created | date:'HH:mm'}}</span></div>
 					<div class="list-customer"><span>{{ delivery.customer.name }}</span></div>
 					<div class="list-dest"><span>{{ delivery.destCity.name }}</span></div>

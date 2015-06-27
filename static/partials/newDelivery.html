@@ -1,7 +1,7 @@
 ﻿<div class="form-area-iner scrollbar" ng-controller="newDeliveryCtrl">
 	<div class="row">
 		<div class="col-sm-4 col-sm-offset-4 form-field">
-			<select ng-change="selectDelivery()" ng-options="delivery.id for delivery in deliveries" ng-model="selectedDelivery"></select>
+			<select ng-change="selectDelivery()" ng-options="delivery.id for delivery in deliveries | orderBy:'id'" ng-model="selectedDelivery"></select>
 			<label>בחר מספר משלוח קיים</label>
 		</div>
 		<div class="col-sm-1">
@@ -25,7 +25,7 @@
 	</div>
 	<div class="row">
 		<div class="col-sm-6 form-field">
-			<select ng-model="delivery.customer" ng-change="customerSelected()">
+			<select ng-model="delivery.customer" ng-change="customerSelected()" id="customer">
 				<option ng-repeat="customer in customers" value="{{ customer.id }}" data-index="{{$index}}">{{ customer.name }}</option>
 			</select>
 			<label>לקוח</label>
@@ -47,7 +47,7 @@
 			<label>איש קשר</label>
 		</div>
 		<div class="col-sm-2 form-field">
-			<select ng-model="delivery.type" ng-change="change()" class="combobox">
+			<select ng-model="delivery.type" ng-change="typeCallback()" class="combobox">
 				<option value="0">שליחות</option>
 				<option value="1">איסוף</option>
 				<option value="2">העברה</option>
@@ -69,12 +69,12 @@
 					<div ng-bind-html="customer.name | highlight: $select.search"></div>
 				</ui-select-choices>
 			</ui-select>-->
-			<ui-select tagging="addTaggingTo1" tagging-tokens="ENTER|TAB" ng-model="delivery.sender" theme="bootstrap" sortable="true" ng-disabled="disabled">
+			<ui-select tagging="addTagging" ng-change="senderChanged()" tagging-tokens="ENTER" ng-model="delivery.senderObj" theme="bootstrap" sortable="true" ng-disabled="disabled">
 				<ui-select-match>{{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="item.name as item in combo1 | filter:$select.search">
+				<ui-select-choices repeat="item in regularSites | filter:$select.search">
 					{{item.name}}
 				</ui-select-choices>
-			</ui-select>{{delivery.sender}}
+			</ui-select>
 			<!--<select ng-model="delivery.sender">
 				<option></option>
 				<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
@@ -123,9 +123,9 @@
 				<option></option>
 				<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
 			</select>-->
-			<ui-select tagging="addTaggingTo2" tagging-tokens="ENTER|TAB" ng-model="delivery.receiver" theme="bootstrap" sortable="true" ng-disabled="disabled">
+			<ui-select tagging="addTagging" ng-change="receiverChanged()" tagging-tokens="ENTER" ng-model="delivery.receiverObj" theme="bootstrap" sortable="true" ng-disabled="disabled">
 				<ui-select-match>{{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="item.name in combo2 | filter:$select.search">
+				<ui-select-choices repeat="item in regularSites | filter:$select.search">
 					{{item.name}}
 				</ui-select-choices>
 			</ui-select>
