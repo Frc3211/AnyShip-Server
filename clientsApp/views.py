@@ -20,17 +20,17 @@ def index(request):
 	return render(request, "index.html")
 	if not request.user.is_authenticated():
 		return redirect("/login")
-	
+
 	context = {}
 	try:
 		context['name'] = AnyshipUser.objects.get(user = request.user).name
 	except ObjectDoesNotExist:
 		context['name'] = ''
 	return render(request, "index.html", context)
-	
+
 def login(request):
 	return render(request, "login.html")
-	
+
 def is_authenticated(request):
 	if not request.user.is_authenticated():
 		print 'Not'
@@ -38,7 +38,7 @@ def is_authenticated(request):
 	print 'Yes'
 	anyshipUser = AnyshipUser.objects.get(user=request.user)
 	return HttpResponse(json.dumps({'state': 'authorized', 'user': {'name': anyshipUser.name }}), content_type="application/json")
-	
+
 def getPrice(request, pk, city1, city2):
 	customer = Customer.objects.get(pk=pk)
 	e = PriceListEntry.objects.filter(Q(list=customer.priceList), (Q(sourceCity=city1) & Q(dest1=city2)) | (Q(sourceCity=city2) & Q(dest1=city1)))
@@ -49,7 +49,8 @@ def getPrice(request, pk, city1, city2):
 	entry['multiForPackage'] = e[0].multiForPackage
 	entry['multiForBox'] = e[0].multiForBox
 	entry['waiting'] = e[0].waiting
-	
+	entry['exeTime'] = e[0].exeTime
+
 	return HttpResponse(json.dumps([entry]))
 
 
@@ -68,28 +69,12 @@ def getLastDeliveries(request):
 
 class PriceListList(generics.ListCreateAPIView):
 	serializer_class = PriceListSerializer
-	
+
 	def perform_create(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-	
-	def get_queryset(self):
-		user = self.request.user
-		try:
-			client = Client.objects.get(anyshipuser=user.anyshipuser)
-		except:
-			return None 
-		return PriceList.objects.filter(client=client)
 
-class PriceListUpdate(generics.RetrieveUpdateDestroyAPIView):
-	serializer_class = PriceListSerializer
-	
-	def perform_update(self, serializer):
-		user = self.request.user
-		client = Client.objects.get(anyshipuser=user.anyshipuser)
-		serializer.save(client=client)
-		
 	def get_queryset(self):
 		user = self.request.user
 		try:
@@ -97,79 +82,127 @@ class PriceListUpdate(generics.RetrieveUpdateDestroyAPIView):
 		except:
 			return None
 		return PriceList.objects.filter(client=client)
-	
-class UrgencyList(generics.ListCreateAPIView):
-	serializer_class = UrgencySerializer
-	
-	def perform_create(self, serializer):
-		user = self.request.user
-		client = Client.objects.get(anyshipuser=user.anyshipuser)
-		serializer.save(client=client)
-	
-	def get_queryset(self):
-		user = self.request.user
-		try:
-			client = Client.objects.get(anyshipuser=user.anyshipuser)
-		except:
-			return None 
-		return Urgency.objects.filter(client=client)
-		
-class DoubleTypeList(generics.ListCreateAPIView):
-	serializer_class = DoubleTypeSerializer
-	
-	def perform_create(self, serializer):
-		user = self.request.user
-		client = Client.objects.get(anyshipuser=user.anyshipuser)
-		serializer.save(client=client)
-	
-	def get_queryset(self):
-		user = self.request.user
-		try:
-			client = Client.objects.get(anyshipuser=user.anyshipuser)
-		except:
-			return None 
-		return DoubleType.objects.filter(client=client)
 
-class PriceListEntryList(generics.ListCreateAPIView):
-	serializer_class = PriceListEntrySerializer
-	
-	def perform_create(self, serializer):
-		user = self.request.user
-		client = Client.objects.get(anyshipuser=user.anyshipuser)
-		serializer.save(client=client)
-	
-	def get_queryset(self):
-		user = self.request.user
-		try:
-			client = Client.objects.get(anyshipuser=user.anyshipuser)
-		except:
-			return None 
-		return PriceListEntry.objects.filter(client=client)
-		
-class PriceListEntryUpdate(generics.RetrieveUpdateDestroyAPIView):
-	serializer_class = PriceListEntrySerializer
-	
+class PriceListUpdate(generics.RetrieveUpdateDestroyAPIView):
+	serializer_class = PriceListSerializer
+
 	def perform_update(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-	
+
 	def get_queryset(self):
 		user = self.request.user
 		try:
 			client = Client.objects.get(anyshipuser=user.anyshipuser)
 		except:
-			return None 
-		return PriceListEntry.objects.filter(client=client)
-		
-class VehicleTypeList(generics.ListCreateAPIView):
-	serializer_class = VehicleTypeSerializer
-	
+			return None
+		return PriceList.objects.filter(client=client)
+
+class UrgencyList(generics.ListCreateAPIView):
+	serializer_class = UrgencySerializer
+
 	def perform_create(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-		
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return Urgency.objects.filter(client=client)
+
+class UrgencyListUpdate(generics.RetrieveUpdateDestroyAPIView):
+	serializer_class = UrgencySerializer
+
+	def perform_update(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return Urgency.objects.filter(client=client)
+
+class DoubleTypeList(generics.ListCreateAPIView):
+	serializer_class = DoubleTypeSerializer
+
+	def perform_create(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return DoubleType.objects.filter(client=client)
+
+class DoubleTypeListUpdate(generics.RetrieveUpdateDestroyAPIView):
+	serializer_class = DoubleTypeSerializer
+
+	def perform_update(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return DoubleType.objects.filter(client=client)
+
+class PriceListEntryList(generics.ListCreateAPIView):
+	serializer_class = PriceListEntrySerializer
+
+	def perform_create(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return PriceListEntry.objects.filter(client=client)
+
+class PriceListEntryUpdate(generics.RetrieveUpdateDestroyAPIView):
+	serializer_class = PriceListEntrySerializer
+
+	def perform_update(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return PriceListEntry.objects.filter(client=client)
+
+class VehicleTypeList(generics.ListCreateAPIView):
+	serializer_class = VehicleTypeSerializer
+
+	def perform_create(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+
 	def get_queryset(self):
 		user = self.request.user
 		try:
@@ -177,15 +210,31 @@ class VehicleTypeList(generics.ListCreateAPIView):
 		except:
 			return None
 		return VehicleType.objects.filter(client=client)
-	
+
+class VehicleTypeListUpdate(generics.RetrieveUpdateDestroyAPIView):
+	serializer_class = VehicleTypeSerializer
+
+	def perform_update(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return VehicleType.objects.filter(client=client)
+
 class DeliveryList(generics.ListCreateAPIView):
 	serializer_class = DeliverySerializer
-	
+
 	def perform_create(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-	
+
 	def get_queryset(self):
 		user = self.request.user
 		try:
@@ -204,24 +253,24 @@ class LastDeliveryList(generics.ListAPIView):
 		except:
 			return None
 		return Delivery.objects.filter(client=client).exclude(status=6)
-		
+
 class DeliveryCreate(generics.CreateAPIView):
 	serializer_class = CreateDeliverySerializer
-	
+
 	def perform_create(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-		
+
 	def perform_update(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-		
-		
+
+
 class DeliveryUpdate(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = CreateDeliverySerializer
-	
+
 	def get_queryset(self):
 		user = self.request.user
 		try:
@@ -229,7 +278,7 @@ class DeliveryUpdate(generics.RetrieveUpdateDestroyAPIView):
 		except:
 			return None
 		return Delivery.objects.filter(client=client)
-		
+
 	def perform_update(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
@@ -293,15 +342,15 @@ class RegularDeliveryUpdate(generics.RetrieveUpdateDestroyAPIView):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-	
+
 class DeliveryStatusList(generics.ListCreateAPIView):
 	serializer_class = DeliveryStatusSerializer
-	
+
 	def perform_create(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-	
+
 	def get_queryset(self):
 		user = self.request.user
 		try:
@@ -309,15 +358,15 @@ class DeliveryStatusList(generics.ListCreateAPIView):
 		except:
 			return None
 		return DeliveryStatus.objects.filter(client=client)
-		
+
 class ContactManList(generics.ListCreateAPIView):
 	serializer_class = ContactManSerializer
-	
+
 	def perform_create(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-		
+
 	def get_queryset(self):
 		user = self.request.user
 		try:
@@ -325,15 +374,15 @@ class ContactManList(generics.ListCreateAPIView):
 		except:
 			return None
 		return ContactMan.objects.filter(client=client)
-		
+
 class ContactManUpdate(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = ContactManSerializer
-	
+
 	def perform_update(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-	
+
 	def get_queryset(self):
 		user = self.request.user
 		try:
@@ -341,15 +390,15 @@ class ContactManUpdate(generics.RetrieveUpdateDestroyAPIView):
 		except:
 			return None
 		return ContactMan.objects.filter(client=client)
-	
+
 class StatusList(generics.ListCreateAPIView):
 	serializer_class = StatusSerializer
-	
+
 	def perform_create(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-	
+
 	def get_queryset(self):
 		user = self.request.user
 		try:
@@ -357,15 +406,15 @@ class StatusList(generics.ListCreateAPIView):
 		except:
 			return None
 		return Status.objects.filter(client=client)
-	
+
 class EmployeeList(generics.ListCreateAPIView):
 	serializer_class = EmployeeSerializer
-	
+
 	def perform_create(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-	
+
 	def get_queryset(self):
 		user = self.request.user
 		try:
@@ -373,15 +422,15 @@ class EmployeeList(generics.ListCreateAPIView):
 		except:
 			return None
 		return Employee.objects.filter(client=client)
-		
+
 class EmployeeUpdate(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = EmployeeSerializer
-	
+
 	def perform_update(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-		
+
 	def get_queryset(self):
 		user = self.request.user
 		try:
@@ -389,15 +438,15 @@ class EmployeeUpdate(generics.RetrieveUpdateDestroyAPIView):
 		except:
 			return None
 		return Employee.objects.filter(client=client)
-		
+
 class JobList(generics.ListCreateAPIView):
 	serializer_class = JobSerializer
-	
+
 	def perform_create(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-	
+
 	def get_queryset(self):
 		user = self.request.user
 		try:
@@ -405,16 +454,16 @@ class JobList(generics.ListCreateAPIView):
 		except:
 			return None
 		return Job.objects.filter(client=client)
-	
-	
+
+
 class DeliveryDetail(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = DeliverySerializer
-	
+
 	def perform_update(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-	
+
 	def get_queryset(self):
 		user = self.request.user
 		try:
@@ -422,21 +471,21 @@ class DeliveryDetail(generics.RetrieveUpdateDestroyAPIView):
 		except:
 			return None
 		return Delivery.objects.filter(client=client)
-		
+
 class BankList(generics.ListCreateAPIView):
 	serializer_class = BankSerializer
 	queryset = Bank.objects.all()
 
 class CustomerList(generics.ListCreateAPIView):
 	serializer_class = CustomersSerializer
-	
+
 	def perform_create(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-	
+
 	def get_queryset(self):
-		user = self.request.user 
+		user = self.request.user
 		try:
 			client = Client.objects.get(anyshipuser=user.anyshipuser)
 		except:
@@ -447,7 +496,7 @@ class MinCustomerList(generics.ListAPIView):
 	serializer_class = MinCustomersSerializer
 
 	def get_queryset(self):
-		user = self.request.user 
+		user = self.request.user
 		try:
 			client = Client.objects.get(anyshipuser=user.anyshipuser)
 		except:
@@ -456,35 +505,35 @@ class MinCustomerList(generics.ListAPIView):
 
 class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = CustomersSerializer
-	
+
 	def perform_update(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-	
+
 	def get_queryset(self):
-		user = self.request.user 
+		user = self.request.user
 		try:
 			client = Client.objects.get(anyshipuser=user.anyshipuser)
 		except:
 			return None
 		return Customer.objects.filter(client=client)
-	
+
 class CityList(generics.ListAPIView):
 	queryset = City.objects.all()
 	serializer_class = CitySerializer
-	
+
 class CustomerTypeList(generics.ListCreateAPIView):
 	serializer_class = CustomerTypeSerializer
-	
+
 	def get_queryset(self):
-		user = self.request.user 
+		user = self.request.user
 		try:
 			client = Client.objects.get(anyshipuser=user.anyshipuser)
 		except:
 			return None
 		return CustomerType.objects.filter(client=client)
-		
+
 	def perform_create(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
@@ -494,7 +543,7 @@ class RegularSiteList(generics.ListCreateAPIView):
 	serializer_class = RegularSiteSerializer
 
 	def get_queryset(self):
-		user = self.request.user 
+		user = self.request.user
 		try:
 			client = Client.objects.get(anyshipuser=user.anyshipuser)
 		except:
@@ -510,7 +559,7 @@ class RegularSiteUpdate(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = RegularSiteSerializer
 
 	def get_queryset(self):
-		user = self.request.user 
+		user = self.request.user
 		try:
 			client = Client.objects.get(anyshipuser=user.anyshipuser)
 		except:
@@ -527,7 +576,7 @@ class RegularSitesForCustomer(generics.ListAPIView):
 
 	def get_queryset(self):
 		customer = self.kwargs['customer']
-		user = self.request.user 
+		user = self.request.user
 		try:
 			client = Client.objects.get(anyshipuser=user.anyshipuser)
 		except:

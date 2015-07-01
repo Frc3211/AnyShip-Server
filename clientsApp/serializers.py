@@ -41,6 +41,7 @@ class DeliverySerializer(serializers.ModelSerializer):
 class DeliveryStatusSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = DeliveryStatus
+		exclude = ('client', 'id')
 		
 				
 class ContactManSerializer(serializers.ModelSerializer):

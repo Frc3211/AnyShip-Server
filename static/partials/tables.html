@@ -1,13 +1,24 @@
 <div class="form-area-iner scrollbar" ng-controller="tablesCtrl">
-	<table>
+	<div class="row">
+		<div class="form-header">
+			<ul class="buttons pull-left">
+				<li class="save" ng-click="save()"></li>
+			</ul>
+		</div>
+	</div>
+	<table class="table table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th ng-repeat="field in currTable.fields">{{ field }}</th>
+				<th><span class="button plus" ng-click="addEntry()"></span></th>
+				<th ng-repeat="field in table.fields">{{ field.title }}</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="row in rows">
-				<td><input type="text" class="form-control" value="{{ row.name }}"></td>
+				<td style="width: 40px;">
+					<span class="button minus" ng-click="deleteEntry($index)"></span>
+				</td>
+				<td ng-repeat="field in table.fields"><input type="text" class="form-control" ng-model="row[field.name]" ng-change="changed(row)"></td>
 			</tr>
 		</tbody>
 	</table>

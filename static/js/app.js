@@ -6,7 +6,7 @@ app.config([ '$stateProvider', '$urlRouterProvider', '$httpProvider', '$interpol
 		$httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 		$urlRouterProvider
-		
+
 		.otherwise('/dashboard');
 
 		$stateProvider
@@ -65,12 +65,12 @@ app.config([ '$stateProvider', '$urlRouterProvider', '$httpProvider', '$interpol
 				url: '/regularSites',
 				templateUrl: 'static/partials/regularSites.html'
 			})
-			.state('main-small', {
+			/*.state('main-small', {
 				url: '/main-small',
 				templateUrl: 'static/partials/main-small.html'
-			})
-			.state('main-small.tables', {
-				url: '/tables',
+			})*/
+			.state('main.tables', {
+				url: '/tables/:tableName',
 				templateUrl: 'static/partials/tables.html'
 			})
 	}
@@ -88,7 +88,7 @@ app.run(['$state', '$rootScope', '$http', function($state, $rootScope, $http){
 				else if(!$rootScope.user){
 					$rootScope.user = {}
 				}
-				
+
 				$rootScope.user.name = data.user.name;
 			})
 			.error(function(){
@@ -96,40 +96,44 @@ app.run(['$state', '$rootScope', '$http', function($state, $rootScope, $http){
 			})
 		}
 	})
-	
+
 	$http.get('/api/Cities/').success(function(data){
 		$rootScope.cities = data;
 	})
-	
+
 	$http.get('/api/VehicleTypes/').success(function(data){
 		$rootScope.vehicles = data;
 	})
-	
+
 	/*$http.get('/api/DeliveryStatus/').success(function(data){
 		$rootScope.deliveryStatuses = data;
 	})*/
-	
+
 	$http.get('/api/Status/').success(function(data){
 		$rootScope.Statuses = data;
 	})
-	
+
 	$http.get('/api/Jobs').success(function(data){
 		$rootScope.jobs = data;
 	})
-	
+
 	$http.get('/api/Banks').success(function(data){
-		$rootScope.banks = data; 
+		$rootScope.banks = data;
 	})
-	
+
 	$rootScope.showLoader = false;
-	
+
 	$rootScope.goToHome = function(){
 		$state.go('dashboard');
 	}
-	
+
 	$http.get('/api/MinCustomers/').success(function(data){
 		$rootScope.customersList = data;
 	})
+
+	$rootScope.gotoPage = function(page, params){
+		$state.go(page, params)
+	}
 
 	$rootScope.deliveryStatuses = [{
 		id: 0,
@@ -165,7 +169,7 @@ app.run(['$state', '$rootScope', '$http', function($state, $rootScope, $http){
 				return value
 			}
 		})
-		
+
 		return {}
 	}*/
 }]);
@@ -186,7 +190,7 @@ app.filter('urgency', function(){
 			return 'דחוף'
 		} else if(input == 2){
 			return 'דחוף מאוד'
-		} 
+		}
 	}
 })
 

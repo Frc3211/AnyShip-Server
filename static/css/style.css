@@ -24,6 +24,13 @@ body{
 .container, #mainView, .full-height{
 	height: 100%;
 }
+#mainView{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+}
 input:focus{
    outline:none;
   }
@@ -49,7 +56,7 @@ input:focus{
 }
 .function-1-dash{
 	float:left;
-	
+
 }
 .function-1-dash img{
 	margin:10px 0px;
@@ -65,6 +72,10 @@ input:focus{
 	text-align:right;
 	margin-right:20px;
 	margin-bottom: 20px;
+}
+#deliveriesTable .dash-iner{
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
 }
 .dash-iner{
 	width:100%;
@@ -683,14 +694,14 @@ input:focus{
 	padding:10px 0px 10px 45px;
 	font-size:20px;
 	color:#a3acbe;
-	width:100%;	
+	width:100%;
 }
 .input-area input[type=password]{
 	background:url(../images/pas2_06.png) no-repeat left center,url(../images/pas1_06.png) no-repeat right center;
 	padding:18px 40px 5px 45px;
 	font-size:15px;
 	color:#dd3e3e;
-	width:100%;	
+	width:100%;
 }
 
 .login-button2 input[type=submit]{
@@ -763,7 +774,7 @@ input:focus{
 	margin:auto;
 	width:100%;
 	height: calc(100% - 160px);
-	direction:rtl; 
+	direction:rtl;
 }
 .form-area-iner3{
 	margin:auto;
@@ -780,7 +791,7 @@ input:focus{
 	display: block;
 	padding-top:20px;
 	padding-bottom: 20px;
-} 
+}
 .scrollbar::-webkit-scrollbar-thumb{
 	background-color:#565656;
 	border-radius:10px;
@@ -975,7 +986,7 @@ input:focus{
 }
 
 @media(min-width:385px) and (max-width:500px){
-	
+
 
 .right-area-dif{
 	float:left;
@@ -1114,18 +1125,19 @@ input:focus{
 }
 
 .table-page-main{
-	height: 100%;
-	margin: auto;
+	height: 92%;
+	/*margin: auto;
 	position: absolute;
-	/*top: 0;
+	top: 0;
 	bottom: 0;
 	right: 0;
-	left: 0;*/
+	left: 0;
 	padding: 2% 0 2% 0;
-	width: 1150px;
+	width: 1150px;*/
 }
 .table-page-left-area{
-	width: 1000px;
+	max-width: 988px;
+	min-width: 420px;
 	float: right;
 }
 .table-page-right-area{
@@ -1315,10 +1327,10 @@ hr{
 }
 
 @keyframes bouncedelay {
-  0%, 80%, 100% { 
+  0%, 80%, 100% {
     transform: scale(0.0);
     -webkit-transform: scale(0.0);
-  } 40% { 
+  } 40% {
     transform: scale(1.0);
     -webkit-transform: scale(1.0);
   }
@@ -1377,6 +1389,7 @@ table .button{
 	display: block;
 	margin: auto;
 	margin-top: 5px;
+	margin-bottom: 5px;
 	width: 25px;
 	height: 25px;
 	background-position: center center;
@@ -1451,7 +1464,7 @@ table .button.plus{
 	height: 26px;
 	position: absolute;
 	top: 12px;
-	left: 12px; 
+	left: 12px;
 	cursor: pointer;
 	opacity: 0.2;
 }
@@ -1541,4 +1554,11 @@ span.ui-select-match-text span{
 	overflow: hidden;
 	margin-top: 4px;
 	text-align: right;
+}
+.popup .btn{
+	border: none !important;
+	border-radius: 0px !important;
+}
+.modal-body .btn{
+	width: 100%;
 }

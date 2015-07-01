@@ -19,22 +19,22 @@ from pygments import highlight
 
 class Client(models.Model):
 	name = models.CharField(max_length=30)
-	
+
 	def __unicode__(self):
 		return self.name
-	
+
 class AnyshipUser(models.Model):
 	client = models.ForeignKey('Client')
 	user = models.OneToOneField(User)
 	name = models.CharField(max_length=30)
-	
+
 	def __unicode__(self):
 		return "%s - %s" % (self.name, self.client)
-	
+
 class Customer(models.Model):
 	client = models.ForeignKey('Client', null=True, blank=True)
 	created = models.DateTimeField(auto_now_add=True)
-	
+
 	name = models.CharField(max_length=50)
 	streetName = models.CharField(max_length=40, null=True, blank=True)
 	streetNum = models.IntegerField(null=True, blank=True)
@@ -48,21 +48,21 @@ class Customer(models.Model):
 	fax = models.CharField(max_length=20, null=True, blank=True)
 	email = models.EmailField(max_length=75, blank=True, null=True)
 	physicalAddress = models.CharField(max_length=100, blank=True, null=True)
-	
+
 	status = models.ForeignKey('Status', blank=True, null=True)
 	customerType = models.ForeignKey('CustomerType', blank=True, null=True)
 	openingDate = models.DateField(blank=True, null=True)
 	endDate = models.DateField(blank=True, null=True)
-	
+
 	priceList = models.ForeignKey('PriceList', null=True, blank=True)
 	bank = models.ForeignKey('Bank', blank=True, null=True)
 	branchNum = models.SmallIntegerField(blank=True, null=True)
 	accountNum = models.IntegerField(blank=True, null=True)
-	
+
 	comment = models.CharField(max_length=300, blank=True, null=True)
 	rakazMsg = models.CharField(max_length=300, blank=True, null=True)
 	jumpMsg = models.CharField(max_length=300, null=True, blank=True)
-	
+
 	"""
 	#arrive = models.IntegerField(blank=True, null=True)
 	term = models.ForeignKey('Term', blank=True, null=True)
@@ -95,61 +95,61 @@ class Customer(models.Model):
 	#IsThermo
 	#SnifID
 	"""
-	
+
 	def __unicode__(self):
 		return self.name
-	
+
 	class Meta:
 		ordering = ('name',)
-		
+
 class PaymentMethod(models.Model):
 	name = models.CharField(max_length=20)
-		
+
 class City(models.Model):
 	name = models.CharField(max_length=50)
 	#areaCode = models.SmallIntegerField()
-	
+
 	def __unicode__(self):
 		return self.name
-	
+
 class Status(models.Model):
 	client = models.ForeignKey('Client', null=True, blank=True)
 	name = models.CharField(max_length=50)
-	
+
 	def __unicode__(self):
 		return self.name
-	
+
 class CustomerType(models.Model):
 	client = models.ForeignKey('Client', null=True, blank=True)
 	name = models.CharField(max_length=30)
-	
+
 class Term(models.Model):
 	name = models.CharField(max_length=30)
-	
+
 class Bank(models.Model):
 	name = models.CharField(max_length=30)
 	num = models.SmallIntegerField()
-	
+
 class SalesMan(models.Model):
 	client = models.ForeignKey('Client')
 	name = models.CharField(max_length=50)
-	
+
 class Urgency(models.Model):
 	client = models.ForeignKey('Client', null=True, blank=True)
 	name = models.CharField(max_length=30)
 	multiplier = models.FloatField(blank=True)
-	
+
 	def __unicode__(self):
 		return self.name
-		
+
 class DoubleType(models.Model):
-	client = models.ForeignKey('Client', blank=True)
+	client = models.ForeignKey('Client', blank=True, null=True)
 	name = models.CharField(max_length=30)
 	multiplier = models.FloatField(blank=True)
-	
+
 	def __unicode__(self):
 		return self.name
-	
+
 class Delivery(models.Model):
 	client = models.ForeignKey('Client', related_name='deliveries', null=True, blank=True)
 	created = models.DateTimeField(auto_now=True, null=True, blank=True)
@@ -158,7 +158,7 @@ class Delivery(models.Model):
 	customer = models.ForeignKey('Customer', null=True, blank=True)
 	contactMan = models.ForeignKey('ContactMan', blank=True, null=True)
 	type = models.PositiveSmallIntegerField(null=True, blank=True)
-	
+
 	#sender = models.ForeignKey('Customer', related_name='Customer3', null=True, blank=True)
 	sender = models.CharField(max_length=50, null=True, blank=True)
 	#receiver = models.ForeignKey('Customer', related_name='Customer2', null=True, blank=True)
@@ -177,10 +177,10 @@ class Delivery(models.Model):
 	destFloor = models.IntegerField(null=True, blank=True)
 	sourceApart = models.IntegerField(null=True, blank=True)
 	destApart = models.IntegerField(null=True, blank=True)
-	
+
 	comment = models.CharField(max_length=300, null=True, blank=True)
 	instructions = models.CharField(max_length=300, null=True, blank=True)
-	
+
 	urgency = models.ForeignKey('Urgency', null=True, blank=True)
 	doubleType = models.ForeignKey('DoubleType', blank=True, null=True)
 	vehicleType = models.ForeignKey('VehicleType', null=True, blank=True)
@@ -201,13 +201,13 @@ class Delivery(models.Model):
 	signCert = models.BooleanField(default=False, blank=True)
 	numOfPackages = models.SmallIntegerField(null=True, blank=True)
 	numOfBoxes = models.SmallIntegerField(null=True, blank=True)
-	
-	
+
+
 	basicPrice = models.IntegerField(null=True, blank=True)
 	totalPrice = models.IntegerField(null=True, blank=True)
-	
+
 	employee = models.ForeignKey('Employee', null=True, blank=True, related_name='delivery_employee')
-	
+
 	"""
 	date = models.DateField(null=True, blank=True)
 	time = models.TimeField(null=True, blank=True)
@@ -241,7 +241,7 @@ class CustomerConatctMan(models.Model):
 
 class RegularDelivery(models.Model):
 	client = models.ForeignKey('Client', null=True, blank=True)
-	
+
 	created = models.DateTimeField(auto_now=True)
 	customer = models.ForeignKey('Customer', null=True, blank=True)
 	contactMan = models.ForeignKey('ContactMan', null=True, blank=True)
@@ -254,7 +254,7 @@ class RegularDelivery(models.Model):
 	endDate = models.DateTimeField(null=True, blank=True)
 	startTime = models.DateTimeField(null=True, blank=True)
 	endTime = models.DateTimeField(null=True)
-	
+
 	sourceCustomer = models.ForeignKey('Customer', null=True, related_name='sourceCustomer')
 	sourceStreet = models.CharField(max_length=40, null=True, blank=True)
 	sourceHomeNum = models.IntegerField(null=True)
@@ -265,7 +265,7 @@ class RegularDelivery(models.Model):
 	destHomeNum = models.IntegerField(null=True)
 	destHomeEnter = models.IntegerField(null=True)
 	destApart = models.IntegerField(null=True)
-	
+
 	urgency = models.ForeignKey('Urgency', null=True)
 	doubleType = models.ForeignKey('DoubleType', null=True)
 	vehicleType = models.ForeignKey('VehicleType', null=True)
@@ -273,12 +273,12 @@ class RegularDelivery(models.Model):
 	numOfPackages = models.IntegerField(null=True)
 	numOfBoxes = models.IntegerField(null=True)
 	comment = models.CharField(max_length=300, null=True)
-	
+
 	basicPrice = models.IntegerField(null=True)
 	totalPrice = models.IntegerField(null=True)
 	firstDeliverPrice = models.IntegerField(null=True)
 	secondDeliverPrice = models.IntegerField(null=True)
-	
+
 	isSunday = models.BooleanField(default=False, blank=True)
 	isMonday = models.BooleanField(default=False, blank=True)
 	isTuesday = models.BooleanField(default=False, blank=True)
@@ -288,11 +288,11 @@ class RegularDelivery(models.Model):
 	isSaturday = models.BooleanField(default=False, blank=True)
 
 	status = models.IntegerField(null=True, blank=True)
-	
-	
+
+
 class Employee(models.Model):
 	client = models.ForeignKey('Client', null=True, blank=True)
-	
+
 	name = models.CharField(max_length=50)
 	idNum = models.IntegerField(null=True, blank=True)
 	birthDate = models.DateField(null=True, blank=True)
@@ -300,11 +300,11 @@ class Employee(models.Model):
 	address = models.CharField(max_length=50, null=True, blank=True)
 	city = models.ForeignKey('City', null=True, blank=True)
 	maritalStatus = models.SmallIntegerField(null=True, blank=True)
-	
+
 	email = models.EmailField(max_length=75, null=True, blank=True)
 	phone1 = models.CharField(max_length=30, null=True, blank=True)
 	phone2 = models.CharField(max_length=30, null=True, blank=True)
-	
+
 	licenseType = models.SmallIntegerField(null=True, blank=True)
 	licenseExp = models.DateField(null=True, blank=True)
 	licenseNum = models.CharField(max_length=12, null=True, blank=True)
@@ -313,18 +313,18 @@ class Employee(models.Model):
 	bank = models.ForeignKey('Bank', null=True, blank=True)
 	branchNum = models.SmallIntegerField(null=True, blank=True)
 	accountNum = models.IntegerField(null=True, blank=True)
-	
-	
+
+
 	status = models.ForeignKey('Status', null=True, blank=True)
 	job = models.ForeignKey('Job', null=True, blank=True)
 	startDate = models.DateField(null=True, blank=True)
 	endDate = models.DateField(null=True, blank=True)
-	
+
 	comment = models.CharField(max_length=300, null=True, blank=True)
-	
+
 	def __unicode__(self):
 		return self.name
-	
+
 
 """
 class ContactMan(models.Model):
@@ -333,9 +333,9 @@ class ContactMan(models.Model):
 	phone1 = models.CharField(max_length=20, blank=True, null=True)
 	phone2 = models.CharField(max_length=20, blank=True, null=True)
 	phoneExt = models.SmallIntegerField(blank=True, null=True)
-	#job = 
+	#job =
 	email = models.EmailField(max_length=75, blank=True, null=True)
-	
+
 	def __unicode__(self):
 		return self.name
 """
@@ -349,31 +349,31 @@ class ContactMan(models.Model):
 	phoneExt = models.SmallIntegerField(blank=True, null=True)
 	job = models.ForeignKey('Job', blank=True, null=True)
 	email = models.EmailField(max_length=75, blank=True, null=True)
-	
+
 	def __unicode__(self):
 		return "%s - %s" % (self.name, self.customer)
 
 class DeliveryStatus(models.Model):
 	client = models.ForeignKey('Client', null=True, blank=True)
 	name = models.CharField(max_length=30)
-	
+
 	def __unicode__(self):
 		return self.name
 
 class Job(models.Model):
 	client = models.ForeignKey('Client', null=True, blank=True)
 	name = models.CharField(max_length=30, blank=True)
-	
+
 	def __unicode__(self):
 		return self.name
-	
+
 class PriceList(models.Model):
 	client = models.ForeignKey('Client')
 	name = models.CharField(max_length=30)
-	
+
 	def __unicode__(self):
 		return self.name
-	
+
 class PriceListEntry(models.Model):
 	client = models.ForeignKey('Client')
 	list = models.ForeignKey('PriceList', related_name='entries')
@@ -385,10 +385,14 @@ class PriceListEntry(models.Model):
 	price = models.SmallIntegerField()
 	waiting = models.SmallIntegerField()
 	#multi = models.SmallIntegerField()
-	addForPackage = models.SmallIntegerField(blank=True, null=True)
-	multiForPackage = models.SmallIntegerField(blank=True, null=True)
-	addForBox = models.SmallIntegerField(blank=True, null=True)
-	multiForBox = models.SmallIntegerField(blank=True, null=True)
+	isMultiForPackage = models.BooleanField(default=False)
+	numForPackages = models.FloatField(blank=True, null=True)
+	isMultiForBox = models.BooleanField(default=False)
+	numForBox = models.FloatField(blank=True, null=True)
+	#addForPackage = models.FloatField(blank=True, null=True)
+	#multiForPackage = models.FloatField(blank=True, null=True)
+	#addForBox = models.FloatField(blank=True, null=True)
+	#multiForBox = models.FloatField(blank=True, null=True)
 	percentForGiver = models.SmallIntegerField(blank=True, null=True)
 	percentForGetter = models.SmallIntegerField(blank=True, null=True)
 
@@ -396,10 +400,10 @@ class VehicleType(models.Model):
 	client = models.ForeignKey('Client', null=True, blank=True)
 	name = models.CharField(max_length=20, null=True, blank=True)
 	price = models.IntegerField(blank=True, null=True)
-	
+
 	def __unicode__(self):
 		return self.name
-		
+
 class RegularSite(models.Model):
 	client = models.ForeignKey('Client', null=True)
 	name = models.CharField(max_length=75, null=True)

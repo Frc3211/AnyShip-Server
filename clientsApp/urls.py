@@ -9,6 +9,7 @@ urlpatterns = [
 	url(r'^Delivery/$', views.DeliveryList.as_view()),
 	url(r'^newDelivery/$', views.DeliveryCreate.as_view()),
 	url(r'^VehicleTypes/$', views.VehicleTypeList.as_view()),
+    url(r'^VehicleTypes/(?P<pk>[0-9]+)$', views.VehicleTypeListUpdate.as_view()),
 	url(r'^Delivery/(?P<pk>[0-9]+)$', views.DeliveryDetail.as_view()),
 	url(r'^updateDelivery/(?P<pk>[0-9]+)$', views.DeliveryUpdate.as_view()),
 	url(r'^DeliveryStatus/$', views.DeliveryStatusList.as_view()),
@@ -19,7 +20,9 @@ urlpatterns = [
 	url(r'^PriceListEntryUpdate/(?P<pk>[0-9]+)$', views.PriceListEntryUpdate.as_view()),
 	url(r'^getPrice/(?P<pk>[0-9]+)/(?P<city1>[0-9]+)/(?P<city2>[0-9]+)/$', views.getPrice),
 	url(r'^UrgencyList/$', views.UrgencyList.as_view()),
+    url(r'^UrgencyList/(?P<pk>[0-9]+)$', views.UrgencyListUpdate.as_view()),
 	url(r'^DoubleTypeList/$', views.DoubleTypeList.as_view()),
+    url(r'^DoubleTypeList/(?P<pk>[0-9]+)$', views.DoubleTypeListUpdate.as_view()),
 	url(r'^Employee/$', views.EmployeeList.as_view()),
 	url(r'^Employee/(?P<pk>[0-9]+)$', views.EmployeeUpdate.as_view()),
 	url(r'^Jobs/$', views.JobList.as_view()),
@@ -36,4 +39,4 @@ urlpatterns = [
 	url(r'^LastDeliveries/$', views.LastDeliveryList.as_view()),
 	url(r'^LastRegularDeliveries/$', views.LastRegularDeliveries.as_view()),
 	url(r'^RegularSitesForCustomer/(?P<customer>[0-9]+)$', views.RegularSitesForCustomer.as_view()),
-] 
+]

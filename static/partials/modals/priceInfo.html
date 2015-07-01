@@ -1,0 +1,73 @@
+﻿<div class="popup">
+	<div class="modal-header">
+		<div>עלות המשלוח</div> 
+		<span ng-click="close()" class="x-btn"></span>
+	</div>
+	<div class="modal-body">
+		<div class="row">
+			<div class="col-lg-6 bold">
+				מחיר בסיס:
+			</div>
+			<div class="col-lg-6">
+				{{ price.basicPrice }}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-6 bold">
+				מקדם דחיפות:
+			</div>
+			<div class="col-lg-6">
+				{{ price.urgency }}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-6 bold">
+				מקדם חבילות:
+			</div>
+			<div class="col-lg-6">
+				{{ price.packages }}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-6 bold">
+				מקדם קרטונים:
+			</div>
+			<div class="col-lg-6">
+				{{ price.boxes }}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-6 bold">
+				מקדם אחה"צ:
+			</div>
+			<div class="col-lg-6">
+				{{ price.afternoon }}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-6 bold">
+				המתנה:
+			</div>
+			<div class="col-lg-6">
+				{{ price.waiting }}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-6 bold">
+				משלוח כפול:
+			</div>
+			<div class="col-lg-6">
+				{{ price.double }}
+			</div>
+		</div>
+		<hr>
+		<div class="row sum">
+			<div class="col-lg-6 bold">
+				סה"כ:
+			</div>
+			<div class="col-lg-6 bold">
+				{{ price.total }}
+			</div>
+		</div>
+	</div>
+</div>

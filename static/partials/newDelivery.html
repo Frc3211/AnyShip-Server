@@ -7,7 +7,7 @@
 		<div class="col-sm-1">
 			<button ng-click="newDelivery()" class="btn btn-primary">חדש</button>
 		</div>
-		<div class="col-sm-1">		
+		<div class="col-sm-1">
 			<button ng-click="deleteDelivery()" class="btn btn-danger" ng-class="{'disabled': !delivery.id}">מחק</button>
 		</div>
 	</div>
@@ -37,7 +37,7 @@
 	</div>
 	<div class="row">
 		<div class="col-sm-4 form-field">
-		
+
 			<!--<select ng-model="delivery.contactMan">
 				<option></option>
 				<option ng-repeat="item in contactMans" value="{{ item.id }}">{{ item.name }}</option>
@@ -116,7 +116,7 @@
 		<span class="col-sm-2">
 			<label>יעד</label>
 		</span>
-	</div>	
+	</div>
 	<div class="row">
 		<div class="col-sm-2 form-field">
 			<!--<select ng-model="delivery.receiver">
@@ -171,7 +171,7 @@
 		<div class="col-sm-12 form-field">
 			<textarea ng-model="delivery.instructions"></textarea>
 			<label>הוראות</label>
-		</div> 
+		</div>
 	</div>
 	<hr>
 	<div class="row">
@@ -249,16 +249,20 @@
 			<label>ביצוע משוער</label>
 		</div>
 		<div class="col-sm-2 form-field">
-			<select ng-model="delivery.isTomorrow">
+			<!--<select ng-model="delivery.isTomorrow">
 				<option value="false">לא</option>
 				<option value="true">כן</option>
+			</select>-->
+			<select ng-options="o.value as o.text for o in [{ text: 'כן', value: true }, { text: 'לא', value: false }]" ng-model="delivery.isTomorrow">
 			</select>
 			<label>מהיום למחר</label>
 		</div>
 		<div class="col-sm-2 form-field">
-			<select ng-model="delivery.signCert">
+			<!--<select ng-model="delivery.signCert">
 				<option value="false">לא</option>
 				<option value="true">כן</option>
+			</select>-->
+			<select ng-options="o.value as o.text for o in [{ text: 'כן', value: true }, { text: 'לא', value: false }]" ng-model="delivery.signCert">
 			</select>
 			<label>תעודה חתומה</label>
 		</div>

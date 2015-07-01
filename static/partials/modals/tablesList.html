@@ -1,0 +1,28 @@
+<div class="popup">
+	<div class="modal-header">
+		<div>טבלאות</div> 
+		<span ng-click="close()" class="x-btn"></span>
+	</div>
+	<div class="modal-body">
+		<div class="row" ng-repeat="menu in currMenu">
+			<div class="col-sm-8 col-sm-offset-2">
+				<button class="btn btn-primary" ng-click="menu.click()">{{ menu.title }}</button>
+			</div>
+		</div>
+		<!--<div class="row">
+			<div class="col-sm-8 col-sm-offset-2">
+				<button class="btn btn-primary" ng-click="closeAndGoTo('main.priceList')">מחירונים</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2">
+				<button class="btn btn-primary" ng-click="closeAndGoTo('main-small.tables')">סוגי משלוח</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2">
+				<button class="btn btn-primary" ng-click="openPrices()">סוגי משלוח</button>
+			</div>
+		</div>-->
+	</div>
+</div>

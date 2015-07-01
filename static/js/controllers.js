@@ -9,7 +9,7 @@ app.controller('loginCtrl', ['$scope', '$http', '$state', function($scope, $http
 		.error(function(data, status, headers, config){
 
 		})
-	
+
 	//function
 	$scope.login = function(){
 		$http.post('/rest-auth/login/', {
@@ -25,23 +25,35 @@ app.controller('loginCtrl', ['$scope', '$http', '$state', function($scope, $http
 	}
 }]);
 
-app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', function($scope, $rootScope, $http, $state){
+app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', '$modal', function($scope, $rootScope, $http, $state, $modal){
 	//init
 	$scope.menus = [{
 		name: 'מסך רכז',
-		link: 'main.deliveries',
+		//link: 'main.deliveries',
+		click: function(){
+			$rootScope.gotoPage('main.deliveries')
+		},
 		icon: 'delivery.png'
 	}, {
 		name: 'מסך פקיד',
-		link: 'main.newDelivery',
+		//link: 'main.newDelivery',
+		click: function(){
+			$rootScope.gotoPage('main.newDelivery')
+		},
 		icon: 'new-delivery.png'
 	}, {
 		name: 'לקוחות',
-		link: 'main.newCustomer',
+		//link: 'main.newCustomer',
+		click: function(){
+			$rootScope.gotoPage('main.newCustomer')
+		},
 		icon: 'customers.png'
 	}, {
 		name: 'עובדים',
-		link: 'main.newEmployee',
+		//link: 'main.newEmployee',
+		click: function(){
+			$rootScope.gotoPage('main.newEmployee')
+		},
 		icon: 'deliver-man.png'
 	},/* {
 		name: 'ערים',
@@ -49,22 +61,107 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', func
 		icon: 'cities.png'
 	}, */{
 		name: 'מחירונים',
-		link: 'main.priceList',
+		click: function(){
+			$rootScope.gotoPage('main.priceList')
+		},
+		//link: 'main.priceList',
 		icon: 'pricelist.png'
-	},/* {
+	}, {
 		name: 'טבלאות',
-		link: 'main-small.tables',
+		//link: 'main-small.tables',
+		click: function(){
+			//$rootScope.gotoPage('main-small.tables')
+			var modalInstance = $modal.open({
+				animation: true,
+				templateUrl: '/static/partials/modals/tablesList.html',
+				controller: function($scope, $modalInstance){
+
+					$scope.menus = {
+						main: [{
+							title: 'מחירונים',
+							click: function(){
+								$scope.currMenu = $scope.menus.priceLists
+							}
+						}, {
+							title: 'טבלאות',
+							click: function(){
+								$scope.currMenu = $scope.menus.tables;
+							}
+						}],
+						priceLists: [{
+							title: 'מחירון יעדים',
+							click: function(){
+								$rootScope.showLoader = true;
+								$modalInstance.close()
+								$rootScope.gotoPage('main.priceList')
+							}
+						}, {
+							title: 'מחירון דחיפויות',
+							click: function(){
+								$modalInstance.close()
+								$rootScope.gotoPage('main.tables', {tableName: 'UrgencyList'})
+							}
+						}, {
+							title: 'מחירון כפולות',
+							click: function(){
+								$modalInstance.close()
+								$rootScope.gotoPage('main.tables', {tableName: 'DoubleTypeList'})
+							}
+						}],
+						tables: [{
+							title: 'סוגי משלוח',
+							click: function(){
+								$modalInstance.close()
+								$rootScope.gotoPage('main.tables', {tableName: 'VehicleTypes'})
+							}
+						}]
+					}
+
+					$scope.currMenu = $scope.menus['main']
+
+					$scope.close = function(){
+						$modalInstance.close();
+					}
+
+					$scope.closeAndGoTo = function(page){
+						$modalInstance.close()
+						$rootScope.gotoPage(page)
+					}
+
+					/*$scope.openPrices = function(){
+						$modalInstance.close();
+						$modal.open({
+							templateUrl: '/static/partials/modals/priceListTables.html',
+							size: 'sm',
+							animation: true,
+							controller: function($scope, $modalInstance){
+								$scope.close = function(){
+									$modalInstance.close()
+								}
+							}
+						})
+					}*/
+				},
+				size: 'sm'
+			});
+		},
 		icon: 'tables.png'
-	}, */{
+	}, {
 		name: 'משלוחים קבועים',
-		link: 'main.newRegularDelivery',
+		//link: 'main.newRegularDelivery',
+		click: function(){
+			$rootScope.gotoPage('main.newRegularDelivery')
+		},
 		icon: 'regularDelivery.png'
 	}, {
 		name: 'אתרים קבועים',
-		link: 'main.regularSites',
+		//link: 'main.regularSites',
+		click: function(){
+			$rootScope.gotoPage('main.regularSites')
+		},
 		icon: 'regularSites.png'
 	}]
-	
+
 	$http.get('/api/Delivery/').success(function(data){
 		$scope.deliveries = data;
 	})
@@ -82,13 +179,10 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', func
 		content: 'בלה בלה בלה',
 		color: '#0ab0f6'
 	}]
-	
-	
-	//functions	
-	$scope.gotoPage = function(page){
-		$state.go(page)
-	}
-	
+
+
+	//functions
+
 	$scope.showRecord = function(event){
 		$rootScope.showLoader = true;
 		id = event.currentTarget.dataset['id'];
@@ -124,11 +218,8 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$state', function($scope, $
 			link: 'main-small.tables'
 		}]
 	}
-	
+
 	//functions
-	$scope.goTo = function($event){
-		$state.go($event.target.dataset.link)
-	} 
 }])
 
 app.controller('newCustomerCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter', 'dateFilter', function($scope, $rootScope, $http, $state, $filter, dateFilter){
@@ -138,29 +229,29 @@ app.controller('newCustomerCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 	$rootScope.currPage = 'main.newCustomer'
 	$scope.contactMans = [];
 	$scope.customer = {}
-	
+
 	$http({
 		method: 'GET',
 		url: '/api/Customers/'
 	}).success(function(data){
 		$scope.customers = data;
 	})
-	
+
 	$http({
 		method: 'GET',
 		url: '/api/PriceList/'
 	}).success(function(data){
 		$scope.priceLists = data;
-	})	
-	
+	})
+
 	$http({
 		method: 'GET',
 		url: '/api/CustomerTypes/'
 	}).success(function(data){
 		$scope.customerTypes = data;
 	})
-	
-	//functions	
+
+	//functions
 	$scope.selectCustomer = function(){
 		$http({
 			method: 'GET',
@@ -170,7 +261,7 @@ app.controller('newCustomerCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 			$scope.contactMans = data.contact_man;
 		})
 	}
-	
+
 	$scope.deleteCustomer = function(){
 		$http({
 			method: 'DELETE',
@@ -178,7 +269,7 @@ app.controller('newCustomerCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 		}).success(function(){
 			for (var i = $scope.customers.length - 1 ; i >= 0 ; i--){
 				var obj = $scope.customers[i];
-				
+
 				if($scope.customer.id == $scope.customers[i].id){
 					$scope.customers.splice(i, 1);
 				}
@@ -189,16 +280,16 @@ app.controller('newCustomerCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 			$rootScope.addAlert('שגיאה', 'danger')
 		})
 	}
-	
+
 	$scope.newCustomer = function(){
 		$scope.customer = {}
 		$scope.selectedCustomer = 0;
 	}
-	
+
 	$scope.newContact = function(){
 		$scope.contactMans.push({});
 	}
-	
+
 	$scope.deleteEntry = function(index){
 		if($scope.contactMans[index].id != undefined){
 			$http({
@@ -208,27 +299,27 @@ app.controller('newCustomerCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 				//alert("נמחק בהצלחה")
 				$rootScope.addAlert('נמחק בהצלחה', 'success')
 			})
-		} 
+		}
 		$scope.contactMans.splice(index, 1)
-		
+
 	}
-	
+
 	/*$scope.$watch('customer.openingDate', function(date){
 		console.log($scope.customer.openingDate)
 		$scope.customer.openingDate = dateFilter(date, 'yyyy-MM-dd')
 		console.log($scope.customer.openingDate)
 		console.log('filter', dateFilter(date, 'yyyy-MM-dd'))
 	})
-	
+
 	$scope.$watch('customer.endDate', function(date){
 		$scope.customer.endDate = dateFilter(date, 'yyyy-MM-dd')
 		console.log('filter', dateFilter(date, 'yyyy-MM-dd'))
 	})*/
-	
+
 	$scope.submitCustomer = function(){
 		//$scope.customer.endDate = $filter('date')($scope.customer.endDate, 'yyyy-MM-dd');
 		//$scope.customer.openingDate = $filter('date')($scope.customer.openingDate, 'yyyy-MM-dd');
-		
+
 		//Check if new customer or existing customer
 		if($scope.customer.id){
 			$http({
@@ -292,14 +383,14 @@ app.controller('newEmployeeCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 	$rootScope.currMenu = 'commands';
 	$rootScope.currTable = "עובד חדש"
 	$rootScope.currPage = 'main.newEmployee'
-	
+
 	$http({
 		method: 'GET',
 		url: '/api/Employee/'
 	}).success(function(data){
 		$scope.employees = data;
 	})
-	
+
 	$scope.genderOptions = [{
 		title: 'זכר',
 		value: 'TRUE'
@@ -307,7 +398,7 @@ app.controller('newEmployeeCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 		title: 'נקבה',
 		value: 'FALSE'
 	}]
-	
+
 	//functions
 	$scope.selectEmployee = function(){
 		$http({
@@ -317,7 +408,7 @@ app.controller('newEmployeeCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 			$scope.employee = data;
 		})
 	}
-	
+
 	$scope.deleteEmployee = function(){
 		$http({
 			method: 'DELETE',
@@ -325,7 +416,7 @@ app.controller('newEmployeeCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 		}).success(function(){
 			for (var i = $scope.employees.length - 1 ; i >= 0 ; i--){
 				var obj = $scope.employees[i];
-				
+
 				if($scope.employee.id == $scope.employees[i].id){
 					$scope.employees.splice(i, 1);
 				}
@@ -337,16 +428,16 @@ app.controller('newEmployeeCtrl', ['$scope', '$rootScope', '$http', '$state', '$
 			$rootScope.addAlert('התרחשה שגיאה, נסה שוב מאוחר יותר', 'danger')
 		})
 	}
-	
+
 	$scope.newEmployee = function(){
 		$scope.employee = {}
 		$scope.selectedEmployee = 0;
 	}
-	
+
 	$scope.newEmployee = function(){
 		$scope.employee = {}
 	}
-	
+
 	$scope.submit = function(){
 		$scope.employee.startDate = $filter('date')($scope.employee.startDate, 'yyyy-MM-dd');
 		$scope.employee.endDate = $filter('date')($scope.employee.endDate, 'yyyy-MM-dd');
@@ -380,7 +471,7 @@ app.controller('citiesCtrl', ['$scope', '$rootScope', function($scope, $rootScop
 	$rootScope.currMenu = 'main'
 	$rootScope.currTable = "ערים"
 	$rootScope.currPage = 'main.cities'
-	
+
 	//functions
 }])
 
@@ -395,7 +486,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 	$scope.delivery.type = '0';
 	$scope.regularSites = [];
 
-	
+
 
 	if ($state.params.id){
 		$http({
@@ -406,29 +497,29 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			$scope.initObjects(data)
 		})
 	}
-	
+
 	$rootScope.currMenu = 'commands';
-	
+
 	$scope.delivery.time = new Date();
 	$scope.delivery.date = new Date();
 	$scope.customerIndex = 0;
-	
+
 	$http.get('/api/Customers/').success(function(data){
 		$scope.customers = data;
 	})
-	
+
 	$http.get('/api/Delivery/').success(function(data){
 		$scope.deliveries = data;
 	})
-	
+
 	$http.get('/api/Employee/').success(function(data){
 		$scope.employees = data;
 	})
-	
+
 	$rootScope.currPage = 'main.newDelivery'
 	$rootScope.currTable = "משלוח חדש"
 	$rootScope.showLoader = false;
-	
+
 	$http({
 		method: 'GET',
 		url: '/api/UrgencyList/'
@@ -436,7 +527,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 		$scope.urgs = data;
 		$scope.delivery.urgency = $scope.urgs[0].id;
 	})
-	
+
 	$http({
 		method: 'GET',
 		url: '/api/DoubleTypeList/'
@@ -444,8 +535,8 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 		$scope.doubles = data;
 		$scope.delivery.doubleType = $scope.doubles[0].id;
 	})
-	
-	
+
+
 	//functions
 	$scope.addTagging = function(name){
 		return {name:name}
@@ -460,7 +551,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			$scope.initObjects(data)
 		})
 	}
-	
+
 	$scope.initObjects = function(data){
 		$scope.delivery.senderObj = {};
 		$scope.delivery.receiverObj = {};
@@ -481,14 +572,14 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 		$scope.delivery.firstDeliver = (data.firstDeliver == undefined) ? undefined : data.firstDeliver.id
 		$scope.delivery.secondDeliver = (data.secondDeliver == undefined) ? undefined : data.secondDeliver.id
 		$scope.delivery.thirdDeliver = (data.thirdDeliver == undefined) ? undefined : data.thirdDeliver.id
-		
+
 		//dates
-		$scope.delivery.created = new Date(data.created)
-		$scope.delivery.exeTime = new Date(data.exeTime)
-		$scope.delivery.rakazTime = new Date(data.rakazTime)
-		$scope.delivery.estTime = new Date(data.estTime)
+		$scope.delivery.created = (data.created == undefined) ? undefined : new Date(data.created)
+		$scope.delivery.exeTime = (data.exeTime == undefined) ? undefined : new Date(data.exeTime)
+		$scope.delivery.rakazTime = (data.rakazTime == undefined) ? undefined : new Date(data.rakazTime)
+		$scope.delivery.endTime = (data.endTime == undefined) ? undefined : new Date(data.endTime)
 	}
-	
+
 	$scope.customerSelected = function(){
 		$http({
 			method: 'GET',
@@ -498,7 +589,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			$scope.typeCallback();
 		})
 	}
-	
+
 	$scope.$watch('delivery.customer', function(data){
 		for (i in $scope.customers){
 			if($scope.customers[i].id == data){
@@ -565,9 +656,6 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 		$scope.delivery.destApart = undefined;
 		$scope.delivery.destCity = undefined;
 
-		
-		
-
 		switch($scope.delivery.type){
 			case '0':
 				//var cust = {name: angular.element('#customer').find('option:selected').text()}
@@ -590,7 +678,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 				$scope.delivery.sourceHomeNum = cust.streetNum;
 				$scope.delivery.sourcePhone = cust.phone1;
 				$scope.delivery.sourceCity = cust.city;*/
-				
+
 				$scope.senderChanged()
 
 				break;
@@ -617,7 +705,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 				$scope.delivery.destHomeNum = cust.streetNum;
 				$scope.delivery.destPhone = cust.phone1;
 				$scope.delivery.destCity = cust.city;*/
-				
+
 				$scope.receiverChanged()
 
 				break;
@@ -639,7 +727,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 		}).success(function(){
 			for (var i = $scope.deliveries.length - 1 ; i >= 0 ; i--){
 				var obj = $scope.deliveries[i];
-				
+
 				if($scope.delivery.id == $scope.deliveries[i].id){
 					$scope.deliveries.splice(i, 1);
 				}
@@ -650,12 +738,12 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			$rootScope.addAlert('שגיאה', 'danger')
 		})
 	}
-	
+
 	$scope.newDelivery = function(){
 		$scope.delivery = {}
 		$scope.selectedDelivery = 0;
 	}
-	
+
 	$scope.submitDelivery = function(){
 		/*$scope.delivery.date = $filter('date')($scope.delivery.date, 'yyyy-MM-dd')
 		$scope.delivery.time = $filter('date')($scope.delivery.time, 'HH:mm')
@@ -688,7 +776,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			})
 		}
 	}
-	
+
 	/*$scope.change = function(){
 		switch($scope.delivery.type){
 			case '0':
@@ -704,12 +792,12 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 				break;
 		}
 	}*/
-	
+
 	$scope.showPriceInfo = function(){
 		$scope.getPrice();
 		var modalInstance = $modal.open({
 			animation: true,
-			templateUrl: '/static/partials/modals/price.html',
+			templateUrl: '/static/partials/modals/priceInfo.html',
 			controller: function($scope, $modalInstance){
 				$scope.close = function(){
 					$modalInstance.close();
@@ -723,42 +811,46 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			}
 		});
 	}
-	
+
 	$scope.getPrice = function(){
-		
+
 		if($scope.delivery.customer == undefined | $scope.delivery.urgency == undefined | $scope.delivery.sourceCity == undefined | $scope.delivery.destCity == undefined){
-			$rootScope.addAlert('נתונים חסרים', 'danger')
-			//alert("חסרים נתונים");
+			$rootScope.addAlert('נתונים חסרים', 'danger');
 			return;
 		}
-		
+
 		$rootScope.price = {}
 		$rootScope.price.urgency = $.grep($scope.urgs, function(e){ return e.id == $scope.delivery.urgency; })[0].multiplier;
 		$rootScope.price.double = $.grep($scope.doubles, function(e){ return e.id == $scope.delivery.doubleType ;})[0].multiplier;
 
 		$rootScope.showLoader = true;
-		
+
 		$http({
 			method: 'GET',
 			url: '/api/getPrice/' + $scope.delivery.customer + '/' + $scope.delivery.sourceCity + '/' + $scope.delivery.destCity
 		}).success(function(data){
 			$rootScope.price.multiForPackage = data[0].multiForPackage;
-			$rootScope.price.multiForBox = data[0].multiForBox; 
+			$rootScope.price.multiForBox = data[0].multiForBox;
 			$rootScope.price.addForWaiting = data[0].waiting;
 			$rootScope.price.basicPrice = data[0].price;
-			
-			
+
+
 			$rootScope.price.packages = $scope.delivery.numOfPackages;
 			$rootScope.price.boxes = $scope.delivery.numOfBoxes;
 			$rootScope.price.waiting = $scope.delivery.waiting;
 			$rootScope.price.afternoon = 0;
-			
-			console.log($rootScope.price);
-			//$rootScope.showPopup = true;
-			
+
+			var now = new Date()
+			var time = new Date(now.getTime() + (data[0].exeTime * 60000))
+			time.setSeconds(0)
+			time.setMilliseconds(0)
+			$scope.delivery.endTime = time
+
 			$rootScope.showLoader = false;
-			
-			$rootScope.price.total = $rootScope.price.urgency * $rootScope.price.basicPrice + ($rootScope.price.multiForPackage * $rootScope.price.packages) + ($rootScope.price.multiForBox * $rootScope.price.boxes) + ($rootScope.price.addForWaiting * $rootScope.price.waiting);
+
+			$rootScope.price.total = $rootScope.price.basicPrice * $rootScope.price.urgency * $rootScope.price.double +
+						($rootScope.price.multiForPackage * $rootScope.price.packages) +
+						($rootScope.price.multiForBox * $rootScope.price.boxes) + ($rootScope.price.addForWaiting * $rootScope.price.waiting);
 			$scope.delivery.basicPrice = $rootScope.price.basicPrice
 			$scope.delivery.totalPrice = $rootScope.price.total;
 		}).error(function(data){
@@ -771,11 +863,11 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 
 app.controller('alertCtrl', ['$scope', '$rootScope', '$timeout', function($scope, $rootScope, $timeout){
 	$scope.alerts = [];
-	
+
 	$scope.closeAlert = function() {
 		$scope.alerts.splice($scope.alerts.length-1, 1)
 	};
-	
+
 	$rootScope.addAlert = function(msg, type){
 		$scope.alerts.push({msg: msg, type: type})
 		$timeout(function(){
@@ -806,7 +898,7 @@ app.controller('deliveriesCtrl', ['$scope', '$rootScope', '$http', '$state', 'ng
 		$scope.employees = data;
 		console.log("getting employees")
 	})
-	
+
 	$rootScope.currTable = "מעקב משלוחים - מוצא / יעד"
 
 	$scope.table = {}
@@ -839,7 +931,7 @@ app.controller('deliveriesCtrl', ['$scope', '$rootScope', '$http', '$state', 'ng
 		name: 'סטטוס',
 		width: 14
 	}]
-	
+
 	$scope.filters = [{
 		title: 'הכל',
 		icon: '',
@@ -900,7 +992,7 @@ app.controller('deliveriesCtrl', ['$scope', '$rootScope', '$http', '$state', 'ng
 			$scope.popup();
 		}
 	}]
-	
+
 	//functions
 	$scope.popup = function(){
 		ngDialog.open({
@@ -939,7 +1031,7 @@ app.controller('deliveriesCtrl', ['$scope', '$rootScope', '$http', '$state', 'ng
 			})
 		}
 	}
-	
+
 	$scope.filterDeliveries = function(item){
 		if(!item.status){
 		//	return false;
@@ -956,7 +1048,7 @@ app.controller('deliveriesCtrl', ['$scope', '$rootScope', '$http', '$state', 'ng
 			// filterInTransit
 			(!$scope.filterCustomer || item.customer.id == $scope.filterCustomerData)
 	}
-	
+
 	$scope.zeroFilters = function(){
 		$scope.filterUrgency 	= false;
 		$scope.filterDoubles 	= false;
@@ -971,17 +1063,17 @@ app.controller('deliveriesCtrl', ['$scope', '$rootScope', '$http', '$state', 'ng
 		// קבלנים
 		// זהב
 	}
-	
+
 	$scope.tooltip = function($event){
 		if($event.target.offsetWidth < $event.target.scrollWidth){
 			angular.element($event.target).addClass('tooltip')
-		} 
+		}
 	}
-	
+
 	$scope.selectRecord = function(id){
 		$scope.currRecord = $scope.records[id]
 	}
-	
+
 	$scope.showRecord = function(event, record){
 		id = event.currentTarget.dataset['id'];
 		console.log(id)
@@ -990,8 +1082,8 @@ app.controller('deliveriesCtrl', ['$scope', '$rootScope', '$http', '$state', 'ng
 		} else {
 			$state.go('main.delivery', {id: id})
 		}
-		
-		
+
+
 	}
 }])
 
@@ -1002,15 +1094,15 @@ app.controller('priceListCtrl', ['$scope', '$rootScope', '$http', function($scop
 	$rootScope.currMenu = 'main'
 	$rootScope.showLoader = true;
 	$rootScope.currTable = 'מחירונים';
-	
+
 	$http.get('/api/PriceList/').success(function(data){
 		$scope.priceLists = data;
 		//$scope.currPriceList = data[0];
 		$scope.currPriceList = 0;
 		$rootScope.showLoader = false;
 	})
-	
-	
+
+
 	//functions
 	$scope.addEntry = function(){
 		if($scope.priceLists[$scope.currPriceList].id){
@@ -1019,7 +1111,7 @@ app.controller('priceListCtrl', ['$scope', '$rootScope', '$http', function($scop
 			$scope.priceLists[$scope.currPriceList].entries.push({})
 		}
 	}
-	
+
 	$scope.deleteEntry = function(index){
 		$rootScope.showLoader = true;
 		$http({
@@ -1032,14 +1124,14 @@ app.controller('priceListCtrl', ['$scope', '$rootScope', '$http', function($scop
 			$rootScope.showLoader = false;
 		})
 	}
-	
+
 	$scope.addList = function(){
 		$scope.priceLists.push({'entries': []})
 		console.log($scope.priceLists)
 		$scope.currPriceList = $scope.priceLists.length - 1;
 		$scope.priceLists[$scope.currPriceList].name = '[הכנס שם]'
 	}
-	
+
 	$scope.removeList = function(){
 		$rootScope.showLoader = true;
 		$http({
@@ -1058,7 +1150,7 @@ app.controller('priceListCtrl', ['$scope', '$rootScope', '$http', function($scop
 			$rootScope.showLoader = false;
 		})
 	}
-	
+
 	$scope.nextList = function(){
 		if($scope.currPriceList >= $scope.priceLists.length - 1){
 			console.log("disabled");
@@ -1066,7 +1158,7 @@ app.controller('priceListCtrl', ['$scope', '$rootScope', '$http', function($scop
 		}
 		$scope.currPriceList++;
 	}
-	
+
 	$scope.backList = function(){
 		if($scope.currPriceList==0){
 			console.log("disabled")
@@ -1074,7 +1166,7 @@ app.controller('priceListCtrl', ['$scope', '$rootScope', '$http', function($scop
 		}
 		$scope.currPriceList--;
 	}
-	
+
 	$scope.submitPriceList = function(){
 		$rootScope.showLoader = true;
 		if(!$scope.priceLists[$scope.currPriceList].id){
@@ -1106,7 +1198,7 @@ app.controller('priceListCtrl', ['$scope', '$rootScope', '$http', function($scop
 			})
 		}
 	}
-	
+
 	$scope.submitEntries = function(){
 		angular.forEach($scope.priceLists[$scope.currPriceList].entries, function(value, key){
 			if(value.id){
@@ -1131,42 +1223,114 @@ app.controller('priceListCtrl', ['$scope', '$rootScope', '$http', function($scop
 
 app.controller('popupCtrl', ['$scope', '$rootScope', function($scope, $rootScope){
 	//init
-	
-	
-	
+
+
+
 	//functions
 	$scope.close = function(){
 		$rootScope.showPopup = false;
 	}
 }])
 
-app.controller('tablesCtrl', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http){
+app.controller('tablesCtrl', ['$scope', '$rootScope', '$http', '$state', function($scope, $rootScope, $http, $state){
 	//init
-	$scope.tables = [{
-		title: 'סטטוסים',
-		fields: ['שם'],
-		name: 'Status'
-	}, {
-		title: 'תפקידים',
-		fields: ['שם'],
-		name: 'Jobs'
-	}, {
-		title: 'סטטוסי משלוח',
-		fields: ['שם'],
-		name: 'DeliveryStatus'
-	}]
-	
-	$scope.currTable = $scope.tables[2];
-	
+	$scope.tables = {
+		VehicleTypes: {
+			fields: [{
+				title: 'כלי רכב',
+				name: 'name'
+			}, {
+				title: 'מחיר',
+				name: 'price'
+			}],
+			name: 'VehicleTypes',
+			title: 'סוגי משלוח'
+		},
+		UrgencyList: {
+			fields: [{
+				title: 'דחיפות',
+				name: 'name'
+			}, {
+				title: 'מכפיל',
+				name: 'multiplier'
+			}],
+			name: 'UrgencyList',
+			title: 'מחירון דחיפויות'
+		},
+		DoubleTypeList: {
+			fields: [{
+				title: 'כפולה',
+				name: 'name'
+			}, {
+				title: 'מכפיל',
+				name: 'multiplier'
+			}],
+			name: 'DoubleTypeList',
+			title: 'מחירון כפולות'
+		}
+	}
+
+	$scope.table = $scope.tables[$state.params.tableName]
+	$rootScope.currTable = $scope.table.title;
+
+
 	$http({
 		method: 'GET',
-		url: '/api/' + $scope.currTable.name
+		url: '/api/' + $scope.table.name
 	}).success(function(data){
 		$scope.rows = data;
 	})
-	
-	
+
+	$scope.deleted = []
+	$scope.changed = [];
 	//functions
+	$scope.addEntry = function(){
+		$scope.rows.push({})
+	}
+
+	$scope.deleteEntry = function(index){
+		if($scope.rows[index].hasOwnProperty('id')){
+			$scope.deleted.push($scope.rows[index]['id'])
+		}
+		$scope.rows.splice(index, 1)
+	}
+
+	$scope.changed = function(row){
+		row.changed = true;
+	}
+
+	$scope.save = function(){
+		angular.forEach($scope.deleted, function(value, key){
+			$http({
+				method: 'DELETE',
+				url: '/api/' + $scope.table.name + '/' + value
+			})
+		})
+
+		angular.forEach($scope.rows, function(value, key){
+			if(value.id){
+				if(value.changed){
+					$http({
+						method: 'PUT',
+						url: '/api/' + $scope.table.name + '/' + value.id,
+						data: value,
+						headers : { 'Content-Type': 'application/json' }
+					}).success(function(data){
+						value.changed = false;
+					})
+				}
+			} else {
+				$http({
+					method: 'POST',
+					url: '/api/' + $scope.table.name + '/',
+					data: value,
+					headers : { 'Content-Type': 'application/json' }
+				}).success(function(data){
+					value.id = data.id;
+				})
+			}
+		})
+	}
 }])
 
 app.controller('regularDeliveryCtrl', ['$scope', '$http', '$rootScope', '$state', function($scope, $http, $rootScope, $state){
@@ -1284,7 +1448,7 @@ app.controller('regularDeliveryCtrl', ['$scope', '$http', '$rootScope', '$state'
 			.error(function(data){
 				$rootScope.addAlert('שגיאה', 'danger')
 				//alert("שגיאה!")
-			})	
+			})
 		}
 	}
 
@@ -1363,7 +1527,7 @@ app.controller('regularSitesCtrl', ['$scope', '$rootScope', '$http', function($s
 			}).success(function(data){
 				$rootScope.addAlert('נמחק בהצלחה', 'success')
 			})
-		} 
+		}
 		$scope.regularSites.splice(index, 1);
 	}
 }])
