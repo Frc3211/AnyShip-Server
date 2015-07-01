@@ -50,7 +50,7 @@
 					<td style="min-width: 90px;">
 						<select ng-options="city.id as city.name for city in cities" ng-model="row.dest1">
 						</select>
-						
+
 					</td>
 					<td style="min-width: 90px;">
 						<select ng-options="city.id as city.name for city in cities" ng-model="row.dest2">
@@ -64,10 +64,18 @@
 					<td><input type="text" class="form-control" ng-model="row.exeTime"></td>
 					<td><input type="text" class="form-control" ng-model="row.price"></td>
 					<td><input type="text" class="form-control" ng-model="row.waiting"></td>
-					<td><input type="text" class="form-control" ng-model="row.addForPackage"></td>
-					<td><input type="text" class="form-control" ng-model="row.multiForPackage"></td>
-					<td><input type="text" class="form-control" ng-model="row.addForBox"></td>
-					<td><input type="text" class="form-control" ng-model="row.multiForBox"></td>
+					<td>
+						<select ng-options="o.value as o.text for o in [{text: 'כפול', value: true}, {text: 'תוספת', value: false}]" ng-model="row.isMultiForPackage">
+						</select>
+					</td>
+					<td><input type="text" class="form-control" ng-model="row.numForPackage"></td>
+					<!--<td><input type="text" class="form-control" ng-model="row.multiForPackage"></td>-->
+					<td>
+						<select ng-options="o.value as o.text for o in [{text: 'כפול', value: true}, {text: 'תוספת', value: false}]" ng-model="row.isMultiForBox">
+						</select>
+					</td>
+					<td><input type="text" class="form-control" ng-model="row.numForBox"></td>
+					<!--<td><input type="text" class="form-control" ng-model="row.multiForBox"></td>-->
 					<td><input type="text" class="form-control" ng-model="row.percentForGetter"></td>
 					<td><input type="text" class="form-control" ng-model="row.percentForGiver"></td>
 				</tr>

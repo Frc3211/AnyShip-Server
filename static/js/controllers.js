@@ -829,33 +829,64 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			method: 'GET',
 			url: '/api/getPrice/' + $scope.delivery.customer + '/' + $scope.delivery.sourceCity + '/' + $scope.delivery.destCity
 		}).success(function(data){
-			$rootScope.price.multiForPackage = data[0].multiForPackage;
-			$rootScope.price.multiForBox = data[0].multiForBox;
+			var totalPrice;
+			var priceAdd = data;
+			var basicPrice = priceAdd['price']
+			var urgency = $.grep($scope.urgs, function(e){ return e.id == $scope.delivery.urgency; })[0].multiplier;
+			var double = $.grep($scope.doubles, function(e){ return e.id == $scope.delivery.doubleType ;})[0].multiplier;
+			var vehicleTypePrice = $.grep($scope.vehicles, function(e){ return e.id == $scope.delivery.vehicleType ;})[0].price;
+
+			/*$rootScope.price.numForPackage = data[0].numForPackage;
+			$rootScope.price.numForBox = data[0].numForBox;
+			$rootScope.price.isMultiForPackage = data[0].isMultiForPackage;
+			$rootScope.price.isMultiForBox = data[0].isMultiForBox;
 			$rootScope.price.addForWaiting = data[0].waiting;
 			$rootScope.price.basicPrice = data[0].price;
-
 
 			$rootScope.price.packages = $scope.delivery.numOfPackages;
 			$rootScope.price.boxes = $scope.delivery.numOfBoxes;
 			$rootScope.price.waiting = $scope.delivery.waiting;
-			$rootScope.price.afternoon = 0;
+			$rootScope.price.afternoon = 0;*/
 
 			var now = new Date()
-			var time = new Date(now.getTime() + (data[0].exeTime * 60000))
+			var time = new Date(now.getTime() + (data.exeTime * 60000))
 			time.setSeconds(0)
 			time.setMilliseconds(0)
 			$scope.delivery.endTime = time
 
 			$rootScope.showLoader = false;
 
-			$rootScope.price.total = $rootScope.price.basicPrice * $rootScope.price.urgency * $rootScope.price.double +
+
+			addForUrgency = (priceAdd.price * urgency) - priceAdd.price;
+			addForDouble = (priceAdd.price * double) - priceAdd.price;
+
+			totalPrice = basicPrice * urgency * double;
+
+			if(priceAdd.isMultiForPackage){
+				addForPackage = (priceAdd.price * priceAdd.numForPackage) - priceAdd.price;
+			} else {
+				addForPackage = priceAdd.numForPackage
+			}
+			totalPrice += addForPackage * $scope.delivery.numOfPackages;
+
+			if(priceAdd.isMultiForBox){
+				addForBox = (priceAdd.price * priceAdd.numForBox) - priceAdd.price;
+			} else {
+				addForBox = priceAdd.numForBox
+			}
+			totalPrice += addForBox * $scope.delivery.numOfBoxes;
+
+			totalPrice += priceAdd.waiting * $scope.delivery.waiting;
+			totalPrice += vehicleTypePrice;
+
+			/*$rootScope.price.total = $rootScope.price.basicPrice * $rootScope.price.urgency * $rootScope.price.double +
 						($rootScope.price.multiForPackage * $rootScope.price.packages) +
-						($rootScope.price.multiForBox * $rootScope.price.boxes) + ($rootScope.price.addForWaiting * $rootScope.price.waiting);
-			$scope.delivery.basicPrice = $rootScope.price.basicPrice
-			$scope.delivery.totalPrice = $rootScope.price.total;
+						($rootScope.price.multiForBox * $rootScope.price.boxes) + ($rootScope.price.addForWaiting * $rootScope.price.waiting);*/
+			$scope.delivery.basicPrice = priceAdd.price;
+			$scope.delivery.totalPrice = totalPrice;
 		}).error(function(data){
 			$rootScope.showLoader = false;
-			$rootScope.addAlert('לא הוזן מחירון למסלול זה!', 'danger')
+			$rootScope.addAlert('לא הוזן מחירון למסלול זה!', 'danger');
 			//alert("לא הוזן מחירון למסלול זה")
 		})
 	}

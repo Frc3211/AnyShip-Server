@@ -43,15 +43,18 @@ def getPrice(request, pk, city1, city2):
 	customer = Customer.objects.get(pk=pk)
 	e = PriceListEntry.objects.filter(Q(list=customer.priceList), (Q(sourceCity=city1) & Q(dest1=city2)) | (Q(sourceCity=city2) & Q(dest1=city1)))
 	if not e:
+		print "not e"
 		return HttpResponseNotFound()
 	entry = {}
 	entry['price'] = e[0].price
-	entry['multiForPackage'] = e[0].multiForPackage
-	entry['multiForBox'] = e[0].multiForBox
+	entry['numForPackage'] = e[0].numForPackage
+	entry['isMultiForPackage'] = e[0].isMultiForPackage
+	entry['isMultiForBox'] = e[0].isMultiForBox
+	entry['numForBox'] = e[0].numForBox
 	entry['waiting'] = e[0].waiting
 	entry['exeTime'] = e[0].exeTime
 
-	return HttpResponse(json.dumps([entry]))
+	return HttpResponse(json.dumps(entry), content_type="application/json")
 
 
 def getLastDeliveries(request):

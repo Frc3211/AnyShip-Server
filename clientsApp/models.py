@@ -386,7 +386,7 @@ class PriceListEntry(models.Model):
 	waiting = models.SmallIntegerField()
 	#multi = models.SmallIntegerField()
 	isMultiForPackage = models.BooleanField(default=False)
-	numForPackages = models.FloatField(blank=True, null=True)
+	numForPackage = models.FloatField(blank=True, null=True)
 	isMultiForBox = models.BooleanField(default=False)
 	numForBox = models.FloatField(blank=True, null=True)
 	#addForPackage = models.FloatField(blank=True, null=True)

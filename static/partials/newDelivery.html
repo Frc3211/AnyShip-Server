@@ -188,9 +188,9 @@
 			<label>סוג כפולה</label>
 		</div>
 		<div class="col-sm-2 form-field">
-			<select ng-model="delivery.vehicleType" class="combobox aaaa">
-				<option></option>
-				<option ng-repeat="vehicle in vehicles" value="{{ vehicle.id }}">{{ vehicle.name }}</option>
+			<select ng-options="vehicle.id as vehicle.name for vehicle in vehicles" ng-model="delivery.vehicleType" class="combobox aaaa">
+				<!--<option></option>
+				<option ng-repeat="vehicle in vehicles" value="{{ vehicle.id }}">{{ vehicle.name }}</option>-->
 			</select>
 			<label>אמצעי הובלה</label>
 		</div>
