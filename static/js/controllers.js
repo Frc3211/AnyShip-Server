@@ -59,14 +59,14 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', '$mo
 		name: 'ערים',
 		link: 'main.cities',
 		icon: 'cities.png'
-	}, */{
+	}, {
 		name: 'מחירונים',
 		click: function(){
 			$rootScope.gotoPage('main.priceList')
 		},
 		//link: 'main.priceList',
 		icon: 'pricelist.png'
-	}, {
+	}, */{
 		name: 'טבלאות',
 		//link: 'main-small.tables',
 		click: function(){
@@ -475,422 +475,6 @@ app.controller('citiesCtrl', ['$scope', '$rootScope', function($scope, $rootScop
 	//functions
 }])
 
-app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '$state', '$modal', function($scope, $rootScope, $http, $filter, $state, $modal){
-	//init
-	$scope.delivery = {}
-
-	$scope.delivery.numOfPackages = 0;
-	$scope.delivery.numOfBoxes = 0;
-	$scope.delivery.waiting = 0;
-	$scope.delivery.status = 0;
-	$scope.delivery.type = '0';
-	$scope.regularSites = [];
-
-
-
-	if ($state.params.id){
-		$http({
-			method: 'GET',
-			url: '/api/Delivery/' + $state.params.id
-		}).success(function(data){
-			$scope.delivery = data
-			$scope.initObjects(data)
-		})
-	}
-
-	$rootScope.currMenu = 'commands';
-
-	$scope.delivery.time = new Date();
-	$scope.delivery.date = new Date();
-	$scope.customerIndex = 0;
-
-	$http.get('/api/Customers/').success(function(data){
-		$scope.customers = data;
-	})
-
-	$http.get('/api/Delivery/').success(function(data){
-		$scope.deliveries = data;
-	})
-
-	$http.get('/api/Employee/').success(function(data){
-		$scope.employees = data;
-	})
-
-	$rootScope.currPage = 'main.newDelivery'
-	$rootScope.currTable = "משלוח חדש"
-	$rootScope.showLoader = false;
-
-	$http({
-		method: 'GET',
-		url: '/api/UrgencyList/'
-	}).success(function(data){
-		$scope.urgs = data;
-		$scope.delivery.urgency = $scope.urgs[0].id;
-	})
-
-	$http({
-		method: 'GET',
-		url: '/api/DoubleTypeList/'
-	}).success(function(data){
-		$scope.doubles = data;
-		$scope.delivery.doubleType = $scope.doubles[0].id;
-	})
-
-
-	//functions
-	$scope.addTagging = function(name){
-		return {name:name}
-	}
-
-	$scope.selectDelivery = function(){
-		$http({
-			method: 'GET',
-			url: '/api/Delivery/' + $scope.selectedDelivery.id
-		}).success(function(data){
-			$scope.delivery = data;
-			$scope.initObjects(data)
-		})
-	}
-
-	$scope.initObjects = function(data){
-		$scope.delivery.senderObj = {};
-		$scope.delivery.receiverObj = {};
-
-		$scope.delivery.customer = (data.customer == undefined) ? undefined : data.customer.id
-		//$scope.delivery.status = (data.status == undefined) ? undefined : data.status.id
-		$scope.delivery.senderObj['name'] = (data.sender == undefined) ? undefined : data.sender
-		$scope.delivery.receiverObj['name'] = (data.receiver == undefined) ? undefined : data.receiver
-		//$scope.delivery.sender = (data.sender == undefined) ? undefined : data.sender.id
-		$scope.delivery.destCity = (data.destCity == undefined) ? undefined : data.destCity.id
-		$scope.delivery.client = (data.client == undefined) ? undefined : data.client.id
-		$scope.delivery.sourceCity = (data.sourceCity == undefined) ? undefined : data.sourceCity.id
-		$scope.delivery.urgency = (data.urgency == undefined) ? undefined : data.urgency.id
-		$scope.delivery.doubleType = (data.doubleType == undefined) ? undefined : data.doubleType.id
-		//$scope.delivery.receiver = (data.receiver == undefined) ? undefined : data.receiver.id
-		$scope.delivery.vehicleType = (data.vehicleType == undefined) ? undefined : data.vehicleType.id
-		$scope.delivery.contactMan = (data.contactMan == undefined) ? undefined : data.contactMan.id
-		$scope.delivery.firstDeliver = (data.firstDeliver == undefined) ? undefined : data.firstDeliver.id
-		$scope.delivery.secondDeliver = (data.secondDeliver == undefined) ? undefined : data.secondDeliver.id
-		$scope.delivery.thirdDeliver = (data.thirdDeliver == undefined) ? undefined : data.thirdDeliver.id
-
-		//dates
-		$scope.delivery.created = (data.created == undefined) ? undefined : new Date(data.created)
-		$scope.delivery.exeTime = (data.exeTime == undefined) ? undefined : new Date(data.exeTime)
-		$scope.delivery.rakazTime = (data.rakazTime == undefined) ? undefined : new Date(data.rakazTime)
-		$scope.delivery.endTime = (data.endTime == undefined) ? undefined : new Date(data.endTime)
-	}
-
-	$scope.customerSelected = function(){
-		$http({
-			method: 'GET',
-			url: '/api/RegularSitesForCustomer/' + $scope.delivery.customer
-		}).success(function(data){
-			$scope.regularSites = data;
-			$scope.typeCallback();
-		})
-	}
-
-	$scope.$watch('delivery.customer', function(data){
-		for (i in $scope.customers){
-			if($scope.customers[i].id == data){
-				$scope.contactMans = $scope.customers[i].contact_man
-			}
-		}
-	})
-
-	$scope.$watch('delivery.senderObj', function(obj){
-		$scope.delivery.sender = (obj == undefined) ? undefined : obj.name
-	})
-
-	$scope.$watch('delivery.receiverObj', function(obj){
-		$scope.delivery.receiver = (obj == undefined) ? undefined : obj.name
-	})
-
-	$scope.senderChanged = function(){
-		var obj = $scope.delivery.senderObj;
-		console.log("senderChanged", obj)
-
-		$scope.delivery.sourceStreet = (obj == undefined) ? undefined : obj.streetName;
-		$scope.delivery.sourceHomeNum = (obj == undefined) ? undefined : obj.streetNum;
-		$scope.delivery.sourcePhone = (obj == undefined) ? undefined : obj.phone1;
-		$scope.delivery.sourceCity = (obj == undefined) ? undefined : obj.city;
-	}
-
-	$scope.receiverChanged = function(){
-		var obj = $scope.delivery.receiverObj;
-		console.log("receiverChanged", obj)
-
-		$scope.delivery.destStreet = (obj == undefined) ? undefined : obj.streetName;
-		$scope.delivery.destHomeNum = (obj == undefined) ? undefined : obj.streetNum;
-		$scope.delivery.destPhone = (obj == undefined) ? undefined : obj.phone1;
-		$scope.delivery.destCity = (obj == undefined) ? undefined : obj.city;
-	}
-
-	$scope.typeCallback = function(){
-		console.log("cb")
-		var cust = undefined;
-
-		angular.forEach($scope.customers, function(obj){
-			console.log(obj, $scope.delivery.customer);
-			if(obj.id == parseInt($scope.delivery.customer)){
-				cust = obj;
-			}
-		})
-
-		if(cust == undefined)
-			return;
-
-		$scope.delivery.sourceStreet = undefined;
-		$scope.delivery.sourcePhone = undefined;
-		$scope.delivery.sourceHomeNum = undefined;
-		$scope.delivery.sourceHomeEnter = undefined;
-		$scope.delivery.sourceFloor = undefined;
-		$scope.delivery.sourceApart = undefined;
-		$scope.delivery.sourceCity = undefined;
-
-		$scope.delivery.destStreet = undefined;
-		$scope.delivery.destPhone = undefined;
-		$scope.delivery.destHomeNum = undefined;
-		$scope.delivery.destHomeEnter = undefined;
-		$scope.delivery.destFloor = undefined;
-		$scope.delivery.destApart = undefined;
-		$scope.delivery.destCity = undefined;
-
-		switch($scope.delivery.type){
-			case '0':
-				//var cust = {name: angular.element('#customer').find('option:selected').text()}
-				var exist = false;
-
-				angular.forEach($scope.regularSites, function(obj){
-					if(obj.name == cust.name){
-						exist = true;
-					}
-				})
-
-				if(exist == false){
-					$scope.regularSites.push(cust)
-				}
-
-				$scope.delivery.senderObj = $scope.regularSites[$scope.regularSites.length-1]
-				$scope.delivery.receiverObj = {};
-
-				/*$scope.delivery.sourceStreet = cust.streetName;
-				$scope.delivery.sourceHomeNum = cust.streetNum;
-				$scope.delivery.sourcePhone = cust.phone1;
-				$scope.delivery.sourceCity = cust.city;*/
-
-				$scope.senderChanged()
-
-				break;
-
-			case '1':
-				//var cust = {name: angular.element('#customer').find('option:selected').text()}
-				var exist = false;
-
-
-				angular.forEach($scope.regularSites, function(obj){
-					if(obj.name == cust.name){
-						exist = true;
-					}
-				})
-
-				if(exist == false){
-					$scope.regularSites.push(cust)
-				}
-
-				$scope.delivery.receiverObj = $scope.regularSites[$scope.regularSites.length-1]
-				$scope.delivery.senderObj = {};
-
-				/*$scope.delivery.destStreet = cust.streetName;
-				$scope.delivery.destHomeNum = cust.streetNum;
-				$scope.delivery.destPhone = cust.phone1;
-				$scope.delivery.destCity = cust.city;*/
-
-				$scope.receiverChanged()
-
-				break;
-
-			case '2':
-				$scope.delivery.sender = undefined;
-				$scope.delivery.senderObj = undefined;
-				$scope.delivery.receiver = undefined;
-				$scope.delivery.receiverObj = undefined;
-
-				break;
-		}
-	}
-
-	$scope.deleteDelivery = function(){
-		$http({
-			method: 'DELETE',
-			url: '/api/Delivery/' + $scope.delivery.id
-		}).success(function(){
-			for (var i = $scope.deliveries.length - 1 ; i >= 0 ; i--){
-				var obj = $scope.deliveries[i];
-
-				if($scope.delivery.id == $scope.deliveries[i].id){
-					$scope.deliveries.splice(i, 1);
-				}
-			}
-			$scope.delivery = {}
-			$rootScope.addAlert('נמחק בהצלחה', 'success')
-		}).error(function(){
-			$rootScope.addAlert('שגיאה', 'danger')
-		})
-	}
-
-	$scope.newDelivery = function(){
-		$scope.delivery = {}
-		$scope.selectedDelivery = 0;
-	}
-
-	$scope.submitDelivery = function(){
-		/*$scope.delivery.date = $filter('date')($scope.delivery.date, 'yyyy-MM-dd')
-		$scope.delivery.time = $filter('date')($scope.delivery.time, 'HH:mm')
-		$scope.delivery.rakazTime = $filter('date')($scope.delivery.rakazTime, 'HH:mm')
-		$scope.delivery.exeTime = $filter('date')($scope.delivery.exeTime, 'HH:mm')
-		$scope.delivery.estTime = $filter('date')($scope.delivery.estTime, 'HH:mm')
-		*/
-		if($scope.delivery.id){
-			$http({
-				method: 'PUT',
-				url: '/api/updateDelivery/' + $scope.delivery.id,
-				data: $scope.delivery,
-				headers : { 'Content-Type': 'application/json' }
-			}).success(function(data){
-				$scope.delivery.id = data.id
-				$rootScope.addAlert('משלוח עודכן בהצלחה', 'success')
-			})
-		} else {
-			$http({
-				method: 'POST',
-				url: '/api/newDelivery/',
-				data: $scope.delivery,
-				headers : { 'Content-Type': 'application/json' }
-			})
-			.success(function(data){
-				$rootScope.addAlert('המשלוח הוזן!', 'success')
-			})
-			.error(function(data){
-				$rootScope.addAlert('שגיאה', 'danger')
-			})
-		}
-	}
-
-	/*$scope.change = function(){
-		switch($scope.delivery.type){
-			case '0':
-				$scope.delivery.receiver = $scope.delivery.sender;
-				$scope.delivery.sender = $scope.delivery.customer;
-				break;
-			case '1':
-				$scope.delivery.sender = $scope.delivery.receiver;
-				$scope.delivery.receiver = $scope.delivery.customer;
-				break;
-			case '2':
-				$scope.delivery.sender = undefined;
-				break;
-		}
-	}*/
-
-	$scope.showPriceInfo = function(){
-		$scope.getPrice();
-		var modalInstance = $modal.open({
-			animation: true,
-			templateUrl: '/static/partials/modals/priceInfo.html',
-			controller: function($scope, $modalInstance){
-				$scope.close = function(){
-					$modalInstance.close();
-				}
-			},
-			size: 'sm',
-			resolve: {
-				price: function(){
-					return $scope.price
-				}
-			}
-		});
-	}
-
-	$scope.getPrice = function(){
-
-		if($scope.delivery.customer == undefined | $scope.delivery.urgency == undefined | $scope.delivery.sourceCity == undefined | $scope.delivery.destCity == undefined){
-			$rootScope.addAlert('נתונים חסרים', 'danger');
-			return;
-		}
-
-		$rootScope.price = {}
-		$rootScope.price.urgency = $.grep($scope.urgs, function(e){ return e.id == $scope.delivery.urgency; })[0].multiplier;
-		$rootScope.price.double = $.grep($scope.doubles, function(e){ return e.id == $scope.delivery.doubleType ;})[0].multiplier;
-
-		$rootScope.showLoader = true;
-
-		$http({
-			method: 'GET',
-			url: '/api/getPrice/' + $scope.delivery.customer + '/' + $scope.delivery.sourceCity + '/' + $scope.delivery.destCity
-		}).success(function(data){
-			var totalPrice;
-			var priceAdd = data;
-			var basicPrice = priceAdd['price']
-			var urgency = $.grep($scope.urgs, function(e){ return e.id == $scope.delivery.urgency; })[0].multiplier;
-			var double = $.grep($scope.doubles, function(e){ return e.id == $scope.delivery.doubleType ;})[0].multiplier;
-			var vehicleTypePrice = $.grep($scope.vehicles, function(e){ return e.id == $scope.delivery.vehicleType ;})[0].price;
-
-			/*$rootScope.price.numForPackage = data[0].numForPackage;
-			$rootScope.price.numForBox = data[0].numForBox;
-			$rootScope.price.isMultiForPackage = data[0].isMultiForPackage;
-			$rootScope.price.isMultiForBox = data[0].isMultiForBox;
-			$rootScope.price.addForWaiting = data[0].waiting;
-			$rootScope.price.basicPrice = data[0].price;
-
-			$rootScope.price.packages = $scope.delivery.numOfPackages;
-			$rootScope.price.boxes = $scope.delivery.numOfBoxes;
-			$rootScope.price.waiting = $scope.delivery.waiting;
-			$rootScope.price.afternoon = 0;*/
-
-			var now = new Date()
-			var time = new Date(now.getTime() + (data.exeTime * 60000))
-			time.setSeconds(0)
-			time.setMilliseconds(0)
-			$scope.delivery.endTime = time
-
-			$rootScope.showLoader = false;
-
-
-			addForUrgency = (priceAdd.price * urgency) - priceAdd.price;
-			addForDouble = (priceAdd.price * double) - priceAdd.price;
-
-			totalPrice = basicPrice * urgency * double;
-
-			if(priceAdd.isMultiForPackage){
-				addForPackage = (priceAdd.price * priceAdd.numForPackage) - priceAdd.price;
-			} else {
-				addForPackage = priceAdd.numForPackage
-			}
-			totalPrice += addForPackage * $scope.delivery.numOfPackages;
-
-			if(priceAdd.isMultiForBox){
-				addForBox = (priceAdd.price * priceAdd.numForBox) - priceAdd.price;
-			} else {
-				addForBox = priceAdd.numForBox
-			}
-			totalPrice += addForBox * $scope.delivery.numOfBoxes;
-
-			totalPrice += priceAdd.waiting * $scope.delivery.waiting;
-			totalPrice += vehicleTypePrice;
-
-			/*$rootScope.price.total = $rootScope.price.basicPrice * $rootScope.price.urgency * $rootScope.price.double +
-						($rootScope.price.multiForPackage * $rootScope.price.packages) +
-						($rootScope.price.multiForBox * $rootScope.price.boxes) + ($rootScope.price.addForWaiting * $rootScope.price.waiting);*/
-			$scope.delivery.basicPrice = priceAdd.price;
-			$scope.delivery.totalPrice = totalPrice;
-		}).error(function(data){
-			$rootScope.showLoader = false;
-			$rootScope.addAlert('לא הוזן מחירון למסלול זה!', 'danger');
-			//alert("לא הוזן מחירון למסלול זה")
-		})
-	}
-}])
 
 app.controller('alertCtrl', ['$scope', '$rootScope', '$timeout', function($scope, $rootScope, $timeout){
 	$scope.alerts = [];
@@ -916,18 +500,15 @@ app.controller('deliveriesCtrl', ['$scope', '$rootScope', '$http', '$state', 'ng
 
 	$http.get('/api/LastDeliveries/').success(function(data){
 		$scope.records = $scope.records.concat(data);
-		console.log($scope.records)
 		$rootScope.showLoader = false;
 	})
 
 	$http.get('/api/LastRegularDeliveries/').success(function(data){
 		$scope.records = $scope.records.concat(data);
-		console.log($scope.records)
 	})
 
 	$http.get('/api/Employee/').success(function(data){
 		$scope.employees = data;
-		console.log("getting employees")
 	})
 
 	$rootScope.currTable = "מעקב משלוחים - מוצא / יעד"
@@ -1049,7 +630,7 @@ app.controller('deliveriesCtrl', ['$scope', '$rootScope', '$http', '$state', 'ng
 				data: data,
 				headers : { 'Content-Type': 'application/json' }
 			}).success(function(data){
-				console.log(data)
+				//console.log(data)
 			})
 		} else {
 			$http({
@@ -1058,7 +639,7 @@ app.controller('deliveriesCtrl', ['$scope', '$rootScope', '$http', '$state', 'ng
 				data: data,
 				headers : { 'Content-Type': 'application/json' }
 			}).success(function(data){
-				console.log(data)
+				//console.log(data)
 			})
 		}
 	}
@@ -1067,7 +648,7 @@ app.controller('deliveriesCtrl', ['$scope', '$rootScope', '$http', '$state', 'ng
 		if(!item.status){
 		//	return false;
 		}
-		console.log(item)
+		//console.log(item)
 		return (!$scope.filterUrgency || item.urgency.name != 'רגיל') &&
 			(!$scope.filterDoubles || item.doubleType.name != 'רגיל')	&&
 			//(!$scope.filterFutures || ) &&
@@ -1103,11 +684,11 @@ app.controller('deliveriesCtrl', ['$scope', '$rootScope', '$http', '$state', 'ng
 
 	$scope.selectRecord = function(id){
 		$scope.currRecord = $scope.records[id]
+		console.log($scope.currRecord)
 	}
 
 	$scope.showRecord = function(event, record){
 		id = event.currentTarget.dataset['id'];
-		console.log(id)
 		if(record.hasOwnProperty('isSunday')){
 			$state.go('main.regularDelivery', {id: id})
 		} else {
@@ -1158,7 +739,6 @@ app.controller('priceListCtrl', ['$scope', '$rootScope', '$http', function($scop
 
 	$scope.addList = function(){
 		$scope.priceLists.push({'entries': []})
-		console.log($scope.priceLists)
 		$scope.currPriceList = $scope.priceLists.length - 1;
 		$scope.priceLists[$scope.currPriceList].name = '[הכנס שם]'
 	}
@@ -1175,7 +755,6 @@ app.controller('priceListCtrl', ['$scope', '$rootScope', '$http', function($scop
 				$scope.addList()
 			}
 			$scope.currPriceList--;
-			console.log($scope.currPriceList);
 			$rootScope.showLoader = false;
 		}).error(function(data){
 			$rootScope.showLoader = false;
@@ -1364,141 +943,6 @@ app.controller('tablesCtrl', ['$scope', '$rootScope', '$http', '$state', functio
 	}
 }])
 
-app.controller('regularDeliveryCtrl', ['$scope', '$http', '$rootScope', '$state', function($scope, $http, $rootScope, $state){
-	//init
-	$scope.regularDelivery = {}
-	if ($state.params.id){
-		$http({
-			method: 'GET',
-			url: '/api/RegularDelivery/' + $state.params.id
-		}).success(function(data){
-			$scope.regularDelivery = data
-			//$scope.initObjects(data)
-		})
-	}
-
-	$rootScope.currPage = 'main.newRegularDelivery';
-	$rootScope.currMenu = 'main'
-	$rootScope.currTable = 'סבבים קבועים'
-	$rootScope.showLoader = true;
-
-	$http.get('/api/Customers/').success(function(data){
-		$scope.customers = data;
-	})
-
-	$http.get('/api/VehicleTypes').success(function(data){
-		$scope.vehicles = data;
-	})
-
-	$http.get('/api/UrgencyList').success(function(data){
-		$scope.urgs = data;
-	})
-
-	$http.get('/api/DoubleTypeList').success(function(data){
-		$scope.doubles = data;
-	})
-
-	$http.get('/api/Employee').success(function(data){
-		$scope.employees = data;
-	})
-
-	$http.get('/api/RegularDelivery/').success(function(data){
-		$scope.regularDeliveries = data;
-	})
-
-	$rootScope.showLoader = false;
-	//$scope.selectedRegularDelivery = undefined;
-
-	//functions
-
-	/*$scope.customerSelected = function(){
-		$scope.contactMans = undefined;
-
-		for (i in $scope.customers){
-			if($scope.customers[i].id == $scope.regularDelivery.customer){
-				$scope.contactMans = $scope.customers[i].contact_man
-				//console.log($scope.customers[i])
-			}
-		}
-	}*/
-
-	$scope.$watch('regularDelivery.customer', function(data){
-		for (i in $scope.customers){
-			if($scope.customers[i].id == data){
-				$scope.contactMans = $scope.customers[i].contact_man
-			}
-		}
-	})
-
-	$scope.newRegularDelivery = function(){
-		$scope.regularDelivery = {}
-		$scope.selectedRegularDelivery = 0;
-	}
-
-	$scope.deleteRegularDelivery = function(){
-		$http({
-			method: 'DELETE',
-			url: '/api/RegularDelivery/' + $scope.regularDelivery.id
-		}).success(function(){
-			//TODO: remove from list
-			$scope.regularDelivery = {}
-			$scope.selectedRegularDelivery = 0;
-
-			$rootScope.addAlert('נמחק בהצלחה', 'success')
-		}).error(function(data){
-			$rootScope.addAlert('התרחשה שגיאה! נסה שוב מאוחר יותר', 'danger')
-		})
-	}
-
-	$scope.submit = function(){
-		if($scope.regularDelivery.id){
-			$http({
-				method: 'PUT',
-				url: '/api/RegularDelivery/' + $scope.regularDelivery.id,
-				data: $scope.regularDelivery,
-				headers : { 'Content-Type': 'application/json' }
-			}).success(function(data){
-				$rootScope.addAlert('סבב קבוע הוזן בהצלחה!', 'success')
-				//alert("המשלוח הוזן!")
-			})
-			.error(function(data){
-				$rootScope.addAlert('שגיאה', 'danger')
-				//alert("שגיאה!")
-			})
-		} else {
-			$http({
-				method: 'POST',
-				url: '/api/newRegularDelivery/',
-				data: $scope.regularDelivery,
-				headers : { 'Content-Type': 'application/json' }
-			})
-			.success(function(data){
-				$rootScope.addAlert('סבב קבוע הוזן בהצלחה!', 'success')
-				//alert("המשלוח הוזן!")
-			})
-			.error(function(data){
-				$rootScope.addAlert('שגיאה', 'danger')
-				//alert("שגיאה!")
-			})
-		}
-	}
-
-	$scope.initObjects = function(data){
-		$scope.regularDelivery.lastUpdate = (data.lastUpdate == undefined) ? undefined : new Date(data.lastUpdate)
-		$scope.regularDelivery.startDate = (data.startDate == undefined) ? undefined : new Date(data.startDate)
-		$scope.regularDelivery.endDate = (data.endDate == undefined) ? undefined : new Date(data.endDate)
-	}
-
-	$scope.selectRegularDelivery = function(){
-		$http({
-			method: 'GET',
-			url: '/api/RegularDelivery/' + $scope.selectedRegularDelivery
-		}).success(function(data){
-			$scope.regularDelivery = data;
-			$scope.initObjects(data);
-		})
-	}
-}])
 
 app.controller('regularSitesCtrl', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http){
 	// init
@@ -1541,7 +985,6 @@ app.controller('regularSitesCtrl', ['$scope', '$rootScope', '$http', function($s
 	}
 
 	$scope.change = function(row){
-		console.log(row)
 		row.changed = true;
 	}
 

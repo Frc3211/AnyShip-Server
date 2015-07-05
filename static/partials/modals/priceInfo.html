@@ -1,63 +1,71 @@
 ﻿<div class="popup">
 	<div class="modal-header">
-		<div>עלות המשלוח</div> 
+		<div>עלות המשלוח</div>
 		<span ng-click="close()" class="x-btn"></span>
 	</div>
 	<div class="modal-body">
 		<div class="row">
-			<div class="col-lg-6 bold">
+			<div class="col-lg-8 bold">
 				מחיר בסיס:
 			</div>
-			<div class="col-lg-6">
-				{{ price.basicPrice }}
+			<div class="col-lg-4">
+				{{ priceData.basicPrice }}
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-6 bold">
-				מקדם דחיפות:
+			<div class="col-lg-8 bold">
+				תוספת  דחיפות:
 			</div>
-			<div class="col-lg-6">
-				{{ price.urgency }}
+			<div class="col-lg-4">
+				{{ priceData.addForUrgency }}
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-6 bold">
+			<div class="col-lg-8 bold">
 				מקדם חבילות:
 			</div>
-			<div class="col-lg-6">
-				{{ price.packages }}
+			<div class="col-lg-4">
+				{{ priceData.addForPackages }}
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-6 bold">
+			<div class="col-lg-8 bold">
 				מקדם קרטונים:
 			</div>
-			<div class="col-lg-6">
-				{{ price.boxes }}
+			<div class="col-lg-4">
+				{{ priceData.addForBoxes }}
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-6 bold">
+			<div class="col-lg-8 bold">
 				מקדם אחה"צ:
 			</div>
-			<div class="col-lg-6">
-				{{ price.afternoon }}
+			<div class="col-lg-4">
+				{{ priceData.afternoon }}
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-6 bold">
+			<div class="col-lg-8 bold">
+				תוספת אמצעי הובלה:
+			</div>
+			<div class="col-lg-4">
+				{{ priceData.vehicleTypePrice }}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-8 bold">
 				המתנה:
 			</div>
-			<div class="col-lg-6">
-				{{ price.waiting }}
+			<div class="col-lg-4">
+				{{ priceData.waiting }}
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-6 bold">
-				משלוח כפול:
+			<div class="col-lg-8 bold">
+				תוספת משלוח כפול:
 			</div>
-			<div class="col-lg-6">
-				{{ price.double }}
+			<div class="col-lg-4">
+				{{ priceData.addForDouble }}
 			</div>
 		</div>
 		<hr>
@@ -66,7 +74,7 @@
 				סה"כ:
 			</div>
 			<div class="col-lg-6 bold">
-				{{ price.total }}
+				{{ priceData.totalPrice }} ש"ח
 			</div>
 		</div>
 	</div>

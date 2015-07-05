@@ -84,9 +84,15 @@
 			<label>מוצא</label>
 		</div>
 		<div class="col-sm-3 form-field">
-			<select ng-model="regularDelivery.sourceCustomer">
+			<!--<select ng-model="regularDelivery.sourceCustomer">
 				<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
-			</select>
+			</select>-->
+			<ui-select tagging="addTagging" ng-change="senderChanged()" tagging-tokens="ENTER" ng-model="delivery.senderObj" theme="bootstrap" sortable="true" ng-disabled="disabled">
+				<ui-select-match>{{$select.selected.name}}</ui-select-match>
+				<ui-select-choices repeat="item in regularSites | filter:$select.search">
+					{{item.name}}
+				</ui-select-choices>
+			</ui-select>
 			<label>לקוח</label>
 		</div>
 		<div class="col-sm-3 form-field">
@@ -109,9 +115,15 @@
 			<label>יעד</label>
 		</div>
 		<div class="col-sm-3 form-field">
-			<select ng-model="regularDelivery.destCustomer">
+			<!--<select ng-model="regularDelivery.destCustomer">
 				<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
-			</select>
+			</select>-->
+			<ui-select tagging="addTagging" ng-change="receiverChanged()" tagging-tokens="ENTER" ng-model="delivery.receiverObj" theme="bootstrap" sortable="true" ng-disabled="disabled">
+				<ui-select-match>{{$select.selected.name}}</ui-select-match>
+				<ui-select-choices repeat="item in regularSites | filter:$select.search">
+					{{item.name}}
+				</ui-select-choices>
+			</ui-select>
 			<label>לקוח</label>
 		</div>
 		<div class="col-sm-3 form-field">

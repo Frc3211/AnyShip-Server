@@ -176,19 +176,19 @@
 	<hr>
 	<div class="row">
 		<div class="col-sm-2 form-field">
-			<select ng-model="delivery.urgency" class="combobox">
+			<select ng-model="delivery.urgency" required>
 				<option ng-repeat="urg in urgs" value="{{ urg.id }}">{{ urg.name }}</option>
 			</select>
 			<label>דחף</label>
 		</div>
 		<div class="col-sm-2 form-field">
-			<select ng-model="delivery.doubleType" class="combobox">
+			<select ng-model="delivery.doubleType">
 				<option ng-repeat="double in doubles" value="{{ double.id }}">{{ double.name }}</option>
 			</select>
 			<label>סוג כפולה</label>
 		</div>
 		<div class="col-sm-2 form-field">
-			<select ng-options="vehicle.id as vehicle.name for vehicle in vehicles" ng-model="delivery.vehicleType" class="combobox aaaa">
+			<select ng-options="vehicle.id as vehicle.name for vehicle in vehicles" ng-model="delivery.vehicleType">
 				<!--<option></option>
 				<option ng-repeat="vehicle in vehicles" value="{{ vehicle.id }}">{{ vehicle.name }}</option>-->
 			</select>

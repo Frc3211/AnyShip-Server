@@ -1,6 +1,26 @@
 ﻿<div ng-controller="deliveriesCtrl" class="full-height">
-	<div class="form-area-iner3">
+	<div class="rakaz-top-bar">
 		<div class="row">
+			<div class="col-sm-6">
+				<div class="path-fields">
+					<div>
+						מ
+						<input ng-model="currRecord.sender">
+					</div>
+					<div>
+						ל
+						<input ng-model="currRecord.receiver">
+					</div>
+				</div>
+				<div class="instructions-fields">
+					<textarea ng-model="currRecord.instructions"></textarea>
+				</div>
+			</div>
+			<div class="col-sm-6">
+
+			</div>
+		</div>
+		<!--<div class="row">
 			<div class="col-sm-4">
 				<div class="row">
 					<div class="col-sm-6 form-field">
@@ -8,14 +28,14 @@
 					</div>
 					<div class="col-sm-6 form-field">
 						<input type="text" ng-model="currRecord.receiver.name" disabled><label>יעד</label>
-					</div>	
-					
+					</div>
+
 					<div class="col-sm-12 form-field">
 						<textarea ng-model="currRecord.comment" disabled></textarea><label>הערות</label>
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="col-sm-2">
 				<div class="row">
 					<div class="col-sm-12 form-field">
@@ -24,7 +44,7 @@
 					<div class="col-sm-12 form-field">
 						<input type="text" ng-model="currRecord.secondReceiverName" disabled><label>מקבל2</label>
 					</div>
-					
+
 					<div class="col-sm-6">
 					</div>
 				</div>
@@ -49,9 +69,9 @@
 				<label>אמצעי הובלה</label>
 			</div>
 			<div class="col-sm-2 form-field">
-			
-			</div>		
-		</div>
+
+			</div>
+		</div>-->
 	</div>
 	<div class="form-area-filters">
 		<div class="row">

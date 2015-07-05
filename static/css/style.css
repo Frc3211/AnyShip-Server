@@ -776,11 +776,41 @@ input:focus{
 	height: calc(100% - 160px);
 	direction:rtl;
 }
-.form-area-iner3{
+.rakaz-top-bar{
 	margin:auto;
 	width:95%;
 	height: 95px;
-	padding: 5px 0px 0px 0px;
+	padding: 5px 0px 5px 0px;
+}
+.rakaz-top-bar input{
+	height: 100%;
+}
+.path-fields{
+	height: 25px;
+}
+.path-fields > div{
+	width: 50%;
+	height: 100%;
+	float: right;
+}
+.path-fields > div:first-child{
+	padding-left: 10px;
+}
+.path-fields > div:last-child{
+	padding-right: 6px;
+}
+.rakaz-top-bar input{
+	width: 92%;
+	height: 100%;
+	float: left;
+}
+.instructions-fields textarea{
+	width: 100%;
+	height: 100%;
+}
+.instructions-fields {
+	margin-top: 10px;
+	height: 50px;
 }
 .scrollbar{
 	overflow: scroll;
@@ -1561,4 +1591,7 @@ span.ui-select-match-text span{
 }
 .modal-body .btn{
 	width: 100%;
+}
+.half-width{
+	width: 50%;
 }
