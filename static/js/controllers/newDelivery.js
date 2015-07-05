@@ -10,8 +10,6 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 	$scope.delivery.type = '0';
 	$scope.regularSites = [];
 
-
-
 	if ($state.params.id){
 		$http({
 			method: 'GET',
@@ -59,7 +57,6 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 		$scope.doubles = data;
 		$scope.delivery.doubleType = $scope.doubles[0].id;
 	})
-
 
 	//functions
 	$scope.addTagging = function(name){
@@ -194,11 +191,6 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 				$scope.delivery.senderObj = $scope.regularSites[$scope.regularSites.length-1]
 				$scope.delivery.receiverObj = {};
 
-				/*$scope.delivery.sourceStreet = cust.streetName;
-				$scope.delivery.sourceHomeNum = cust.streetNum;
-				$scope.delivery.sourcePhone = cust.phone1;
-				$scope.delivery.sourceCity = cust.city;*/
-
 				$scope.senderChanged()
 
 				break;
@@ -221,10 +213,6 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 				$scope.delivery.receiverObj = $scope.regularSites[$scope.regularSites.length-1]
 				$scope.delivery.senderObj = {};
 
-				/*$scope.delivery.destStreet = cust.streetName;
-				$scope.delivery.destHomeNum = cust.streetNum;
-				$scope.delivery.destPhone = cust.phone1;
-				$scope.delivery.destCity = cust.city;*/
 
 				$scope.receiverChanged()
 
@@ -296,22 +284,6 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			})
 		}
 	}
-
-	/*$scope.change = function(){
-		switch($scope.delivery.type){
-			case '0':
-				$scope.delivery.receiver = $scope.delivery.sender;
-				$scope.delivery.sender = $scope.delivery.customer;
-				break;
-			case '1':
-				$scope.delivery.sender = $scope.delivery.receiver;
-				$scope.delivery.receiver = $scope.delivery.customer;
-				break;
-			case '2':
-				$scope.delivery.sender = undefined;
-				break;
-		}
-	}*/
 
 	$scope.showPriceInfo = function(){
 		$scope.getPrice();
