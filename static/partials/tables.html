@@ -9,16 +9,16 @@
 	<table class="table table-bordered table-condensed">
 		<thead>
 			<tr>
-				<!--<th><span class="button plus" ng-click="addEntry()"></span></th>-->
+				<th ng-if="table.isAdded"><span class="button plus" ng-click="addEntry()"></span></th>
 				<th ng-repeat="field in table.fields">{{ field.title }}</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="row in rows">
-				<!--<td style="width: 40px;">
+				<td style="width: 40px;" ng-if="table.isAdded">
 					<span class="button minus" ng-click="deleteEntry($index)"></span>
-				</td>-->
-				<td ng-repeat="field in table.fields"><input type="text" class="form-control" ng-model="row[field.name]" ng-change="changed(row)"></td>
+				</td>
+				<td ng-repeat="field in table.fields"><input type="text" class="form-control" ng-model="row[field.name]" ng-change="changed($parent.$index)"></td>
 			</tr>
 		</tbody>
 	</table>

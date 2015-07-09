@@ -259,12 +259,13 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 		$scope.delivery.exeTime = $filter('date')($scope.delivery.exeTime, 'HH:mm')
 		$scope.delivery.estTime = $filter('date')($scope.delivery.estTime, 'HH:mm')
 		*/
+
 		if($scope.delivery.id){
 			$http({
 				method: 'PUT',
 				url: '/api/updateDelivery/' + $scope.delivery.id,
 				data: $scope.delivery,
-				headers : { 'Content-Type': 'application/json' }
+				//headers : { 'Content-Type': 'application/json' }
 			}).success(function(data){
 				$scope.delivery.id = data.id
 				$rootScope.addAlert('משלוח עודכן בהצלחה', 'success')

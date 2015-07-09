@@ -1,4 +1,4 @@
-app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', 'ngDialog', function($scope, $rootScope, $http, $state, ngDialog){
+app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter', 'ngDialog', 'tablesService', function($scope, $rootScope, $http, $state, $filter, ngDialog, tablesService){
 	//init
 	$rootScope.currMenu = 'commands';
 	$rootScope.showLoader = true;
@@ -10,6 +10,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', 'ngDialo
 		$rootScope.showLoader = false;
 	})
 
+
 	$http.get('/api/LastRegularDeliveries/').success(function(data){
 		$scope.records = $scope.records.concat(data);
 	})
@@ -17,6 +18,8 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', 'ngDialo
 	$http.get('/api/Employee/').success(function(data){
 		$scope.employees = data;
 	})
+
+	$scope.vehicleTypes = tablesService['VehicleTypes'].getAll()
 
 	$rootScope.currTable = "מעקב משלוחים - מוצא / יעד"
 
@@ -198,6 +201,12 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', 'ngDialo
 		}
 		console.log($scope.currRecord)
 	}
+
+	$scope.$watch('currRecord', function(obj){
+		if(obj == undefined)
+			return;
+		obj.created = $filter('date')(obj.created, 'dd-MM-yyyy')
+	})
 
 	$scope.showRecord = function(event, record){
 		id = event.currentTarget.dataset['id'];

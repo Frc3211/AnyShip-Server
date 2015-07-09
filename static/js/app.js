@@ -12,7 +12,12 @@ app.config([ '$stateProvider', '$urlRouterProvider', '$httpProvider', '$interpol
 		$stateProvider
 			.state('dashboard', {
 				url: '/dashboard',
-				templateUrl: 'static/partials/dashboard.html'
+				templateUrl: 'static/partials/dashboard.html',
+				resolve: {
+					'tablesServiceData': function(tablesService){
+						return tablesService['VehicleTypes'].promise;
+					}
+				}
 			})
 			.state('login', {
 			    url: '/login',

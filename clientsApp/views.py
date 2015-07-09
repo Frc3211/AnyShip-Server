@@ -410,6 +410,22 @@ class StatusList(generics.ListCreateAPIView):
 			return None
 		return Status.objects.filter(client=client)
 
+class StatusUpdate(generics.RetrieveUpdateDestroyAPIView):
+	serializer_class = StatusSerializer
+
+	def perform_update(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return Status.objects.filter(client=client)
+
 class EmployeeList(generics.ListCreateAPIView):
 	serializer_class = EmployeeSerializer
 
@@ -446,6 +462,22 @@ class JobList(generics.ListCreateAPIView):
 	serializer_class = JobSerializer
 
 	def perform_create(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return Job.objects.filter(client=client)
+
+class JobListUpdate(generics.RetrieveUpdateDestroyAPIView):
+	serializer_class = JobSerializer
+
+	def perform_update(self, serializer):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)

@@ -83,12 +83,17 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', '$mo
 								$scope.currMenu = $scope.menus.priceLists
 							}
 						}, {
-							title: 'טבלאות',
+							title: 'טבלאות בחירה',
 							click: function(){
 								$scope.currMenu = $scope.menus.tables;
 							}
 						}],
 						priceLists: [{
+							title: 'חזור',
+							click: function(){
+								$scope.currMenu = $scope.menus.main;
+							}
+						}, {
 							title: 'מחירון יעדים',
 							click: function(){
 								$rootScope.showLoader = true;
@@ -109,10 +114,27 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', '$mo
 							}
 						}],
 						tables: [{
+							title: 'חזור',
+							click: function(){
+								$scope.currMenu = $scope.menus.main;
+							}
+						}, {
 							title: 'סוגי משלוח',
 							click: function(){
 								$modalInstance.close()
 								$rootScope.gotoPage('main.tables', {tableName: 'VehicleTypes'})
+							}
+						}, {
+							title: 'סטטוסים',
+							click: function(){
+								$modalInstance.close()
+								$rootScope.gotoPage('main.tables', {tableName: 'Status'})
+							}
+						}, {
+							title: 'תפקידים',
+							click: function(){
+								$modalInstance.close()
+								$rootScope.gotoPage('main.tables', {tableName: 'Jobs'})
 							}
 						}]
 					}
@@ -625,113 +647,9 @@ app.controller('priceListCtrl', ['$scope', '$rootScope', '$http', function($scop
 
 app.controller('popupCtrl', ['$scope', '$rootScope', function($scope, $rootScope){
 	//init
-
-
-
 	//functions
 	$scope.close = function(){
 		$rootScope.showPopup = false;
-	}
-}])
-
-app.controller('tablesCtrl', ['$scope', '$rootScope', '$http', '$state', function($scope, $rootScope, $http, $state){
-	//init
-	$scope.tables = {
-		VehicleTypes: {
-			fields: [{
-				title: 'כלי רכב',
-				name: 'name'
-			}, {
-				title: 'מחיר',
-				name: 'price'
-			}],
-			name: 'VehicleTypes',
-			title: 'סוגי משלוח'
-		},
-		UrgencyList: {
-			fields: [{
-				title: 'דחיפות',
-				name: 'name'
-			}, {
-				title: 'מכפיל',
-				name: 'multiplier'
-			}],
-			name: 'UrgencyList',
-			title: 'מחירון דחיפויות'
-		},
-		DoubleTypeList: {
-			fields: [{
-				title: 'כפולה',
-				name: 'name'
-			}, {
-				title: 'מכפיל',
-				name: 'multiplier'
-			}],
-			name: 'DoubleTypeList',
-			title: 'מחירון כפולות'
-		}
-	}
-
-	$scope.table = $scope.tables[$state.params.tableName]
-	$rootScope.currTable = $scope.table.title;
-
-
-	$http({
-		method: 'GET',
-		url: '/api/' + $scope.table.name
-	}).success(function(data){
-		$scope.rows = data;
-	})
-
-	$scope.deleted = []
-	$scope.changed = [];
-	//functions
-	$scope.addEntry = function(){
-		$scope.rows.push({})
-	}
-
-	$scope.deleteEntry = function(index){
-		if($scope.rows[index].hasOwnProperty('id')){
-			$scope.deleted.push($scope.rows[index]['id'])
-		}
-		$scope.rows.splice(index, 1)
-	}
-
-	$scope.changed = function(row){
-		row.changed = true;
-	}
-
-	$scope.save = function(){
-		angular.forEach($scope.deleted, function(value, key){
-			$http({
-				method: 'DELETE',
-				url: '/api/' + $scope.table.name + '/' + value
-			})
-		})
-
-		angular.forEach($scope.rows, function(value, key){
-			if(value.id){
-				if(value.changed){
-					$http({
-						method: 'PUT',
-						url: '/api/' + $scope.table.name + '/' + value.id,
-						data: value,
-						headers : { 'Content-Type': 'application/json' }
-					}).success(function(data){
-						value.changed = false;
-					})
-				}
-			} else {
-				$http({
-					method: 'POST',
-					url: '/api/' + $scope.table.name + '/',
-					data: value,
-					headers : { 'Content-Type': 'application/json' }
-				}).success(function(data){
-					value.id = data.id;
-				})
-			}
-		})
 	}
 }])
 

@@ -12,296 +12,299 @@
 		</div>
 	</div>
 	<hr>
-	<div class="row">{{ delivery.sender }} - {{ delivery.receiver }}
-		<div class="col-sm-2 form-field">
-			<input type="text" ng-model="delivery.id" disabled><label>מס. משלוח</label>
+	<form name="newDeliveryForm" novalidate>
+		<div class="row">
+			<div class="col-sm-2 form-field">
+				<input type="text" ng-model="delivery.id" disabled><label>מס. משלוח</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="time" ng-model="delivery.created" disabled><label>שעה</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="date" ng-model="delivery.created" disabled><label>תאריך</label>
+			</div>
 		</div>
-		<div class="col-sm-2 form-field">
-			<input type="time" ng-model="delivery.created" disabled><label>שעה</label>
+		<div class="row">
+			<div class="col-sm-6 form-field">
+				<select ng-model="delivery.customer" ng-change="customerSelected()" id="customer" required>
+					<option ng-repeat="customer in customers" value="{{ customer.id }}" data-index="{{$index}}">{{ customer.name }}</option>
+				</select>
+				<label>לקוח</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="text" disabled ng-model="delivery.customer">
+				<label>מספר לקוח</label>
+			</div>
 		</div>
-		<div class="col-sm-2 form-field">
-			<input type="date" ng-model="delivery.created" disabled><label>תאריך</label>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm-6 form-field">
-			<select ng-model="delivery.customer" ng-change="customerSelected()" id="customer">
-				<option ng-repeat="customer in customers" value="{{ customer.id }}" data-index="{{$index}}">{{ customer.name }}</option>
-			</select>
-			<label>לקוח</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="text" disabled ng-model="delivery.customer">
-			<label>מספר לקוח</label>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm-4 form-field">
+		<div class="row">
+			<div class="col-sm-4 form-field">
 
-			<!--<select ng-model="delivery.contactMan">
-				<option></option>
-				<option ng-repeat="item in contactMans" value="{{ item.id }}">{{ item.name }}</option>
-			</select>-->
-			<select ng-model="delivery.contactMan" ng-options="item.id as item.name for item in contactMans"></select>
-			<!--<input type="text" ng-model="delivery.ContactMan">-->
-			<label>איש קשר</label>
+				<!--<select ng-model="delivery.contactMan">
+					<option></option>
+					<option ng-repeat="item in contactMans" value="{{ item.id }}">{{ item.name }}</option>
+				</select>-->
+				<select ng-model="delivery.contactMan" ng-options="item.id as item.name for item in contactMans"></select>
+				<!--<input type="text" ng-model="delivery.ContactMan">-->
+				<label>איש קשר</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select ng-model="delivery.type" ng-change="typeCallback()" class="combobox" required>
+					<option value="0">שליחות</option>
+					<option value="1">איסוף</option>
+					<option value="2">העברה</option>
+				</select>
+				<label>סוג</label>
+			</div>
 		</div>
-		<div class="col-sm-2 form-field">
-			<select ng-model="delivery.type" ng-change="typeCallback()" class="combobox">
-				<option value="0">שליחות</option>
-				<option value="1">איסוף</option>
-				<option value="2">העברה</option>
-			</select>
-			<label>סוג</label>
+		<hr>
+		<div class="row">
+			<span class="col-sm-2">
+				<label>מוצא</label>
+			</span>
 		</div>
-	</div>
-	<hr>
-	<div class="row">
-		<span class="col-sm-2">
-			<label>מוצא</label>
-		</span>
-	</div>
-	<div class="row">
-		<div class="col-sm-2 form-field">
-			<!--<ui-select ng-model="delivery.sender" theme="bootstrap">
-				<ui-select-match>{{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="customer.id as customer in customers | propsFilter: {name: $select.search, id: $select.search}">
-					<div ng-bind-html="customer.name | highlight: $select.search"></div>
-				</ui-select-choices>
-			</ui-select>-->
-			<ui-select tagging="addTagging" ng-change="senderChanged()" tagging-tokens="ENTER" ng-model="delivery.senderObj" theme="bootstrap" sortable="true" ng-disabled="disabled">
-				<ui-select-match>{{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="item in regularSites | filter:$select.search">
-					{{item.name}}
-				</ui-select-choices>
-			</ui-select>
-			<!--<select ng-model="delivery.sender">
-				<option></option>
-				<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
-			</select>-->
-			<label>שם חברה</label>
+		<div class="row">
+			<div class="col-sm-2 form-field">
+				<!--<ui-select ng-model="delivery.sender" theme="bootstrap">
+					<ui-select-match>{{$select.selected.name}}</ui-select-match>
+					<ui-select-choices repeat="customer.id as customer in customers | propsFilter: {name: $select.search, id: $select.search}">
+						<div ng-bind-html="customer.name | highlight: $select.search"></div>
+					</ui-select-choices>
+				</ui-select>-->
+				<ui-select tagging="addTagging" ng-change="senderChanged()" tagging-tokens="ENTER" ng-model="delivery.senderObj" theme="bootstrap" sortable="true" ng-disabled="disabled" ng-required="true">
+					<ui-select-match>{{$select.selected.name}}</ui-select-match>
+					<ui-select-choices repeat="item in regularSites | filter:$select.search">
+						{{item.name}}
+					</ui-select-choices>
+				</ui-select>
+				<!--<select ng-model="delivery.sender">
+					<option></option>
+					<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
+				</select>-->
+				<label>שם חברה</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="text" ng-model="delivery.sourceStreet" required><label>רחוב</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="text" ng-model="delivery.sourcePhone">
+				<label>טלפון</label>
+			</div>
+			<div class="col-sm-1 form-field">
+				<input type="number" ng-model="delivery.sourceHomeNum" required>
+				<label>מס' בית</label>
+			</div>
+			<div class="col-sm-1 form-field">
+				<input type="number" ng-model="delivery.sourceHomeEnter">
+				<label>כניסה</label>
+			</div>
+			<div class="col-sm-1 form-field">
+				<input type="number" ng-model="delivery.sourceFloor">
+				<label>קומה</label>
+			</div>
+			<div class="col-sm-1 form-field">
+				<input type="number" ng-model="delivery.sourceApart">
+				<label>דירה</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select class="combobox" ng-model="delivery.sourceCity" required>
+					<option></option>
+					<option ng-repeat="city in cities" value="{{ city.id }}">{{ city.name }}</option>
+				</select>
+				<label>עיר</label>
+			</div>
 		</div>
-		<div class="col-sm-2 form-field">
-			<input type="text" ng-model="delivery.sourceStreet"><label>רחוב</label>
+		<div class="row">
+			<span class="col-sm-2">
+				<label>יעד</label>
+			</span>
 		</div>
-		<div class="col-sm-2 form-field">
-			<input type="text" ng-model="delivery.sourcePhone">
-			<label>טלפון</label>
+		<div class="row">
+			<div class="col-sm-2 form-field">
+				<!--<select ng-model="delivery.receiver">
+					<option></option>
+					<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
+				</select>-->
+				<ui-select tagging="addTagging" ng-change="receiverChanged()" tagging-tokens="ENTER" ng-model="delivery.receiverObj" theme="bootstrap" sortable="true" ng-disabled="disabled">
+					<ui-select-match>{{$select.selected.name}}</ui-select-match>
+					<ui-select-choices repeat="item in regularSites | filter:$select.search">
+						{{item.name}}
+					</ui-select-choices>
+				</ui-select>
+				<label>שם חברה</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="text" ng-model="delivery.destStreet" required><label>רחוב</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="text" ng-model="delivery.destPhone">
+				<label>טלפון</label>
+			</div>
+			<div class="col-sm-1 form-field">
+				<input type="number" ng-model="delivery.destHomeNum" required>
+				<label>מס' בית</label>
+			</div>
+			<div class="col-sm-1 form-field">
+				<input type="number" ng-model="delivery.destHomeEnter">
+				<label>כניסה</label>
+			</div>
+			<div class="col-sm-1 form-field">
+				<input type="number" ng-model="delivery.destFloor">
+				<label>קומה</label>
+			</div>
+			<div class="col-sm-1 form-field">
+				<input type="number" ng-model="delivery.destApart">
+				<label>דירה</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select ng-model="delivery.destCity" required>
+					<option></option>
+					<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
+				</select>
+				<label>עיר</label>
+			</div>
 		</div>
-		<div class="col-sm-1 form-field">
-			<input type="number" ng-model="delivery.sourceHomeNum">
-			<label>מס' בית</label>
+		<hr>
+		<div class="row">
+			<div class="col-sm-12 form-field">
+				<textarea ng-model="delivery.comment"></textarea>
+				<label>הערות</label>
+			</div>
+			<div class="col-sm-12 form-field">
+				<textarea ng-model="delivery.instructions"></textarea>
+				<label>הוראות</label>
+			</div>
 		</div>
-		<div class="col-sm-1 form-field">
-			<input type="number" ng-model="delivery.sourceHomeEnter">
-			<label>כניסה</label>
+		<hr>
+		<div class="row">
+			<div class="col-sm-2 form-field">
+				<select ng-model="delivery.urgency" required>
+					<option ng-repeat="urg in urgs" value="{{ urg.id }}">{{ urg.name }}</option>
+				</select>
+				<label>דחף</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select ng-model="delivery.doubleType" required>
+					<option ng-repeat="double in doubles" value="{{ double.id }}">{{ double.name }}</option>
+				</select>
+				<label>סוג כפולה</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select ng-options="vehicle.id as vehicle.name for vehicle in vehicles" ng-model="delivery.vehicleType" required>
+					<!--<option></option>
+					<option ng-repeat="vehicle in vehicles" value="{{ vehicle.id }}">{{ vehicle.name }}</option>-->
+				</select>
+				<label>אמצעי הובלה</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="number" ng-model="delivery.waiting">
+				<label>המתנה בדקות</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select ng-options="status.id as status.name for status in deliveryStatuses" ng-model="delivery.status" required></select>
+				<label>סטטוס</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="number" ng-model="delivery.barcode">
+				<label>ברקוד</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="text" ng-model="delivery.firstReceiverName">
+				<label>מקבל1</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="text" ng-model="delivery.secondReceiverName">
+				<label>מקבל2</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select ng-model="delivery.firstDeliver" class="combobox">
+					<option ng-repeat="employee in employees" value="{{employee.id}}">{{ employee.name }}</option>
+				</select>
+				<label>שליח אוסף</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select ng-model="delivery.secondDeliver" class="combobox">
+					<option ng-repeat="employee in employees" value="{{employee.id}}">{{ employee.name }}</option>
+				</select>
+				<label>שליח מוסר</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select ng-model="delivery.thirdDeliver" class="combobox">
+					<option ng-repeat="employee in employees" value="{{employee.id}}">{{ employee.name }}</option>
+				</select>
+				<label>שליח שלישי</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="number" ng-model="delivery.certNum">
+				<label>מספר תעודה</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="time" ng-model="delivery.rakazTime">
+				<label>זמן רכז</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="time" ng-model="delivery.exeTime">
+				<label>ביצוע בפועל</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="time" ng-model="delivery.endTime">
+				<label>ביצוע משוער</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<!--<select ng-model="delivery.isTomorrow">
+					<option value="false">לא</option>
+					<option value="true">כן</option>
+				</select>-->
+				<select ng-options="o.value as o.text for o in [{ text: 'כן', value: true }, { text: 'לא', value: false }]" ng-model="delivery.isTomorrow">
+				</select>
+				<label>מהיום למחר</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<!--<select ng-model="delivery.signCert">
+					<option value="false">לא</option>
+					<option value="true">כן</option>
+				</select>-->
+				<select ng-options="o.value as o.text for o in [{ text: 'כן', value: true }, { text: 'לא', value: false }]" ng-model="delivery.signCert">
+				</select>
+				<label>תעודה חתומה</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="number" ng-model="delivery.numOfPackages">
+				<label>חבילות</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="number" ng-model="delivery.numOfBoxes">
+				<label>קרטונים</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<!-- TODO -->
+				<input type="number">
+				<label>ת. טלפוני</label>
+			</div>
 		</div>
-		<div class="col-sm-1 form-field">
-			<input type="number" ng-model="delivery.sourceFloor">
-			<label>קומה</label>
+		<hr>
+		<div class="row">
+			<div class="col-sm-2 form-field">
+				<input type="number" ng-model="delivery.basicPrice">
+				<label>מחיר בסיס</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="number" ng-model="delivery.totalPrice">
+				<label>סה"כ ללקוח</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<!-- TODO -->
+				<input type="number">
+				<label>הוצאות</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="number">
+				<label>גוביינא</label>
+			</div>
 		</div>
-		<div class="col-sm-1 form-field">
-			<input type="number" ng-model="delivery.sourceApart">
-			<label>דירה</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<select class="combobox" ng-model="delivery.sourceCity">
-				<option></option>
-				<option ng-repeat="city in cities" value="{{ city.id }}">{{ city.name }}</option>
-			</select>
-			<label>עיר</label>
-		</div>
-	</div>
-	<div class="row">
-		<span class="col-sm-2">
-			<label>יעד</label>
-		</span>
-	</div>
-	<div class="row">
-		<div class="col-sm-2 form-field">
-			<!--<select ng-model="delivery.receiver">
-				<option></option>
-				<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
-			</select>-->
-			<ui-select tagging="addTagging" ng-change="receiverChanged()" tagging-tokens="ENTER" ng-model="delivery.receiverObj" theme="bootstrap" sortable="true" ng-disabled="disabled">
-				<ui-select-match>{{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="item in regularSites | filter:$select.search">
-					{{item.name}}
-				</ui-select-choices>
-			</ui-select>
-			<label>שם חברה</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="text" ng-model="delivery.destStreet"><label>רחוב</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="text" ng-model="delivery.destPhone">
-			<label>טלפון</label>
-		</div>
-		<div class="col-sm-1 form-field">
-			<input type="number" ng-model="delivery.destHomeNum">
-			<label>מס' בית</label>
-		</div>
-		<div class="col-sm-1 form-field">
-			<input type="number" ng-model="delivery.destHomeEnter">
-			<label>כניסה</label>
-		</div>
-		<div class="col-sm-1 form-field">
-			<input type="number" ng-model="delivery.destFloor">
-			<label>קומה</label>
-		</div>
-		<div class="col-sm-1 form-field">
-			<input type="number" ng-model="delivery.destApart">
-			<label>דירה</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<select ng-model="delivery.destCity">
-				<option></option>
-				<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
-			</select>
-			<label>עיר</label>
-		</div>
-	</div>
-	<hr>
-	<div class="row">
-		<div class="col-sm-12 form-field">
-			<textarea ng-model="delivery.comment"></textarea>
-			<label>הערות</label>
-		</div>
-		<div class="col-sm-12 form-field">
-			<textarea ng-model="delivery.instructions"></textarea>
-			<label>הוראות</label>
-		</div>
-	</div>
-	<hr>
-	<div class="row">
-		<div class="col-sm-2 form-field">
-			<select ng-model="delivery.urgency" required>
-				<option ng-repeat="urg in urgs" value="{{ urg.id }}">{{ urg.name }}</option>
-			</select>
-			<label>דחף</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<select ng-model="delivery.doubleType">
-				<option ng-repeat="double in doubles" value="{{ double.id }}">{{ double.name }}</option>
-			</select>
-			<label>סוג כפולה</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<select ng-options="vehicle.id as vehicle.name for vehicle in vehicles" ng-model="delivery.vehicleType">
-				<!--<option></option>
-				<option ng-repeat="vehicle in vehicles" value="{{ vehicle.id }}">{{ vehicle.name }}</option>-->
-			</select>
-			<label>אמצעי הובלה</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="number" ng-model="delivery.waiting">
-			<label>המתנה בדקות</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<select ng-options="status.id as status.name for status in deliveryStatuses" ng-model="delivery.status"></select>
-			<label>סטטוס</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="number" ng-model="delivery.barcode">
-			<label>ברקוד</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="text" ng-model="delivery.firstReceiverName">
-			<label>מקבל1</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="text" ng-model="delivery.secondReceiverName">
-			<label>מקבל2</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<select ng-model="delivery.firstDeliver" class="combobox">
-				<option ng-repeat="employee in employees" value="{{employee.id}}">{{ employee.name }}</option>
-			</select>
-			<label>שליח אוסף</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<select ng-model="delivery.secondDeliver" class="combobox">
-				<option ng-repeat="employee in employees" value="{{employee.id}}">{{ employee.name }}</option>
-			</select>
-			<label>שליח מוסר</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<select ng-model="delivery.thirdDeliver" class="combobox">
-				<option ng-repeat="employee in employees" value="{{employee.id}}">{{ employee.name }}</option>
-			</select>
-			<label>שליח שלישי</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="number" ng-model="delivery.certNum">
-			<label>מספר תעודה</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="time" ng-model="delivery.rakazTime">
-			<label>זמן רכז</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="time" ng-model="delivery.exeTime">
-			<label>ביצוע בפועל</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="time" ng-model="delivery.endTime">
-			<label>ביצוע משוער</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<!--<select ng-model="delivery.isTomorrow">
-				<option value="false">לא</option>
-				<option value="true">כן</option>
-			</select>-->
-			<select ng-options="o.value as o.text for o in [{ text: 'כן', value: true }, { text: 'לא', value: false }]" ng-model="delivery.isTomorrow">
-			</select>
-			<label>מהיום למחר</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<!--<select ng-model="delivery.signCert">
-				<option value="false">לא</option>
-				<option value="true">כן</option>
-			</select>-->
-			<select ng-options="o.value as o.text for o in [{ text: 'כן', value: true }, { text: 'לא', value: false }]" ng-model="delivery.signCert">
-			</select>
-			<label>תעודה חתומה</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="number" ng-model="delivery.numOfPackages">
-			<label>חבילות</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="number" ng-model="delivery.numOfBoxes">
-			<label>קרטונים</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<!-- TODO -->
-			<input type="number">
-			<label>ת. טלפוני</label>
-		</div>
-	</div>
-	<hr>
-	<div class="row">
-		<div class="col-sm-2 form-field">
-			<input type="number" ng-model="delivery.basicPrice">
-			<label>מחיר בסיס</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="number" ng-model="delivery.totalPrice">
-			<label>סה"כ ללקוח</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<!-- TODO -->
-			<input type="number">
-			<label>הוצאות</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="number">
-			<label>גוביינא</label>
-		</div>
-	</div>
-	<hr>
-	<button ng-click="submitDelivery()" class="btn btn-primary">שלח</button>
-	<button ng-click="getPrice()" class="btn">עדכן מחיר</button>
-	<button ng-click="showPriceInfo()" class="btn">הצג פירוט מחיר</button>
+	</form>
+
+		<hr>
+		<button ng-click="submitDelivery()" class="btn btn-primary" ng-disabled="newDeliveryForm.$invalid">שלח</button>
+		<button ng-click="getPrice()" class="btn">עדכן מחיר</button>
+		<button ng-click="showPriceInfo()" class="btn">הצג פירוט מחיר</button>
 </div>
