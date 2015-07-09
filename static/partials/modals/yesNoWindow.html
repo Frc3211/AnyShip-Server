@@ -1,0 +1,13 @@
+<div class="popup">
+	<div class="modal-header">
+		<div>{{ title }}</div>
+		<span ng-click="close()" class="x-btn"></span>
+	</div>
+	<div class="modal-body">
+        {{ msg }}
+        <div class="buttons">
+            <button ng-click="yes()" class="btn btn-primary">כן</button>
+            <button ng-click="no()" class="btn btn-danger">לא</button>
+        </div>
+	</div>
+</div>

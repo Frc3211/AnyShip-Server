@@ -81,7 +81,7 @@ app.config([ '$stateProvider', '$urlRouterProvider', '$httpProvider', '$interpol
 	}
 ])
 
-app.run(['$state', '$rootScope', '$http', function($state, $rootScope, $http){
+app.run(['$state', '$rootScope', '$http', '$modal', function($state, $rootScope, $http, $modal){
 	$rootScope.showLoader = true;
 	$rootScope.$on('$stateChangeStart', function(event, toState){
 		if(toState.name != 'login'){
@@ -129,7 +129,32 @@ app.run(['$state', '$rootScope', '$http', function($state, $rootScope, $http){
 	$rootScope.showLoader = false;
 
 	$rootScope.goToHome = function(){
-		$state.go('dashboard');
+		if($rootScope.formHasChanges){
+			var modalInstance = $modal.open({
+				animation: true,
+				templateUrl: '/static/partials/modals/yesNoWindow.html',
+				controller: function($scope, $modalInstance){
+					$scope.close = function(){
+						$modalInstance.close();
+					}
+
+					$scope.msg = "יש שינויים שלא נשמרו, האם אתה בטוח שברצונך לצאת?";
+					$scope.title = "אזהרה"
+
+					$scope.yes = function(){
+						$modalInstance.close();
+						$state.go('dashboard');
+					}
+
+					$scope.no = function(){
+						$modalInstance.close();
+					}
+				},
+				size: 'sm'
+			});
+		} else {
+			$state.go('dashboard');
+		}
 	}
 
 	$http.get('/api/MinCustomers/').success(function(data){

@@ -17,9 +17,10 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 		}).success(function(data){
 			$scope.delivery = data
 			$scope.initObjects(data)
+			$rootScope.formHasChanges = false;
 		})
 	}
-
+	$rootScope.formHasChanges = false;
 	$rootScope.currMenu = 'commands';
 
 	$scope.delivery.time = new Date();
@@ -269,6 +270,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			}).success(function(data){
 				$scope.delivery.id = data.id
 				$rootScope.addAlert('משלוח עודכן בהצלחה', 'success')
+				$rootScope.formHasChanges = false;
 			})
 		} else {
 			$http({
@@ -279,6 +281,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			})
 			.success(function(data){
 				$rootScope.addAlert('המשלוח הוזן!', 'success')
+				$rootScope.formHasChanges = false;
 			})
 			.error(function(data){
 				$rootScope.addAlert('שגיאה', 'danger')
@@ -390,4 +393,8 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			//alert("לא הוזן מחירון למסלול זה")
 		})
 	}
+
+	$scope.$watch('delivery', function(){
+		$rootScope.formHasChanges = true;
+	}, true)
 }])

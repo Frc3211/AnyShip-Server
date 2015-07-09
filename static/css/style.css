@@ -825,8 +825,11 @@ input:focus{
 .rakaz-top-bar .with-label label{
 	width: 30%;
 	float: right;
-	font-size: 12px;
+	font-size: 10px;
 	line-height: 25px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
 }
 .rakaz-top-bar .with-label input{
 	width: 70%;
@@ -1614,6 +1617,12 @@ span.ui-select-match-text span{
 }
 .modal-body .btn{
 	width: 100%;
+}
+.modal-body .buttons{
+	text-align: center;
+}
+.modal-body .buttons .btn{
+	width: auto;
 }
 .half-width{
 	width: 50%;
