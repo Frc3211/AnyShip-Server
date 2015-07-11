@@ -1,4 +1,4 @@
-app.controller('regularDeliveryCtrl', ['$scope', '$http', '$rootScope', '$state', function($scope, $http, $rootScope, $state){
+app.controller('regularDeliveryCtrl', ['$scope', '$http', '$rootScope', '$state', '$modal', function($scope, $http, $rootScope, $state, $modal){
 	//init
 	$scope.regularDelivery = {}
     $scope.regularDelivery.type = '0';
@@ -180,8 +180,36 @@ app.controller('regularDeliveryCtrl', ['$scope', '$http', '$rootScope', '$state'
 	})
 
 	$scope.newRegularDelivery = function(){
-		$scope.regularDelivery = {}
-		$scope.selectedRegularDelivery = 0;
+		if(!$scope.form.$pristine){
+			var modalInstance = $modal.open({
+				animation: true,
+				templateUrl: '/static/partials/modals/yesNoWindow.html',
+				controller: function($scope, $modalInstance){
+					$scope.close = function(){
+						$modalInstance.close();
+					}
+
+					$scope.msg = "יש שינויים שלא נשמרו. להמשיך בכל זאת?";
+					$scope.title = "אזהרה"
+
+					$scope.yes = function(){
+						$scope.$parent.regularDelivery = {};
+						$scope.$parent.selectedRegularDelivery = 0;
+						$scope.$parent.form.$pristine = true
+						$modalInstance.close();
+					}
+
+					$scope.no = function(){
+						$modalInstance.close();
+					}
+				},
+				scope: $scope,
+				size: 'sm'
+			});
+		} else {
+			$scope.regularDelivery = {}
+			$scope.selectedRegularDelivery = 0;
+		}
 	}
 
 	$scope.deleteRegularDelivery = function(){
@@ -245,12 +273,48 @@ app.controller('regularDeliveryCtrl', ['$scope', '$http', '$rootScope', '$state'
 	}
 
 	$scope.selectRegularDelivery = function(){
-		$http({
-			method: 'GET',
-			url: '/api/RegularDelivery/' + $scope.selectedRegularDelivery
-		}).success(function(data){
-			$scope.regularDelivery = data;
-			$scope.initObjects(data);
-		})
+		if(!$scope.form.$pristine){
+			var modalInstance = $modal.open({
+				animation: true,
+				templateUrl: '/static/partials/modals/yesNoWindow.html',
+				controller: function($scope, $modalInstance){
+					$scope.close = function(){
+						$modalInstance.close();
+					}
+
+					$scope.msg = "יש שינויים שלא נשמרו. להמשיך בכל זאת?";
+					$scope.title = "אזהרה"
+
+					$scope.yes = function(){
+						$http({
+							method: 'GET',
+							url: '/api/RegularDelivery/' + $scope.selectedRegularDelivery
+						}).success(function(data){
+							$scope.$parent.regularDelivery = data;
+							$scope.$parent.initObjects(data);
+							$scope.$parent.form.$pristine = true
+							$modalInstance.close();
+						})
+					}
+
+					$scope.no = function(){
+						$scope.$parent.selectedRegularDelivery = 0;
+						$modalInstance.close();
+					}
+				},
+				scope: $scope,
+				size: 'sm'
+			});
+		} else {
+			$http({
+				method: 'GET',
+				url: '/api/RegularDelivery/' + $scope.selectedRegularDelivery
+			}).success(function(data){
+				$scope.regularDelivery = data;
+				$scope.initObjects(data);
+			})
+		}
+
+
 	}
 }])

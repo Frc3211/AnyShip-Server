@@ -14,208 +14,210 @@
 		</div>
 	</div>
 	<hr>
-	<div class="row">
-		<div class="col-sm-2 form-field">
-			<input ng-model="regularDelivery.id" disabled>
-			<label>מספר סבב</label>
+	<form name="form" novalidate>
+		<div class="row">
+			<div class="col-sm-2 form-field">
+				<input ng-model="regularDelivery.id" disabled>
+				<label>מספר סבב</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="time" ng-model="regularDelivery.startTime">
+				<label>שעת קבלה</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select ng-model="regularDelivery.customer" ng-change="customerSelected()">
+					<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
+				</select>
+				<label>לקוח</label>
+			</div>
 		</div>
-		<div class="col-sm-2 form-field">
-			<input type="time" ng-model="regularDelivery.startTime">
-			<label>שעת קבלה</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<select ng-model="regularDelivery.customer" ng-change="customerSelected()">
-				<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
-			</select>
-			<label>לקוח</label>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm-2 form-field">
-			<select ng-options="item.id as item.name for item in contactMans" ng-model="regularDelivery.contactMan">
+		<div class="row">
+			<div class="col-sm-2 form-field">
+				<select ng-options="item.id as item.name for item in contactMans" ng-model="regularDelivery.contactMan">
 
-			</select>
-			<!--<select ng-model="regularDelivery.contactMan">
-				<option ng-repeat="contactMan in contactMans" value="{{contactMan.id}}">{{ contactMan.name }}</option>
-			</select>-->
-			<label>מזמין</label>
+				</select>
+				<!--<select ng-model="regularDelivery.contactMan">
+					<option ng-repeat="contactMan in contactMans" value="{{contactMan.id}}">{{ contactMan.name }}</option>
+				</select>-->
+				<label>מזמין</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select ng-model="regularDelivery.type" ng-change="typeCallback()">
+					<option value="0">שליחות</option>
+					<option value="1">איסוף</option>
+					<option value="2">העברה</option>
+				</select>
+				<label>סוג משלוח</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select ng-model="regularDelivery.firstDeliver">
+					<option ng-repeat="employee in employees" value="{{employee.id}}">{{ employee.name }}</option>
+				</select>
+				<label>שליח אוסף</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select ng-model="regularDelivery.secondDeliver">
+					<option ng-repeat="employee in employees" value="{{employee.id}}">{{ employee.name }}</option>
+				</select>
+				<label>שליח מוסר</label>
+			</div>
 		</div>
-		<div class="col-sm-2 form-field">
-			<select ng-model="regularDelivery.type" ng-change="typeCallback()">
-				<option value="0">שליחות</option>
-				<option value="1">איסוף</option>
-				<option value="2">העברה</option>
-			</select>
-			<label>סוג משלוח</label>
+		<hr>
+		<div class="row">
+			<div class="col-sm-2 form-field">
+				<input type="date" ng-model="regularDelivery.lastUpdate">
+				<label>עדכון אחרון</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="date" ng-model="regularDelivery.startDate">
+				<label>תאריך התחלה</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="date" ng-model="regularDelivery.endDate">
+				<label>תאריך סיום</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="time" ng-model="regularDelivery.endTime">
+				<label>שעת סיום</label>
+			</div>
 		</div>
-		<div class="col-sm-2 form-field">
-			<select ng-model="regularDelivery.firstDeliver">
-				<option ng-repeat="employee in employees" value="{{employee.id}}">{{ employee.name }}</option>
-			</select>
-			<label>שליח אוסף</label>
+		<hr>
+		<div class="row">
+			<div class="col-sm-1">
+				<label>מוצא</label>
+			</div>
+			<div class="col-sm-3 form-field">
+				<!--<select ng-model="regularDelivery.sourceCustomer">
+					<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
+				</select>-->
+				<ui-select tagging="addTagging" ng-change="senderChanged()" tagging-tokens="ENTER" ng-model="regularDelivery.senderObj" theme="bootstrap" sortable="true" ng-disabled="disabled">
+					<ui-select-match>{{$select.selected.name}}</ui-select-match>
+					<ui-select-choices repeat="item in regularSites | filter:$select.search">
+						{{item.name}}
+					</ui-select-choices>
+				</ui-select>
+				<label>לקוח</label>
+			</div>
+			<div class="col-sm-3 form-field">
+				<input type="text" ng-model="regularDelivery.sourceStreet">
+				<label>רחוב</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="text" ng-model="regularDelivery.sourceHomeNum">
+				<label>מספר</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select ng-model="regularDelivery.sourceCity">
+					<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
+				</select>
+				<label>עיר</label>
+			</div>
 		</div>
-		<div class="col-sm-2 form-field">
-			<select ng-model="regularDelivery.secondDeliver">
-				<option ng-repeat="employee in employees" value="{{employee.id}}">{{ employee.name }}</option>
-			</select>
-			<label>שליח מוסר</label>
+		<div class="row">
+			<div class="col-sm-1">
+				<label>יעד</label>
+			</div>
+			<div class="col-sm-3 form-field">
+				<!--<select ng-model="regularDelivery.destCustomer">
+					<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
+				</select>-->
+				<ui-select tagging="addTagging" ng-change="receiverChanged()" tagging-tokens="ENTER" ng-model="regularDelivery.receiverObj" theme="bootstrap" sortable="true" ng-disabled="disabled">
+					<ui-select-match>{{$select.selected.name}}</ui-select-match>
+					<ui-select-choices repeat="item in regularSites | filter:$select.search">
+						{{item.name}}
+					</ui-select-choices>
+				</ui-select>
+				<label>לקוח</label>
+			</div>
+			<div class="col-sm-3 form-field">
+				<input type="text" ng-model="regularDelivery.destStreet">
+				<label>רחוב</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="text" ng-model="regularDelivery.destHomeNum">
+				<label>מספר</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select ng-model="regularDelivery.destCity">
+					<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
+				</select>
+				<label>עיר</label>
+			</div>
 		</div>
-	</div>
-	<hr>
-	<div class="row">
-		<div class="col-sm-2 form-field">
-			<input type="date" ng-model="regularDelivery.lastUpdate">
-			<label>עדכון אחרון</label>
+		<hr>
+		<div class="row">
+			<div class="col-sm-2 form-field">
+				<select ng-model="regularDelivery.urgency">
+					<option ng-repeat="urg in urgs" value="{{urg.id}}">{{ urg.name }}</option>
+				</select>
+				<label>דחף</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select type="text" ng-model="regularDelivery.doubleType">
+					<option ng-repeat="double in doubles" value="{{double.id}}">{{ double.name }}</option>
+				</select>
+				<label>סוג כפולה</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<select type="text" ng-model="regularDelivery.vehicleType">
+					<option ng-repeat="vehicle in vehicles" value="{{vehicle.id}}">{{ vehicle.name }}</option>
+				</select>
+				<label>רכב</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="number" ng-model="regularDelivery.numOfPackages">
+				<label>חבילות</label>
+			</div>
+			<div class="col-sm-2 form-field">
+				<input type="number" ng-model="regularDelivery.numOfBoxes">
+				<label>קרטונים</label>
+			</div>
 		</div>
-		<div class="col-sm-2 form-field">
-			<input type="date" ng-model="regularDelivery.startDate">
-			<label>תאריך התחלה</label>
+		<hr>
+		<div class="row">
+			<div class="col-sm-3 form-field">
+				<input type="text" ng-model="regularDelivery.basicPrice">
+				<label>מחיר בסיס</label>
+			</div>
+			<div class="col-sm-3 form-field">
+				<input type="text" ng-model="regularDelivery.totalPrice">
+				<label>מחיר סופי</label>
+			</div>
+			<div class="col-sm-3 form-field">
+				<input type="text" ng-model="regularDelivery.firstDeliverPrice">
+				<label>מחיר לאוסף</label>
+			</div>
+			<div class="col-sm-3 form-field">
+				<input type="text" ng-model="regularDelivery.secondDeliverPrice">
+				<label>מחיר למוסר</label>
+			</div>
 		</div>
-		<div class="col-sm-2 form-field">
-			<input type="date" ng-model="regularDelivery.endDate">
-			<label>תאריך סיום</label>
+		<hr>
+		<div class="row">
+			<div class="col-sm-12 weekdays">
+				<label>
+					<input type="checkbox" ng-model="regularDelivery.isSunday">יום ראשון
+				</label>
+				<label>
+					<input type="checkbox" ng-model="regularDelivery.isMonday">יום שני
+				</label>
+				<label>
+					<input type="checkbox" ng-model="regularDelivery.isTuesday">יום שלישי
+				</label>
+				<label>
+					<input type="checkbox" ng-model="regularDelivery.isWednesday">יום רביעי
+				</label>
+				<label>
+					<input type="checkbox" ng-model="regularDelivery.isThursday">יום חמישי
+				</label>
+				<label>
+					<input type="checkbox" ng-model="regularDelivery.isFriday">יום שישי
+				</label>
+				<label>
+					<input type="checkbox" ng-model="regularDelivery.isStaurday">יום שבת
+				</label>
+			</div>
 		</div>
-		<div class="col-sm-2 form-field">
-			<input type="time" ng-model="regularDelivery.endTime">
-			<label>שעת סיום</label>
-		</div>
-	</div>
-	<hr>
-	<div class="row">
-		<div class="col-sm-1">
-			<label>מוצא</label>
-		</div>
-		<div class="col-sm-3 form-field">
-			<!--<select ng-model="regularDelivery.sourceCustomer">
-				<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
-			</select>-->
-			<ui-select tagging="addTagging" ng-change="senderChanged()" tagging-tokens="ENTER" ng-model="regularDelivery.senderObj" theme="bootstrap" sortable="true" ng-disabled="disabled">
-				<ui-select-match>{{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="item in regularSites | filter:$select.search">
-					{{item.name}}
-				</ui-select-choices>
-			</ui-select>
-			<label>לקוח</label>
-		</div>
-		<div class="col-sm-3 form-field">
-			<input type="text" ng-model="regularDelivery.sourceStreet">
-			<label>רחוב</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="text" ng-model="regularDelivery.sourceHomeNum">
-			<label>מספר</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<select ng-model="regularDelivery.sourceCity">
-				<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
-			</select>
-			<label>עיר</label>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm-1">
-			<label>יעד</label>
-		</div>
-		<div class="col-sm-3 form-field">
-			<!--<select ng-model="regularDelivery.destCustomer">
-				<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
-			</select>-->
-			<ui-select tagging="addTagging" ng-change="receiverChanged()" tagging-tokens="ENTER" ng-model="regularDelivery.receiverObj" theme="bootstrap" sortable="true" ng-disabled="disabled">
-				<ui-select-match>{{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="item in regularSites | filter:$select.search">
-					{{item.name}}
-				</ui-select-choices>
-			</ui-select>
-			<label>לקוח</label>
-		</div>
-		<div class="col-sm-3 form-field">
-			<input type="text" ng-model="regularDelivery.destStreet">
-			<label>רחוב</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="text" ng-model="regularDelivery.destHomeNum">
-			<label>מספר</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<select ng-model="regularDelivery.destCity">
-				<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
-			</select>
-			<label>עיר</label>
-		</div>
-	</div>
-	<hr>
-	<div class="row">
-		<div class="col-sm-2 form-field">
-			<select ng-model="regularDelivery.urgency">
-				<option ng-repeat="urg in urgs" value="{{urg.id}}">{{ urg.name }}</option>
-			</select>
-			<label>דחף</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<select type="text" ng-model="regularDelivery.doubleType">
-				<option ng-repeat="double in doubles" value="{{double.id}}">{{ double.name }}</option>
-			</select>
-			<label>סוג כפולה</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<select type="text" ng-model="regularDelivery.vehicleType">
-				<option ng-repeat="vehicle in vehicles" value="{{vehicle.id}}">{{ vehicle.name }}</option>
-			</select>
-			<label>רכב</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="number" ng-model="regularDelivery.numOfPackages">
-			<label>חבילות</label>
-		</div>
-		<div class="col-sm-2 form-field">
-			<input type="number" ng-model="regularDelivery.numOfBoxes">
-			<label>קרטונים</label>
-		</div>
-	</div>
-	<hr>
-	<div class="row">
-		<div class="col-sm-3 form-field">
-			<input type="text" ng-model="regularDelivery.basicPrice">
-			<label>מחיר בסיס</label>
-		</div>
-		<div class="col-sm-3 form-field">
-			<input type="text" ng-model="regularDelivery.totalPrice">
-			<label>מחיר סופי</label>
-		</div>
-		<div class="col-sm-3 form-field">
-			<input type="text" ng-model="regularDelivery.firstDeliverPrice">
-			<label>מחיר לאוסף</label>
-		</div>
-		<div class="col-sm-3 form-field">
-			<input type="text" ng-model="regularDelivery.secondDeliverPrice">
-			<label>מחיר למוסר</label>
-		</div>
-	</div>
-	<hr>
-	<div class="row">
-		<div class="col-sm-12 weekdays">
-			<label>
-				<input type="checkbox" ng-model="regularDelivery.isSunday">יום ראשון
-			</label>
-			<label>
-				<input type="checkbox" ng-model="regularDelivery.isMonday">יום שני
-			</label>
-			<label>
-				<input type="checkbox" ng-model="regularDelivery.isTuesday">יום שלישי
-			</label>
-			<label>
-				<input type="checkbox" ng-model="regularDelivery.isWednesday">יום רביעי
-			</label>
-			<label>
-				<input type="checkbox" ng-model="regularDelivery.isThursday">יום חמישי
-			</label>
-			<label>
-				<input type="checkbox" ng-model="regularDelivery.isFriday">יום שישי
-			</label>
-			<label>
-				<input type="checkbox" ng-model="regularDelivery.isStaurday">יום שבת
-			</label>
-		</div>
-	</div>
+	</form>
 	<button class="btn btn-primary" ng-click="submit()">שלח</button>
 </div>

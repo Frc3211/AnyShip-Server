@@ -12,7 +12,7 @@
 		</div>
 	</div>
 	<hr>
-	<form name="newDeliveryForm"  novalidate>
+	<form name="form" novalidate>
 		<div class="row">
 			<div class="col-sm-2 form-field">
 				<input type="text" ng-model="delivery.id" disabled><label>מס. משלוח</label>
@@ -303,8 +303,8 @@
 		</div>
 	</form>
 
-		<hr>
-		<button ng-click="submitDelivery()" class="btn btn-primary" ng-disabled="newDeliveryForm.$invalid">שלח</button>
-		<button ng-click="getPrice()" class="btn">עדכן מחיר</button>
-		<button ng-click="showPriceInfo()" class="btn">הצג פירוט מחיר</button>
+	<hr>
+	<button ng-click="submitDelivery()" class="btn btn-primary" ng-disabled="newDeliveryForm.$invalid">שלח</button>
+	<button ng-click="getPrice()" class="btn">עדכן מחיר</button>
+	<button ng-click="showPriceInfo()" class="btn">הצג פירוט מחיר</button>
 </div>

@@ -17,10 +17,9 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 		}).success(function(data){
 			$scope.delivery = data
 			$scope.initObjects(data)
-			$rootScope.formHasChanges = false;
 		})
 	}
-	$rootScope.formHasChanges = false;
+
 	$rootScope.currMenu = 'commands';
 
 	$scope.delivery.time = new Date();
@@ -65,13 +64,47 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 	}
 
 	$scope.selectDelivery = function(){
-		$http({
-			method: 'GET',
-			url: '/api/Delivery/' + $scope.selectedDelivery.id
-		}).success(function(data){
-			$scope.delivery = data;
-			$scope.initObjects(data)
-		})
+		if(!$scope.form.$pristine){
+			var modalInstance = $modal.open({
+				animation: true,
+				templateUrl: '/static/partials/modals/yesNoWindow.html',
+				controller: function($scope, $modalInstance){
+					$scope.close = function(){
+						$modalInstance.close();
+					}
+
+					$scope.msg = "יש שינויים שלא נשמרו. להמשיך בכל זאת?";
+					$scope.title = "אזהרה"
+
+					$scope.yes = function(){
+						$http({
+							method: 'GET',
+							url: '/api/Delivery/' + $scope.$parent.selectedDelivery.id
+						}).success(function(data){
+							$scope.$parent.delivery = data;
+							$scope.$parent.initObjects(data);
+							$scope.$parent.form.$pristine = true
+							$modalInstance.close();
+						})
+					}
+
+					$scope.no = function(){
+						$scope.$parent.selectedDelivery = 0;
+						$modalInstance.close();
+					}
+				},
+				scope: $scope,
+				size: 'sm'
+			});
+		} else {
+			$http({
+				method: 'GET',
+				url: '/api/Delivery/' + $scope.selectedDelivery.id
+			}).success(function(data){
+				$scope.delivery = data;
+				$scope.initObjects(data);
+			})
+		}
 	}
 
 	$scope.initObjects = function(data){
@@ -249,8 +282,36 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 	}
 
 	$scope.newDelivery = function(){
-		$scope.delivery = {}
-		$scope.selectedDelivery = 0;
+		if(!$scope.form.$pristine){
+			var modalInstance = $modal.open({
+				animation: true,
+				templateUrl: '/static/partials/modals/yesNoWindow.html',
+				controller: function($scope, $modalInstance){
+					$scope.close = function(){
+						$modalInstance.close();
+					}
+
+					$scope.msg = "יש שינויים שלא נשמרו. להמשיך בכל זאת?";
+					$scope.title = "אזהרה"
+
+					$scope.yes = function(){
+						$scope.$parent.delivery = {};
+						$scope.$parent.selectedDelivery = 0;
+						$scope.$parent.form.$pristine = true
+						$modalInstance.close();
+					}
+
+					$scope.no = function(){
+						$modalInstance.close();
+					}
+				},
+				scope: $scope,
+				size: 'sm'
+			});
+		} else {
+			$scope.delivery = {}
+			$scope.selectedDelivery = 0;
+		}
 	}
 
 	$scope.submitDelivery = function(){
@@ -270,7 +331,6 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			}).success(function(data){
 				$scope.delivery.id = data.id
 				$rootScope.addAlert('משלוח עודכן בהצלחה', 'success')
-				$rootScope.formHasChanges = false;
 			})
 		} else {
 			$http({
@@ -281,7 +341,6 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			})
 			.success(function(data){
 				$rootScope.addAlert('המשלוח הוזן!', 'success')
-				$rootScope.formHasChanges = false;
 			})
 			.error(function(data){
 				$rootScope.addAlert('שגיאה', 'danger')
@@ -393,8 +452,4 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			//alert("לא הוזן מחירון למסלול זה")
 		})
 	}
-
-	$scope.$watch('delivery', function(){
-		$rootScope.formHasChanges = true;
-	}, true)
 }])

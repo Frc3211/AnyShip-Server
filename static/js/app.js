@@ -129,7 +129,39 @@ app.run(['$state', '$rootScope', '$http', '$modal', function($state, $rootScope,
 	$rootScope.showLoader = false;
 
 	$rootScope.goToHome = function(){
-		if($rootScope.formHasChanges){
+		var form = angular.element('form')
+		if(form.length == 0){
+			$state.go('dashboard');
+		} else {
+			if(!form.scope().form.$pristine){
+				var modalInstance = $modal.open({
+					animation: true,
+					templateUrl: '/static/partials/modals/yesNoWindow.html',
+					controller: function($scope, $modalInstance){
+						$scope.close = function(){
+							$modalInstance.close();
+						}
+
+						$scope.msg = "יש שינויים שלא נשמרו, האם אתה בטוח שברצונך לצאת?";
+						$scope.title = "אזהרה"
+
+						$scope.yes = function(){
+							form.scope().form.$pristine = true;
+							$state.go('dashboard');
+							$modalInstance.close();
+						}
+
+						$scope.no = function(){
+							$modalInstance.close();
+						}
+					},
+					size: 'sm'
+				});
+			} else {
+				$state.go('dashboard');
+			}
+		}
+		/*if($rootScope.formHasChanges){
 			var modalInstance = $modal.open({
 				animation: true,
 				templateUrl: '/static/partials/modals/yesNoWindow.html',
@@ -144,6 +176,7 @@ app.run(['$state', '$rootScope', '$http', '$modal', function($state, $rootScope,
 					$scope.yes = function(){
 						$modalInstance.close();
 						$state.go('dashboard');
+						$rootScope.formHasChanges = false;
 					}
 
 					$scope.no = function(){
@@ -154,7 +187,7 @@ app.run(['$state', '$rootScope', '$http', '$modal', function($state, $rootScope,
 			});
 		} else {
 			$state.go('dashboard');
-		}
+		}*/
 	}
 
 	$http.get('/api/MinCustomers/').success(function(data){
