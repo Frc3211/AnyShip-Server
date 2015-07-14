@@ -6,7 +6,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 	$scope.delivery.numOfBoxes = 0;
 	$scope.delivery.waiting = 0;
 	$scope.delivery.status = 0;
-	$scope.delivery.vehicleType = 0;
+	//$scope.delivery.vehicleType = 0;
 	$scope.delivery.type = '0';
 	$scope.regularSites = [];
 
@@ -321,6 +321,12 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 		$scope.delivery.exeTime = $filter('date')($scope.delivery.exeTime, 'HH:mm')
 		$scope.delivery.estTime = $filter('date')($scope.delivery.estTime, 'HH:mm')
 		*/
+		var date = new Date($scope.delivery.endTime)
+		var now = new Date()
+		date.setDate(now.getDate())
+		date.setFullYear(now.getFullYear())
+		date.setMonth(now.getMonth())
+		$scope.delivery.endTime = date
 
 		if($scope.delivery.id){
 			$http({

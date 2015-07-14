@@ -183,15 +183,15 @@
 				<label>דחף</label>
 			</div>
 			<div class="col-sm-2 form-field">
-				<select ng-model="delivery.doubleType" required>
-					<option ng-repeat="double in doubles" value="{{ double.id }}">{{ double.name }}</option>
+				<select name="double" ng-model="delivery.doubleType" ng-options="double.id as double.name for double in doubles" required>
+					<!--<option ng-repeat="double in doubles" value="{{ double.id }}">{{ double.name }}</option>-->
 				</select>
 				<label>סוג כפולה</label>
 			</div>
 			<div class="col-sm-2 form-field">
-				<select ng-options="vehicle.id as vehicle.name for vehicle in vehicles" ng-model="delivery.vehicleType" required>
-					<!--<option></option>
-					<option ng-repeat="vehicle in vehicles" value="{{ vehicle.id }}">{{ vehicle.name }}</option>-->
+				<select name="vehicle" ng-options="vehicle.id as vehicle.name for vehicle in vehicles" ng-model="delivery.vehicleType" required>
+					<option></option>
+					<!--<option ng-repeat="vehicle in vehicles" value="{{ vehicle.id }}">{{ vehicle.name }}</option>-->
 				</select>
 				<label>אמצעי הובלה</label>
 			</div>
@@ -304,7 +304,7 @@
 	</form>
 
 	<hr>
-	<button ng-click="submitDelivery()" class="btn btn-primary" ng-disabled="newDeliveryForm.$invalid">שלח</button>
+	<button ng-click="submitDelivery()" class="btn btn-primary" ng-disabled="form.$invalid">שלח</button>
 	<button ng-click="getPrice()" class="btn">עדכן מחיר</button>
 	<button ng-click="showPriceInfo()" class="btn">הצג פירוט מחיר</button>
 </div>

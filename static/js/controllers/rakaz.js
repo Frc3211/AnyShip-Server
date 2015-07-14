@@ -74,7 +74,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 			$scope.zeroFilters()
 			$scope.filterDoubles = true;
 		}
-	}, {
+	},/* {
 		title: 'עתידיות',
 		icon: 'futures.png',
 		method: function(){
@@ -86,7 +86,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		method: function(){
 			$scope.zeroFilters()
 		}
-	}, {
+	}, */{
 		title: 'מבוצעות',
 		icon: 'ended.png',
 		method: function(){
@@ -98,6 +98,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		icon: 'lates.png',
 		method: function(){
 			$scope.zeroFilters()
+			$scope.filterLates = true;
 		}
 	}, {
 		title: 'למחר',
@@ -115,6 +116,49 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		}
 	}]
 
+
+	$scope.setFilterWaitings = function(){
+		$scope.zeroFilters();
+		$scope.filterWaitings = true;
+	}
+
+	$scope.setFilterOpenes = function(){
+		$scope.zeroFilters();
+		$scope.filterOpenes = true;
+	}
+
+	$scope.submitChanges = function(){
+		if($scope.currRecord.hasOwnProperty('isSunday')){
+			$http({
+				method: 'PUT',
+				url: '/api/RegularDelivery/' + $scope.currRecord.id,
+				data: $scope.currRecord
+			})
+		} else {
+			$http({
+				method: 'PUT',
+				url: '/api/Delivery/' + $scope.currRecord.id,
+				data: $scope.currRecord
+			})
+		}
+
+	}
+
+	$scope.$watch('records', function(obj){
+		$scope.countOpens = 0;
+		$scope.countWaitings = 0;
+		angular.forEach($scope.records, function(obj){
+			switch(obj.status){
+				case 0:
+					$scope.countOpens++;
+					break;
+				case 4:
+					$scope.countWaitings++;
+					break
+			}
+		})
+	})
+
 	//functions
 	$scope.popup = function(){
 		ngDialog.open({
@@ -130,9 +174,22 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 	}
 
 	$scope.change = function(record, fieldName, id){
-		console.log('changing', record, fieldName)
 		var data = {}
 		data[fieldName] = id
+
+		var index = $scope.records.indexOf(record);
+
+		switch(fieldName){
+			case 'firstDeliver':
+				data['status'] = 1
+				$scope.records[index].status = 1;
+				break;
+			case 'secondDeliver':
+				data['status'] = 1
+				$scope.records[index].status = 1
+				break;
+		}
+
 		if(record.hasOwnProperty('isSunday')){
 			$http({
 				method: 'PUT',
@@ -140,7 +197,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 				data: data,
 				headers : { 'Content-Type': 'application/json' }
 			}).success(function(data){
-				//console.log(data)
+				//$scope.records[index] = data;
 			})
 		} else {
 			$http({
@@ -149,7 +206,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 				data: data,
 				headers : { 'Content-Type': 'application/json' }
 			}).success(function(data){
-				//console.log(data)
+				//$scope.records[index] = data;
 			})
 		}
 	}
@@ -160,11 +217,13 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		}
 		//console.log(item)
 		return (!$scope.filterUrgency || item.urgency.name != 'רגיל') &&
-			(!$scope.filterDoubles || item.doubleType.name != 'רגיל')	&&
+			(!$scope.filterDoubles || item.doubleType.name != 'רגיל') &&
 			//(!$scope.filterFutures || ) &&
 			(!$scope.filterTomorrow || item.isTomorrow == true) &&
-			(!$scope.filterDones || item.status == 0) &&
-			(!$scope.filterOpenes || item.status == 6) &&
+			(!$scope.filterDones || item.status == 6) &&
+			(!$scope.filterOpenes || item.status == 0) &&
+			(!$scope.filterLates || item.status == 6 || new Date() < new Date(item.endTime)) &&
+			(!$scope.filterWaitings || item.status == 4) &&
 			// filterLates
 			// filterSpecial
 			// filterInTransit
@@ -182,9 +241,12 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		$scope.filterSpecial 	= false;
 		$scope.filterInTransit 	= false;
 		$scope.filterCustomer 	= false;
+		$scope.filterWaitings 	= false;
 		// קבלנים
 		// זהב
 	}
+
+	$scope.zeroFilters()
 
 	$scope.tooltip = function($event){
 		if($event.target.offsetWidth < $event.target.scrollWidth){
@@ -192,15 +254,27 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		}
 	}
 
-	$scope.selectRecord = function(id){
-		$scope.currRecord = $scope.records[id]
-		if($scope.records[id].hasOwnProperty('isSunday')){
+	$scope.selectRecord = function(index){
+		var index = $scope.records.indexOf(index)
+		$scope.currRecord = $scope.records[index]
+		//$scope.initCurrRecord()
+		if($scope.records[index].hasOwnProperty('isSunday')){
 			$scope.currRecord.deliveryType = 'סבב קבוע'
 		} else {
 			$scope.currRecord.deliveryType = 'משלוח רגיל'
 		}
-		console.log($scope.currRecord)
 	}
+
+	/*$scope.initCurrRecord = function(){
+		$scope.currRecord.customer = ($scope.currRecord.customer == undefined) ? undefined : $scope.currRecord.customer.id
+		$scope.currRecord.contactMan = ($scope.currRecord.contactMan == undefined) ? undefined : $scope.currRecord.contactMan.id
+		$scope.currRecord.doubleType = ($scope.currRecord.doubleType == undefined) ? undefined : $scope.currRecord.doubleType.id
+		$scope.currRecord.firstDeliver = ($scope.currRecord.firstDeliver == undefined) ? undefined : $scope.currRecord.firstDeliver.id
+		$scope.currRecord.secondDeliver = ($scope.currRecord.secondDeliver == undefined) ? undefined : $scope.currRecord.secondDeliver.id
+		$scope.currRecord.urgency = ($scope.currRecord.urgency == undefined) ? undefined : $scope.currRecord.urgency.id
+		$scope.currRecord.vehicleType = ($scope.currRecord.vehicleType == undefined) ? undefined : $scope.currRecord.vehicleType.id
+		delete($scope.currRecord.client)
+	}*/
 
 	$scope.$watch('currRecord', function(obj){
 		if(obj == undefined)

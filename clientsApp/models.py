@@ -51,8 +51,8 @@ class Customer(models.Model):
 
 	status = models.ForeignKey('Status', blank=True, null=True)
 	customerType = models.ForeignKey('CustomerType', blank=True, null=True)
-	openingDate = models.DateField(blank=True, null=True)
-	endDate = models.DateField(blank=True, null=True)
+	openingDate = models.DateTimeField(blank=True, null=True)
+	endDate = models.DateTimeField(blank=True, null=True)
 
 	priceList = models.ForeignKey('PriceList', null=True, blank=True)
 	bank = models.ForeignKey('Bank', blank=True, null=True)
@@ -152,7 +152,7 @@ class DoubleType(models.Model):
 
 class Delivery(models.Model):
 	client = models.ForeignKey('Client', related_name='deliveries', null=True, blank=True)
-	created = models.DateTimeField(auto_now=True, null=True, blank=True)
+	created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 	#date = models.DateField(auto_now=True, null=True, blank=True)
 	#deliveryNumber = models.IntegerField(unique=True, null=True, blank=True)
 	customer = models.ForeignKey('Customer', null=True, blank=True)
@@ -242,7 +242,7 @@ class CustomerConatctMan(models.Model):
 class RegularDelivery(models.Model):
 	client = models.ForeignKey('Client', null=True, blank=True)
 
-	created = models.DateTimeField(auto_now=True)
+	created = models.DateTimeField(auto_now_add=True)
 	customer = models.ForeignKey('Customer', null=True, blank=True)
 	contactMan = models.ForeignKey('ContactMan', null=True, blank=True)
 	type = models.IntegerField(null=True, blank=True)
@@ -297,7 +297,7 @@ class Employee(models.Model):
 
 	name = models.CharField(max_length=50)
 	idNum = models.IntegerField(null=True, blank=True)
-	birthDate = models.DateField(null=True, blank=True)
+	birthDate = models.DateTimeField(null=True, blank=True)
 	gender = models.BooleanField(default=True)
 	address = models.CharField(max_length=50, null=True, blank=True)
 	city = models.ForeignKey('City', null=True, blank=True)
@@ -308,7 +308,7 @@ class Employee(models.Model):
 	phone2 = models.CharField(max_length=30, null=True, blank=True)
 
 	licenseType = models.SmallIntegerField(null=True, blank=True)
-	licenseExp = models.DateField(null=True, blank=True)
+	licenseExp = models.DateTimeField(null=True, blank=True)
 	licenseNum = models.CharField(max_length=12, null=True, blank=True)
 	type = models.BooleanField(default=True)
 	tax = models.SmallIntegerField(null=True, blank=True)
@@ -319,8 +319,8 @@ class Employee(models.Model):
 
 	status = models.ForeignKey('Status', null=True, blank=True)
 	job = models.ForeignKey('Job', null=True, blank=True)
-	startDate = models.DateField(null=True, blank=True)
-	endDate = models.DateField(null=True, blank=True)
+	startDate = models.DateTimeField(null=True, blank=True)
+	endDate = models.DateTimeField(null=True, blank=True)
 
 	comment = models.CharField(max_length=300, null=True, blank=True)
 

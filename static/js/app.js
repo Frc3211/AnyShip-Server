@@ -16,7 +16,10 @@ app.config([ '$stateProvider', '$urlRouterProvider', '$httpProvider', '$interpol
 				resolve: {
 					'tablesServiceData': function(tablesService){
 						return tablesService['VehicleTypes'].promise;
-					}
+					},
+					/*objectsServiceData: function(objectsService){
+						return objectsService['customers'].promise;
+					}*/
 				}
 			})
 			.state('login', {

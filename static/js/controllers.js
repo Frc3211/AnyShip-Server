@@ -25,12 +25,13 @@ app.controller('loginCtrl', ['$scope', '$http', '$state', function($scope, $http
 	}
 }]);
 
-app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', '$modal', function($scope, $rootScope, $http, $state, $modal){
+app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', '$modal', '$q', function($scope, $rootScope, $http, $state, $modal, $q){
 	//init
 	$scope.menus = [{
 		name: 'מסך רכז',
 		//link: 'main.deliveries',
 		click: function(){
+
 			$rootScope.gotoPage('main.deliveries')
 		},
 		icon: 'delivery.png'
@@ -38,7 +39,8 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', '$mo
 		name: 'מסך פקיד',
 		//link: 'main.newDelivery',
 		click: function(){
-			$rootScope.gotoPage('main.newDelivery')
+			$state.go('main.newDelivery')
+			//$rootScope.gotoPage('main.newDelivery')
 		},
 		icon: 'new-delivery.png'
 	}, {
@@ -202,7 +204,9 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', '$mo
 		color: '#0ab0f6'
 	}]
 
-
+	/*$q.all(prom).then(function(data){
+		console.log(prom, data)
+	})*/
 	//functions
 
 	$scope.showRecord = function(event){
@@ -243,163 +247,6 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$state', function($scope, $
 
 	//functions
 }])
-
-app.controller('newCustomerCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter', 'dateFilter', function($scope, $rootScope, $http, $state, $filter, dateFilter){
-	//init
-	$rootScope.currMenu = 'commands';
-	$rootScope.currTable = "לקוח חדש"
-	$rootScope.currPage = 'main.newCustomer'
-	$scope.contactMans = [];
-	$scope.customer = {}
-
-	$http({
-		method: 'GET',
-		url: '/api/Customers/'
-	}).success(function(data){
-		$scope.customers = data;
-	})
-
-	$http({
-		method: 'GET',
-		url: '/api/PriceList/'
-	}).success(function(data){
-		$scope.priceLists = data;
-	})
-
-	$http({
-		method: 'GET',
-		url: '/api/CustomerTypes/'
-	}).success(function(data){
-		$scope.customerTypes = data;
-	})
-
-	//functions
-	$scope.selectCustomer = function(){
-		$http({
-			method: 'GET',
-			url: '/api/Customers/' + $scope.selectedCustomer.id
-		}).success(function(data){
-			$scope.customer = data;
-			$scope.contactMans = data.contact_man;
-		})
-	}
-
-	$scope.deleteCustomer = function(){
-		$http({
-			method: 'DELETE',
-			url: '/api/Customers/' + $scope.customer.id
-		}).success(function(){
-			for (var i = $scope.customers.length - 1 ; i >= 0 ; i--){
-				var obj = $scope.customers[i];
-
-				if($scope.customer.id == $scope.customers[i].id){
-					$scope.customers.splice(i, 1);
-				}
-			}
-			$scope.customer = {}
-			$rootScope.addAlert('נמחק בהצלחה', 'success')
-		}).error(function(){
-			$rootScope.addAlert('שגיאה', 'danger')
-		})
-	}
-
-	$scope.newCustomer = function(){
-		$scope.customer = {}
-		$scope.selectedCustomer = 0;
-	}
-
-	$scope.newContact = function(){
-		$scope.contactMans.push({});
-	}
-
-	$scope.deleteEntry = function(index){
-		if($scope.contactMans[index].id != undefined){
-			$http({
-				method: 'DELETE',
-				url: '/api/ContactMan/' + $scope.contactMans[index].id
-			}).success(function(data){
-				//alert("נמחק בהצלחה")
-				$rootScope.addAlert('נמחק בהצלחה', 'success')
-			})
-		}
-		$scope.contactMans.splice(index, 1)
-
-	}
-
-	/*$scope.$watch('customer.openingDate', function(date){
-		console.log($scope.customer.openingDate)
-		$scope.customer.openingDate = dateFilter(date, 'yyyy-MM-dd')
-		console.log($scope.customer.openingDate)
-		console.log('filter', dateFilter(date, 'yyyy-MM-dd'))
-	})
-
-	$scope.$watch('customer.endDate', function(date){
-		$scope.customer.endDate = dateFilter(date, 'yyyy-MM-dd')
-		console.log('filter', dateFilter(date, 'yyyy-MM-dd'))
-	})*/
-
-	$scope.submitCustomer = function(){
-		//$scope.customer.endDate = $filter('date')($scope.customer.endDate, 'yyyy-MM-dd');
-		//$scope.customer.openingDate = $filter('date')($scope.customer.openingDate, 'yyyy-MM-dd');
-
-		//Check if new customer or existing customer
-		if($scope.customer.id){
-			$http({
-				method: 'PUT',
-				url: '/api/Customers/' + $scope.customer.id,
-				data: $scope.customer,
-				headers : { 'Content-Type': 'application/json' }
-			})
-			angular.forEach($scope.contactMans, function(value, key){
-				if(value.id){
-					$http({
-						method: 'PUT',
-						url: '/api/ContactMan/' + value.id,
-						data: value,
-						headers : { 'Content-Type': 'application/json' }
-					})
-				} else {
-					value.customer = $scope.customer.id;
-					$http({
-						method: 'POST',
-						url: '/api/ContactMan/',
-						data: value,
-						headers : { 'Content-Type': 'application/json' }
-					}).success(function(data){
-						value.id = data.id;
-					})
-				}
-			})
-		} else {
-			$http({
-				method: 'POST',
-				url: '/api/Customers/',
-				data: $scope.customer,
-				headers : { 'Content-Type': 'application/json' }
-			})
-			.success(function(data){
-				$scope.customer.id = data.id;
-				angular.forEach($scope.contactMans, function(value, key){
-					value.customer = data.id;
-					$http({
-						method: 'POST',
-						url: '/api/ContactMan/',
-						data: value,
-						headers : { 'Content-Type': 'application/json' }
-					}).success(function(data){
-						console.log(data);
-					})
-				})
-
-				$rootScope.addAlert('לקוח נשמר בהצלחה', 'success')
-			})
-			.error(function(data){
-				$rootScope.addAlert('התרחשה שגיאה, נסה שוב מאוחר יותר', 'danger')
-			})
-		}
-	}
-}])
-
 
 app.controller('citiesCtrl', ['$scope', '$rootScope', function($scope, $rootScope){
 	//init
@@ -563,68 +410,5 @@ app.controller('popupCtrl', ['$scope', '$rootScope', function($scope, $rootScope
 	//functions
 	$scope.close = function(){
 		$rootScope.showPopup = false;
-	}
-}])
-
-
-app.controller('regularSitesCtrl', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http){
-	// init
-	$rootScope.currTable = 'אתרים קבועים';
-	$http.get('/api/RegularSite/').success(function(data){
-		$scope.regularSites = data;
-	})
-
-	// functions
-	$scope.save = function(){
-		angular.forEach($scope.regularSites, function(obj, index){
-			if(!obj.id){
-				$http({
-					method: 'POST',
-					url: '/api/RegularSite/',
-					data: obj,
-					headers : { 'Content-Type': 'application/json' }
-				}).success(function(data){
-					$rootScope.addAlert('נשמר בהצלחה', 'success')
-					obj.id = data.id
-				}).error(function(data){
-					$rootScope.addAlert('שגיאה, נסה שוב מאוחר יותר', 'danger')
-				})
-			} else if(obj.changed){
-				$http({
-					method: 'PUT',
-					url: '/api/RegularSite/' + obj.id,
-					data: obj,
-					headers : { 'Content-Type': 'application/json' }
-				}).success(function(data){
-					obj.changed = false;
-					$rootScope.addAlert('נשמר בהצלחה', 'success')
-				}).error(function(data){
-					$rootScope.addAlert('שגיאה, נסה שוב מאוחר יותר', 'danger')
-				})
-			} else {
-				console.log(index + " not changed")
-			}
-		})
-	}
-
-	$scope.change = function(row){
-		row.changed = true;
-	}
-
-	$scope.addEntry = function(){
-		$scope.regularSites.push({})
-	}
-
-	$scope.deleteEntry = function(index){
-		console.log($scope.regularSites[index])
-		if($scope.regularSites[index].id != undefined){
-			$http({
-				method: 'DELETE',
-				url: '/api/RegularSite/' + $scope.regularSites[index].id
-			}).success(function(data){
-				$rootScope.addAlert('נמחק בהצלחה', 'success')
-			})
-		}
-		$scope.regularSites.splice(index, 1);
 	}
 }])

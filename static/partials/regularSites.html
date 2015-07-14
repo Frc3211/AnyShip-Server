@@ -7,52 +7,54 @@
 		</div>
 	</div>
 	<div class="row">
-		<table class="table table-bordered table-condensed">
-			<thead>
-				<tr>
-					<th><span class="button plus" ng-click="addEntry()"></span></th>
-					<th>שם אתר</th>
-					<th>שם לקוח</th>
-					<th>רחוב</th>
-					<th>מס'</th>
-					<th>ישוב</th>
-					<th>אגרה</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="row in regularSites">
-					<td style="width: 40px;">
-						<span class="button minus" ng-click="deleteEntry($index)"></span>
-					</td>
-					<td style="min-width: 90px;">
-						<input type="text" ng-model="row.name" ng-change="change(row)">
-					</td>
-					<td style="min-width: 90px;">
-						<select ng-model="row.customer" ng-options="customer.id as customer.name for customer in customersList" ng-change="change(row)">
-							<option></option>
-						</select>
-					</td>
-					<td style="min-width: 90px;">
-						<!--<ui-select ng-model="row.dest2" theme="bootstrap">
-							<ui-select-match>{{$select.selected.name}}</ui-select-match>
-							<ui-select-choices repeat="city.id as city in cities | propsFilter: {name: $select.search, id: $select.search}">
-								<div ng-bind-html="city.name | highlight: $select.search"></div>
-							</ui-select-choices>
-						</ui-select>-->
-						<input ng-model="row.streetName" ng-change="change(row)">
-					</td>
-					<td>
-						<input type="number" ng-model="row.streetNum" ng-change="change(row)">
-					</td>
-					<td style="min-width: 90px;">
-						<select ng-options="city.id as city.name for city in cities" ng-model="row.city" ng-change="change(row)">
-						</select>
-					</td>
-					<td>
-						<input type="number" ng-model="row.toll" ng-change="change(row)">
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<form name="form" novalidate>
+			<table class="table table-bordered table-condensed">
+				<thead>
+					<tr>
+						<th><span class="button plus" ng-click="addEntry()"></span></th>
+						<th>שם אתר</th>
+						<th>שם לקוח</th>
+						<th>רחוב</th>
+						<th>מס'</th>
+						<th>ישוב</th>
+						<th>אגרה</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="row in regularSites">
+						<td style="width: 40px;">
+							<span class="button minus" ng-click="deleteEntry($index)"></span>
+						</td>
+						<td style="min-width: 90px;">
+							<input type="text" ng-model="row.name" ng-change="change(row)">
+						</td>
+						<td style="min-width: 90px;">
+							<select ng-model="row.customer" ng-options="customer.id as customer.name for customer in customersList" ng-change="change(row)">
+								<option></option>
+							</select>
+						</td>
+						<td style="min-width: 90px;">
+							<!--<ui-select ng-model="row.dest2" theme="bootstrap">
+								<ui-select-match>{{$select.selected.name}}</ui-select-match>
+								<ui-select-choices repeat="city.id as city in cities | propsFilter: {name: $select.search, id: $select.search}">
+									<div ng-bind-html="city.name | highlight: $select.search"></div>
+								</ui-select-choices>
+							</ui-select>-->
+							<input ng-model="row.streetName" ng-change="change(row)">
+						</td>
+						<td>
+							<input type="number" ng-model="row.streetNum" ng-change="change(row)">
+						</td>
+						<td style="min-width: 90px;">
+							<select ng-options="city.id as city.name for city in cities" ng-model="row.city" ng-change="change(row)">
+							</select>
+						</td>
+						<td>
+							<input type="number" ng-model="row.toll" ng-change="change(row)">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
 	</div>
 </div>
