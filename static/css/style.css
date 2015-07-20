@@ -926,6 +926,9 @@ input:focus{
 	padding:5px 0px 5px 0px;
 	border-bottom:2px solid #eeeeee;
 }
+.tracking-list.curr{
+	background-color: gainsboro;
+}
 .tracking-list > div >h1{
 	min-height: 33px;
 }
@@ -949,7 +952,7 @@ input:focus{
 	width:7%;
 	background:#0ab0f6;
 	padding:10px 0px 10px 0px;
-	margin: 5px 19px 0px 0px;
+	margin: 0 19px 0px 0px;
 	text-align:center;
 	font-size:15px;
 }
@@ -957,7 +960,7 @@ input:focus{
 	float:right;
 	width:13%;;
 	padding:10px 0px 10px 0px;
-	margin: 5px 6px 0px 0px;
+	margin: 0 6px 0px 0px;
 	text-align:center;
 	font-size:14px;
 }
@@ -965,7 +968,7 @@ input:focus{
 	float:right;
 	width:13%;
 	padding:10px 0px 10px 0px;
-	margin: 5px 3px 0px 0px;
+	margin: 0 3px 0px 0px;
 	text-align:center;
 	font-size:14px;
 	background:#eef60a;
@@ -975,7 +978,7 @@ input:focus{
 	float:right;
 	width:13%;
 	padding:10px 0px 10px 0px;
-	margin: 5px 3px 0px 0px;
+	margin: 0 3px 0px 0px;
 	text-align:center;
 	font-size:14px;
 	background:#e9cd10;
@@ -984,7 +987,7 @@ input:focus{
 	float:right;
 	width:7%;
 	padding:10px 0px 10px 0px;
-	margin: 5px 5px 0px 0px;
+	margin: 0 5px 0px 0px;
 	text-align:center;
 	font-size:14px;
 	background:#2fafa7;
@@ -993,7 +996,7 @@ input:focus{
 	float:right;
 	width:7%;
 	padding:10px 0px 10px 0px;
-	margin: 5px 4px 0px 0px;
+	margin: 0 4px 0px 0px;
 	text-align:center;
 	font-size:14px;
 	background:#2579cf;
@@ -1003,7 +1006,7 @@ input:focus{
 	float:right;
 	width:9%;
 	padding:7px 0px 7px 0px;
-	margin: 5px 4px 0px 0px;
+	margin: 0 4px 0px 0px;
 	text-align:center;
 	font-size:14px;
 	background:#2fb135;
@@ -1012,7 +1015,7 @@ input:focus{
 	float:right;
 	width:9%;
 	padding:7px 0px 7px 0px;
-	margin: 5px 4px 0px 0px;
+	margin: 0 4px 0px 0px;
 	text-align:center;
 	font-size:14px;
 	background:#FF8800;
@@ -1021,7 +1024,7 @@ input:focus{
 	float:right;
 	width:7%;
 	padding:7px 0px 7px 0px;
-	margin: 5px 4px 0px 0px;
+	margin: 0 4px 0px 0px;
 	text-align:center;
 	font-size:14px;
 	background:#f83c3c;
@@ -1030,7 +1033,7 @@ input:focus{
 	float:right;
 	width:7%;
 	padding:10px 0px 10px 0px;
-	margin: 5px 0px 0px 0px;
+	margin: 0 0px 0px 0px;
 	text-align:center;
 	font-size:14px;
 	background:#565656;
@@ -1627,4 +1630,11 @@ span.ui-select-match-text span{
 }
 .half-width{
 	width: 50%;
+}
+.hide-date-picker{
+	padding: 0 !important;
+	text-align: center !important;
+}
+.hide-date-picker::-webkit-calendar-picker-indicator, .hide-date-picker::-webkit-inner-spin-button{
+	display: none;
 }

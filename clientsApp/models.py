@@ -262,11 +262,13 @@ class RegularDelivery(models.Model):
 	sourceHomeNum = models.IntegerField(null=True)
 	sourceHomeEnter = models.IntegerField(null=True)
 	sourceApart = models.IntegerField(null=True)
+	sourceCity = models.ForeignKey('City', related_name='source_city', null=True, blank=True)
 	#destCustomer = models.ForeignKey('Customer', null=True, related_name='destCustomer')
 	destStreet = models.CharField(max_length=40, null=True)
 	destHomeNum = models.IntegerField(null=True)
 	destHomeEnter = models.IntegerField(null=True)
 	destApart = models.IntegerField(null=True)
+	destCity = models.ForeignKey('City', related_name='dest_city', null=True, blank=True)
 
 	urgency = models.ForeignKey('Urgency', null=True)
 	doubleType = models.ForeignKey('DoubleType', null=True)

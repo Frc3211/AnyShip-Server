@@ -25,7 +25,7 @@ app.controller('loginCtrl', ['$scope', '$http', '$state', function($scope, $http
 	}
 }]);
 
-app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', '$modal', '$q', function($scope, $rootScope, $http, $state, $modal, $q){
+app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', '$modal', 'objectsService', function($scope, $rootScope, $http, $state, $modal, objectsService){
 	//init
 	$scope.menus = [{
 		name: 'מסך רכז',

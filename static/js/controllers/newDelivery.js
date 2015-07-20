@@ -1,4 +1,4 @@
-app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '$state', '$modal', function($scope, $rootScope, $http, $filter, $state, $modal){
+app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '$state', '$modal', 'objectsService', function($scope, $rootScope, $http, $filter, $state, $modal, objectsService){
 	//init
 	$scope.delivery = {}
 
@@ -6,19 +6,8 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 	$scope.delivery.numOfBoxes = 0;
 	$scope.delivery.waiting = 0;
 	$scope.delivery.status = 0;
-	//$scope.delivery.vehicleType = 0;
 	$scope.delivery.type = '0';
 	$scope.regularSites = [];
-
-	if ($state.params.id){
-		$http({
-			method: 'GET',
-			url: '/api/Delivery/' + $state.params.id
-		}).success(function(data){
-			$scope.delivery = data
-			$scope.initObjects(data)
-		})
-	}
 
 	$rootScope.currMenu = 'commands';
 
@@ -26,37 +15,15 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 	$scope.delivery.date = new Date();
 	$scope.customerIndex = 0;
 
-	$http.get('/api/Customers/').success(function(data){
-		$scope.customers = data;
-	})
-
-	$http.get('/api/Delivery/').success(function(data){
-		$scope.deliveries = data;
-	})
-
-	$http.get('/api/Employee/').success(function(data){
-		$scope.employees = data;
-	})
+	$scope.customers = objectsService.list('Customers')
+	$scope.deliveries = objectsService.list('Delivery')
+	$scope.employees = objectsService.list('Employee')
+	$scope.urgs = objectsService.list('UrgencyList');
+	$scope.doubles = objectsService.list('DoubleTypeList');
 
 	$rootScope.currPage = 'main.newDelivery'
 	$rootScope.currTable = "משלוח חדש"
 	$rootScope.showLoader = false;
-
-	$http({
-		method: 'GET',
-		url: '/api/UrgencyList/'
-	}).success(function(data){
-		$scope.urgs = data;
-		$scope.delivery.urgency = $scope.urgs[0].id;
-	})
-
-	$http({
-		method: 'GET',
-		url: '/api/DoubleTypeList/'
-	}).success(function(data){
-		$scope.doubles = data;
-		$scope.delivery.doubleType = $scope.doubles[0].id;
-	})
 
 	//functions
 	$scope.addTagging = function(name){
@@ -77,15 +44,10 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 					$scope.title = "אזהרה"
 
 					$scope.yes = function(){
-						$http({
-							method: 'GET',
-							url: '/api/Delivery/' + $scope.$parent.selectedDelivery.id
-						}).success(function(data){
-							$scope.$parent.delivery = data;
-							$scope.$parent.initObjects(data);
-							$scope.$parent.form.$pristine = true
-							$modalInstance.close();
-						})
+						$scope.$parent.delivery = angular.copy(objectsService.get('Delivery', $scope.$parent.selectedDelivery.id));
+						$scope.$parent.initObjects($scope.$parent.delivery);
+						$scope.$parent.form.$pristine = true
+						$modalInstance.close();
 					}
 
 					$scope.no = function(){
@@ -97,13 +59,8 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 				size: 'sm'
 			});
 		} else {
-			$http({
-				method: 'GET',
-				url: '/api/Delivery/' + $scope.selectedDelivery.id
-			}).success(function(data){
-				$scope.delivery = data;
-				$scope.initObjects(data);
-			})
+			$scope.delivery = angular.copy(objectsService.get('Delivery', $scope.selectedDelivery.id));
+			$scope.initObjects($scope.delivery);
 		}
 	}
 
@@ -263,22 +220,7 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 	}
 
 	$scope.deleteDelivery = function(){
-		$http({
-			method: 'DELETE',
-			url: '/api/Delivery/' + $scope.delivery.id
-		}).success(function(){
-			for (var i = $scope.deliveries.length - 1 ; i >= 0 ; i--){
-				var obj = $scope.deliveries[i];
-
-				if($scope.delivery.id == $scope.deliveries[i].id){
-					$scope.deliveries.splice(i, 1);
-				}
-			}
-			$scope.delivery = {}
-			$rootScope.addAlert('נמחק בהצלחה', 'success')
-		}).error(function(){
-			$rootScope.addAlert('שגיאה', 'danger')
-		})
+		objectsService.delete('Delivery', $scope.delivery.id)
 	}
 
 	$scope.newDelivery = function(){
@@ -315,12 +257,6 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 	}
 
 	$scope.submitDelivery = function(){
-		/*$scope.delivery.date = $filter('date')($scope.delivery.date, 'yyyy-MM-dd')
-		$scope.delivery.time = $filter('date')($scope.delivery.time, 'HH:mm')
-		$scope.delivery.rakazTime = $filter('date')($scope.delivery.rakazTime, 'HH:mm')
-		$scope.delivery.exeTime = $filter('date')($scope.delivery.exeTime, 'HH:mm')
-		$scope.delivery.estTime = $filter('date')($scope.delivery.estTime, 'HH:mm')
-		*/
 		var date = new Date($scope.delivery.endTime)
 		var now = new Date()
 		date.setDate(now.getDate())
@@ -329,27 +265,16 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 		$scope.delivery.endTime = date
 
 		if($scope.delivery.id){
-			$http({
-				method: 'PUT',
-				url: '/api/updateDelivery/' + $scope.delivery.id,
-				data: $scope.delivery,
-				//headers : { 'Content-Type': 'application/json' }
-			}).success(function(data){
-				$scope.delivery.id = data.id
+			objectsService.put('Delivery', $scope.delivery.id, $scope.delivery).success(function(data){
 				$rootScope.addAlert('משלוח עודכן בהצלחה', 'success')
-			})
+			}).error(function(data){
+				$rootScope.addAlert('שגיאה', 'danger');
+			});
 		} else {
-			$http({
-				method: 'POST',
-				url: '/api/newDelivery/',
-				data: $scope.delivery,
-				headers : { 'Content-Type': 'application/json' }
-			})
-			.success(function(data){
+			objectsService.post('Delivery', $scope.delivery).success(function(data){
 				$rootScope.addAlert('המשלוח הוזן!', 'success')
-			})
-			.error(function(data){
-				$rootScope.addAlert('שגיאה', 'danger')
+			}).error(function(data){
+				$rootScope.addAlert('שגיאה', 'danger');
 			})
 		}
 	}
@@ -457,5 +382,10 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 			$rootScope.addAlert('לא הוזן מחירון למסלול זה!', 'danger');
 			//alert("לא הוזן מחירון למסלול זה")
 		})
+	}
+
+	if ($state.params.id){
+		$scope.delivery = objectsService.get('Delivery', $state.params.id)
+		$scope.initObjects($scope.delivery)
 	}
 }])

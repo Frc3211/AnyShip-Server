@@ -231,7 +231,14 @@ class VehicleTypeListUpdate(generics.RetrieveUpdateDestroyAPIView):
 		return VehicleType.objects.filter(client=client)
 
 class DeliveryList(generics.ListCreateAPIView):
-	serializer_class = DeliverySerializer
+	#serializer_class = DeliverySerializer
+	def get(self, request, *args, **kwargs):
+		self.serializer_class = DeliverySerializer
+		return generics.ListCreateAPIView.get(self, request, *args, **kwargs)
+
+	def post(self, request, *args, **kwargs):
+		self.serializer_class = CreateDeliverySerializer
+		return generics.ListCreateAPIView.post(self, request, *args, **kwargs)
 
 	def perform_create(self, serializer):
 		user = self.request.user
@@ -256,7 +263,7 @@ class LastDeliveryList(generics.ListAPIView):
 		except:
 			return None
 		return Delivery.objects.filter(client=client).exclude(status=6)
-
+"""
 class DeliveryCreate(generics.CreateAPIView):
 	serializer_class = CreateDeliverySerializer
 
@@ -269,7 +276,7 @@ class DeliveryCreate(generics.CreateAPIView):
 		user = self.request.user
 		client = Client.objects.get(anyshipuser=user.anyshipuser)
 		serializer.save(client=client)
-
+"""
 
 class DeliveryUpdate(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = CreateDeliverySerializer

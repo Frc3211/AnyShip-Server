@@ -7,7 +7,7 @@ urlpatterns = [
 	url(r'^MinCustomers/$', views.MinCustomerList.as_view()),
 	url(r'^Cities/$', views.CityList.as_view()),
 	url(r'^Delivery/$', views.DeliveryList.as_view()),
-	url(r'^newDelivery/$', views.DeliveryCreate.as_view()),
+	#url(r'^newDelivery/$', views.DeliveryCreate.as_view()),
 	url(r'^VehicleTypes/$', views.VehicleTypeList.as_view()),
     url(r'^VehicleTypes/(?P<pk>[0-9]+)$', views.VehicleTypeListUpdate.as_view()),
 	url(r'^Delivery/(?P<pk>[0-9]+)$', views.DeliveryDetail.as_view()),

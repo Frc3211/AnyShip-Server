@@ -1,7 +1,7 @@
-app.factory('globalFunctions', function(){
+/*app.factory('globalFunctions', function(){
     return {
         yesNoWindow: function(){
 
         }
     }
-})
+})*/

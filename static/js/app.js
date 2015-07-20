@@ -225,6 +225,15 @@ app.run(['$state', '$rootScope', '$http', '$modal', function($state, $rootScope,
 	}, {
 		id: 7,
 		name: 'שליח שני'
+	}, {
+		id: 8,
+		name: 'אושר ביצוע'
+	}, {
+		id: 9,
+		name: 'כפולה קבל 1'
+	}, {
+		id: 10,
+		name: 'קבל 2'
 	}]
 	/*
 	$rootScope.findCustomerById = function(id){
@@ -247,6 +256,19 @@ app.run(['$state', '$rootScope', '$http', '$modal', function($state, $rootScope,
 		return input.split(":", 2).join(":")
 	}
 })*/
+
+app.filter('getById', ['objectsService' ,function(objectsService){
+	return function(type, id){
+		var list = objectsService.list(type);
+		var i = 0, len = list.length;
+		for(; i < len ; i++){
+			if(+list[i].id == id){
+				return list[i]
+			}
+		}
+		return null;
+	}
+}])
 
 app.filter('urgency', function(){
 	return function(input){

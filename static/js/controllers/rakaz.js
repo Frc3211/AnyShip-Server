@@ -1,27 +1,18 @@
-app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter', 'ngDialog', 'tablesService', function($scope, $rootScope, $http, $state, $filter, ngDialog, tablesService){
+app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter', 'ngDialog', 'tablesService', 'objectsService', function($scope, $rootScope, $http, $state, $filter, ngDialog, tablesService, objectsService){
 	//init
 	$rootScope.currMenu = 'commands';
-	$rootScope.showLoader = true;
 	$rootScope.currPage = 'main.deliveries'
 	$scope.records = [];
 
-	$http.get('/api/LastDeliveries/').success(function(data){
-		$scope.records = $scope.records.concat(data);
-		$rootScope.showLoader = false;
-	})
-
-
-	$http.get('/api/LastRegularDeliveries/').success(function(data){
-		$scope.records = $scope.records.concat(data);
-	})
-
-	$http.get('/api/Employee/').success(function(data){
-		$scope.employees = data;
-	})
+	$scope.records = $scope.records.concat(objectsService.list('Delivery'))
+	$scope.records = $scope.records.concat(objectsService.list('RegularDelivery'))
+	$scope.employees = objectsService.list('Employee')
 
 	$scope.vehicleTypes = tablesService['VehicleTypes'].getAll()
 
 	$rootScope.currTable = "מעקב משלוחים - מוצא / יעד"
+
+	$scope.filterGeneral = true;
 
 	$scope.table = {}
 	$scope.table.name = 'מעקב משלוחים - מוצא / יעד'
@@ -59,6 +50,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		icon: '',
 		method: function(){
 			$scope.zeroFilters()
+			$scope.filterGeneral = true;
 		}
 	}, {
 		title: 'דחופים',
@@ -127,19 +119,30 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		$scope.filterOpenes = true;
 	}
 
-	$scope.submitChanges = function(){
+	$scope.submitChanges = function(field){
+		var data = {}
+		if(typeof($scope.currRecord[field]) == 'object'){
+			data[field] = $scope.currRecord[field].id;
+		} else {
+			data[field] = $scope.currRecord[field];
+		}
+
+		console.log('submit changes')
 		if($scope.currRecord.hasOwnProperty('isSunday')){
-			$http({
+			/*$http({
 				method: 'PUT',
 				url: '/api/RegularDelivery/' + $scope.currRecord.id,
-				data: $scope.currRecord
-			})
+				data: data
+			})*/
+			objectsService.put('RegularDelivery', $scope.currRecord.id, data);
 		} else {
+			/*
 			$http({
 				method: 'PUT',
 				url: '/api/Delivery/' + $scope.currRecord.id,
-				data: $scope.currRecord
-			})
+				data: data
+			})*/
+			objectsService.put('Delivery', $scope.currRecord.id, data);
 		}
 
 	}
@@ -157,7 +160,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 					break
 			}
 		})
-	})
+	}, true)
 
 	//functions
 	$scope.popup = function(){
@@ -173,7 +176,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		})
 	}
 
-	$scope.change = function(record, fieldName, id){
+	$scope.change = function(record, fieldName, id, oldId){
 		var data = {}
 		data[fieldName] = id
 
@@ -185,8 +188,84 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 				$scope.records[index].status = 1;
 				break;
 			case 'secondDeliver':
+				record.status = 1
 				data['status'] = 1
-				$scope.records[index].status = 1
+				if(record.firstDeliver == null){
+					record.firstDeliver = id;
+					data.firstDeliver = id;
+				}
+
+				break;
+			case 'status':
+				switch(id){
+					case 1: // הועבר לשליח
+						if(record.firstDeliver == null){
+							alert("לא נבחר שליח")
+							record.status = oldId;
+							data['status'] = oldId;
+							return;
+						}
+						break;
+					case 2: // חזר מכפולה
+						if(record.doubleType.name == "רגיל"){
+							alert("משלוח לא כפול")
+							record.status = oldId;
+							data['status'] = oldId;
+							return;
+						}
+						break;
+					case 3:
+						if(!confirm("להעביר למבוטלים?")){
+							record.status = oldId;
+							data['status'] = oldId;
+							return;
+						}
+						break;
+					case 5: // נאסף
+
+						break;
+						//if(record.)
+					case 6: //בוצע
+						if(record.firstDeliver == null || record.secondDeliver == null){
+							alert('יש לבחור שליח אוסף ומוסר!')
+							record.status = oldId;
+							data['status'] = oldId;
+							return;
+						}
+						break;
+					case 7: // שליח שני
+						if(record.firstDeliver == null){
+							alert('יש לבחור שליח אוסף!')
+							record.status = oldId;
+							data['status'] = oldId;
+							return;
+						}
+						break;
+					case 8: // אושר ביצוע
+						if(record.firstDeliver == null || record.secondDeliver == null){
+							alert('יש לבחור שליח אוסף ושליח מוסר!')
+							record.status = oldId;
+							data['status'] = oldId;
+							return;
+						}
+						break;
+					case 9: // כפולה קבל 1
+						if(record.firstDeliver == null){
+							alert('יש לבחור שליח!')
+							record.status = oldId;
+							data.status = oldId;
+							return;
+						}
+						break;
+					case 10:
+						if(record.firstDeliver == null){
+							alert("יש לבחור שליח אוסף")
+							record.status = oldId;
+							data.status = oldId;
+							return;
+						}
+						break;
+				}
 				break;
 		}
 
@@ -217,6 +296,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		}
 		//console.log(item)
 		return (!$scope.filterUrgency || item.urgency.name != 'רגיל') &&
+			(!$scope.filterGeneral || item.status != 6) &&
 			(!$scope.filterDoubles || item.doubleType.name != 'רגיל') &&
 			//(!$scope.filterFutures || ) &&
 			(!$scope.filterTomorrow || item.isTomorrow == true) &&
@@ -231,6 +311,9 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 	}
 
 	$scope.zeroFilters = function(){
+		$scope.currRecordIndex 	= null;
+		$scope.currRecord		= null;
+		$scope.filterGeneral	= false;
 		$scope.filterUrgency 	= false;
 		$scope.filterDoubles 	= false;
 		$scope.filterFutures 	= false;
@@ -247,6 +330,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 	}
 
 	$scope.zeroFilters()
+	$scope.filterGeneral = true;
 
 	$scope.tooltip = function($event){
 		if($event.target.offsetWidth < $event.target.scrollWidth){
@@ -254,9 +338,11 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		}
 	}
 
-	$scope.selectRecord = function(index){
-		var index = $scope.records.indexOf(index)
+	$scope.selectRecord = function(record, i){
+		var index = $scope.records.indexOf(record)
 		$scope.currRecord = $scope.records[index]
+		$scope.currRecordIndex = i
+
 		//$scope.initCurrRecord()
 		if($scope.records[index].hasOwnProperty('isSunday')){
 			$scope.currRecord.deliveryType = 'סבב קבוע'
@@ -279,7 +365,8 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 	$scope.$watch('currRecord', function(obj){
 		if(obj == undefined)
 			return;
-		obj.created = $filter('date')(obj.created, 'dd-MM-yyyy')
+		obj.created = new Date(obj.created);
+		//obj.created = $filter('date')(obj.created, 'dd-MM-yyyy')
 	})
 
 	$scope.showRecord = function(event, record){
@@ -289,7 +376,5 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		} else {
 			$state.go('main.delivery', {id: id})
 		}
-
-
 	}
 }])

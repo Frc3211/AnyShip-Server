@@ -23,7 +23,7 @@
 				<tbody>
 					<tr ng-repeat="row in regularSites">
 						<td style="width: 40px;">
-							<span class="button minus" ng-click="deleteEntry($index)"></span>
+							<span class="button minus" ng-click="deleteEntry(regularSites.indexOf(row))"></span>
 						</td>
 						<td style="min-width: 90px;">
 							<input type="text" ng-model="row.name" ng-change="change(row)">

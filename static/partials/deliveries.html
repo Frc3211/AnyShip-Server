@@ -5,106 +5,60 @@
 				<div class="path-fields">
 					<div>
 						מ
-						<input ng-model="currRecord.sender" ng-change="submitChanges()" ng-model-options="{debounce:750}">
+						<input class="form-control" ng-model="currRecord.sender" ng-change="submitChanges('sender')" ng-model-options="{debounce:750}">
 					</div>
 					<div>
 						ל
-						<input ng-model="currRecord.receiver">
+						<input class="form-control" ng-model="currRecord.receiver" ng-change="submitChanges('receiver')" ng-model-options="{debounce:750}">
 					</div>
 				</div>
 				<div class="instructions-fields">
-					<textarea ng-model="currRecord.instructions"></textarea>
+					<textarea class="form-control" ng-model="currRecord.instructions" ng-change="submitChanges('instructions')" ng-model-options="{debounce:750}"></textarea>
 				</div>
 			</div>
 			<div class="col-sm-8">
 				<div class="column">
 					<div class="with-label">
 						<label>איש קשר</label>
-						<input ng-model="currRecord.contactMan.name">
+						<input class="form-control" ng-model="currRecord.contactMan.name">
 					</div>
 					<div class="with-label">
 						<label>סוג</label>
-						<input ng-model="currRecord.deliveryType" disabled>
+						<input class="form-control" ng-model="currRecord.deliveryType" disabled>
 					</div>
-					<input>
+					<div class="with-label">
+						<label>טלפון</label>
+						<input class="form-control" ng-model="currRecord.contactMan.phone2" disabled>
+					</div>
+
 				</div>
 				<div class="column">
 					<button type="button" ng-click="setFilterOpenes()">{{ countOpens }} פתוחים</button>
 					<button type="button" ng-click="setFilterWaitings()">{{ countWaitings }} בהמתנה</button>
 				</div>
 				<div class="column">
-					<select ng-model="currRecord.vehicleType.id">
-						<option ng-repeat="vehicle in vehicleTypes" value="{{vehicle.id}}">{{ vehicle.name }}</option>
+					<select ng-model="currRecord.vehicleType.id" ng-options="vehicle.id as vehicle.name for vehicle in vehicleTypes" ng-change="submitChanges('vehicleType')">
+					</select>
+
+					<select ng-model="currRecord.thirdDeliver.id" ng-options="employee.id as employee.name for employee in employees" ng-change="submitChanges('thirdDeliver')">
 					</select>
 				</div>
 				<div class="column">
 					<div class="with-label">
 						<label>מקבל1:</label>
-						<input ng-model="currRecord.firstReceiverName">
+						<input class="form-control" ng-model="currRecord.firstReceiverName">
 					</div>
 					<div class="with-label">
 						<label>מקבל2:</label>
-						<input ng-model="currRecord.secondReceiverName">
+						<input class="form-control" ng-model="currRecord.secondReceiverName">
 					</div>
 					<div class="with-label">
 						<label>תאריך:</label>
-						<input ng-model="currRecord.created" disabled>
+						<input type="date" class="form-control hide-date-picker" ng-model="currRecord.created" disabled>
 					</div>
 				</div>
 			</div>
 		</div>
-		<!--<div class="row">
-			<div class="col-sm-4">
-				<div class="row">
-					<div class="col-sm-6 form-field">
-						<input type="text" ng-model="currRecord.sender.name" disabled><label>מוצא</label>
-					</div>
-					<div class="col-sm-6 form-field">
-						<input type="text" ng-model="currRecord.receiver.name" disabled><label>יעד</label>
-					</div>
-
-					<div class="col-sm-12 form-field">
-						<textarea ng-model="currRecord.comment" disabled></textarea><label>הערות</label>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-sm-2">
-				<div class="row">
-					<div class="col-sm-12 form-field">
-						<input type="text" ng-model="currRecord.firstReceiverName" disabled><label>מקבל1</label>
-					</div>
-					<div class="col-sm-12 form-field">
-						<input type="text" ng-model="currRecord.secondReceiverName" disabled><label>מקבל2</label>
-					</div>
-
-					<div class="col-sm-6">
-					</div>
-				</div>
-			</div>
-			<div class="col-sm-2">
-				<div class="row">
-					<div class="col-sm-12 form-field">
-						<input ng-model="currRecord.contactMan.name" disabled>
-						<label>איש קשר</label>
-					</div>
-					<div class="col-sm-12 form-field">
-						<input ng-model="currRecord.contactMan" disabled>
-						<label>איש קשר</label>
-					</div>
-				</div>
-			</div>
-			<div class="col-sm-2 form-field">
-				<select ng-model="currRecord.vehicleType.id">
-					<option></option>
-					<option ng-repeat="vehicle in vehicles" value="{{ vehicle.id }}">{{ vehicle.name }}</option>
-				</select>
-				<label>אמצעי הובלה</label>
-			</div>
-			<div class="col-sm-2 form-field">
-
-			</div>
-		</div>-->
 	</div>
 	<div class="form-area-filters">
 		<div class="row">
@@ -128,14 +82,14 @@
 					</div>
 				</div>
 				<!--<div class="tracking-list" ng-repeat="record in records | filter:filterDeliveries" data-id="{{ record.id }}" ng-click="selectRecord($index)" ng-dblclick="showRecord($event)">-->
-				<div class="tracking-list" ng-repeat="record in records | orderBy:'endTime' | filter:filterDeliveries" data-id="{{ record.id }}" ng-click="selectRecord(record)" ng-dblclick="showRecord($event, record)">
+				<div class="tracking-list" ng-repeat="record in records | orderBy:'endTime' | filter:filterDeliveries" ng-class="{'curr': currRecordIndex == $index}" data-id="{{ record.id }}" ng-click="selectRecord(record, $index)" ng-dblclick="showRecord($event, record)">
 					<!--<div class="timing"><h1>6E +<br />07</h1></div>-->
-					<div class="second-1"><h1 popover="{{record.created| date : 'HH:mm'}}" popover-trigger="mouseenter">{{ record.created | date : 'HH:mm' }}</h1></div>
-					<div class="third-1"><h1 popover="{{record.customer.name}}" popover-trigger="mouseenter">{{ record.customer.name }}</h1></div>
-					<div class="third-1-2"><h1 popover="{{ record.sourceStreet }} {{ record.sourceHomeNum }}, {{ record.sourceCity.name }}" popover-trigger="mouseenter">{{ record.sourceStreet }} {{ record.sourceHomeNum }}, {{ record.sourceCity.name }}</h1></div>
-					<div class="third-1-3"><h1 popover="{{record.destStreet}} {{ record.destHomeNum }}, {{ record.destCity.name }}" popover-trigger="mouseenter">{{ record.destStreet }} {{ record.destHomeNum }}, {{ record.destCity.name }}</h1></div>
-					<div class="fourth-1"><h1 popover="{{record.urgency.name}}" popover-trigger="mouseenter">{{ record.urgency.name }}</h1></div>
-					<div class="fourth-1-2"><h1 popover="{{record.doubleType.name}}" popover-trigger="mouseenter">{{ record.doubleType.name }}</h1></div>
+					<div class="second-1"><h1>{{ record.created | date : 'HH:mm' }}</h1></div>
+					<div class="third-1"><h1>{{ record.customer.name }}</h1></div>
+					<div class="third-1-2"><h1>{{ record.sourceStreet }} {{ record.sourceHomeNum }}, {{ record.sourceCity.name }}</h1></div>
+					<div class="third-1-3"><h1>{{ record.destStreet }} {{ record.destHomeNum }}, {{ record.destCity.name }}</h1></div>
+					<div class="fourth-1"><h1>{{ record.urgency.name }}</h1></div>
+					<div class="fourth-1-2"><h1>{{ record.doubleType.name }}</h1></div>
 					<div class="five-1">
 						<!--<h1 popover="{{record.firstDeliver.name}}" popover-trigger="mouseenter">{{ record.firstDeliver.name }}</h1>-->
 						<select ng-options="employee.id as employee.name for employee in employees" ng-change="change(record, 'firstDeliver', record.firstDeliver.id)" ng-model="record.firstDeliver.id">
@@ -148,10 +102,10 @@
 					</div>
 					<div class="last-timer">
 						<!--<h1 popover="{{record.status.name}}" popover-trigger="mouseenter">{{ record.status.name }}</h1>-->
-						<select ng-options="status.id as status.name for status in deliveryStatuses" ng-change="change(record, 'status', record.status)" ng-model="record.status">
+						<select ng-options="status.id as status.name for status in deliveryStatuses | orderBy: 'name'" ng-change="change(record, 'status', record.status, {{record.status}})" ng-model="record.status">
 						</select>
 					</div>
-					<div class="last-timer-1"><h1 popover="{{record.endTime | date: 'HH:mm'}}" popover-trigger="mouseenter">{{ record.endTime | date: 'HH:mm' }}</h1></div>
+					<div class="last-timer-1"><h1>{{ record.endTime | date: 'HH:mm' }}</h1></div>
 				</div>
 			</div>
 		</div>
