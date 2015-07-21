@@ -1,4 +1,4 @@
-﻿<div ng-controller="rakazCtrl" class="full-height">
+﻿<div ng-controller="rakazCtrl" class="full-height" key-press>
 	<div class="rakaz-top-bar">
 		<div class="row">
 			<div class="col-sm-4">
@@ -46,15 +46,15 @@
 				<div class="column">
 					<div class="with-label">
 						<label>מקבל1:</label>
-						<input class="form-control" ng-model="currRecord.firstReceiverName">
+						<input class="form-control" ng-model="currRecord.firstReceiverName" ng-change="submitChanges('firstReceiverName')" ng-model-options="{debounce:750}">
 					</div>
 					<div class="with-label">
 						<label>מקבל2:</label>
-						<input class="form-control" ng-model="currRecord.secondReceiverName">
+						<input class="form-control" ng-model="currRecord.secondReceiverName" ng-change="submitChanges('secondReceiverName')" ng-model-options="{debounce:750}">
 					</div>
 					<div class="with-label">
 						<label>תאריך:</label>
-						<input type="date" class="form-control hide-date-picker" ng-model="currRecord.created" disabled>
+						<input type="date" class="form-control hide-date-picker" ng-model="currRecord.dateCreated" disabled>
 					</div>
 				</div>
 			</div>
@@ -82,14 +82,14 @@
 					</div>
 				</div>
 				<!--<div class="tracking-list" ng-repeat="record in records | filter:filterDeliveries" data-id="{{ record.id }}" ng-click="selectRecord($index)" ng-dblclick="showRecord($event)">-->
-				<div class="tracking-list" ng-repeat="record in records | orderBy:'endTime' | filter:filterDeliveries" ng-class="{'curr': currRecordIndex == $index}" data-id="{{ record.id }}" ng-click="selectRecord(record, $index)" ng-dblclick="showRecord($event, record)">
+				<div class="tracking-list" ng-repeat="record in filteredRecords = (records | orderBy:'created' | filter:filterDeliveries)" ng-class="{'curr': currRecordIndex == $index}" data-id="{{ record.id }}" ng-click="selectRecord(record, $index)" ng-dblclick="showRecord($event, record)" ng-keydown="key($event)" tabindex="0">
 					<!--<div class="timing"><h1>6E +<br />07</h1></div>-->
 					<div class="second-1"><h1>{{ record.created | date : 'HH:mm' }}</h1></div>
 					<div class="third-1"><h1>{{ record.customer.name }}</h1></div>
 					<div class="third-1-2"><h1>{{ record.sourceStreet }} {{ record.sourceHomeNum }}, {{ record.sourceCity.name }}</h1></div>
 					<div class="third-1-3"><h1>{{ record.destStreet }} {{ record.destHomeNum }}, {{ record.destCity.name }}</h1></div>
-					<div class="fourth-1"><h1>{{ record.urgency.name }}</h1></div>
-					<div class="fourth-1-2"><h1>{{ record.doubleType.name }}</h1></div>
+					<div class="fourth-1"><h1 ng-class="checkUrgency(record.urgency.name)">{{ record.urgency.name }}</h1></div>
+					<div class="fourth-1-2"><h1 ng-class="checkDouble(record.doubleType.name)">{{ record.doubleType.name }}</h1></div>
 					<div class="five-1">
 						<!--<h1 popover="{{record.firstDeliver.name}}" popover-trigger="mouseenter">{{ record.firstDeliver.name }}</h1>-->
 						<select ng-options="employee.id as employee.name for employee in employees" ng-change="change(record, 'firstDeliver', record.firstDeliver.id)" ng-model="record.firstDeliver.id">

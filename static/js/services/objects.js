@@ -26,9 +26,15 @@ app.service('objectsService', ['$http', '$filter', function($http, $filter){
             url: '/api/' + type + '/',
             data: data
         })
-
+        /// TODO: fix this
         promise.success(function(data){
-            objects[type].push(data)
+            $http({
+                method: 'GET',
+                url: '/api/' + type + '/' + data.id
+            }).success(function(data){
+                objects[type].push(data)
+            })
+            //objects[type].push(data)
         })
 
         return promise;

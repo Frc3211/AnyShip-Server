@@ -4,6 +4,8 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 	$rootScope.currPage = 'main.deliveries'
 	$scope.records = [];
 
+	$scope.currRecordIndex = 0;
+
 	$scope.records = $scope.records.concat(objectsService.list('Delivery'))
 	$scope.records = $scope.records.concat(objectsService.list('RegularDelivery'))
 	$scope.employees = objectsService.list('Employee')
@@ -119,6 +121,63 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		$scope.filterOpenes = true;
 	}
 
+	$scope.key = function($event){
+		switch($event.keyCode){
+			case 40:
+				if($scope.currRecordIndex < $scope.filteredRecords.length - 1){
+					$scope.currRecordIndex++;
+				}
+				break;
+			case 38:
+				if($scope.currRecordIndex > 0){
+					$scope.currRecordIndex--;
+				}
+				break;
+		}
+	}
+
+	$scope.checkUrgency = function(value){
+		switch(value){
+			case 'רגיל':
+				return null;
+				break;
+			case 'מיידי':
+				return 'mark-very-urgent';
+				break;
+			case 'בהול':
+				return 'mark-very-urgent';
+				break;
+			case 'בהול כיוון אחד':
+				return 'mark-very-urgent';
+				break;
+			case 'דחוף כיוון אחד':
+				return 'mark-urgent';
+				break;
+			case 'דחוף':
+				return 'mark-urgent';
+				break;
+		}
+	}
+
+	$scope.checkDouble = function(value){
+		switch(value){
+			case 'רגיל':
+				break;
+			case 'כפול רגיל':
+				return 'mark-double'
+				break;
+			case 'ללא חיוב':
+				return 'mark-double-no-charge';
+				break;
+			case 'חזרה למשרד':
+				return 'mark-double-return';
+				break;
+			default:
+				return null;
+				break;
+		}
+	}
+
 	$scope.submitChanges = function(field){
 		var data = {}
 		if(typeof($scope.currRecord[field]) == 'object'){
@@ -127,7 +186,6 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 			data[field] = $scope.currRecord[field];
 		}
 
-		console.log('submit changes')
 		if($scope.currRecord.hasOwnProperty('isSunday')){
 			/*$http({
 				method: 'PUT',
@@ -311,7 +369,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 	}
 
 	$scope.zeroFilters = function(){
-		$scope.currRecordIndex 	= null;
+		$scope.currRecordIndex 	= 0;
 		$scope.currRecord		= null;
 		$scope.filterGeneral	= false;
 		$scope.filterUrgency 	= false;
@@ -338,13 +396,20 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		}
 	}
 
+	$scope.$watch('currRecordIndex', function(value){
+		$scope.currRecord = $scope.filteredRecords[$scope.currRecordIndex]
+	})
+
 	$scope.selectRecord = function(record, i){
-		var index = $scope.records.indexOf(record)
+		$scope.currRecord = $scope.filteredRecords[$scope.currRecordIndex];
+		$scope.currRecordIndex = i;
+
+		/*var index = $scope.records.indexOf(record)
 		$scope.currRecord = $scope.records[index]
-		$scope.currRecordIndex = i
+		$scope.currRecordIndex = i*/
 
 		//$scope.initCurrRecord()
-		if($scope.records[index].hasOwnProperty('isSunday')){
+		if($scope.currRecord.hasOwnProperty('isSunday')){
 			$scope.currRecord.deliveryType = 'סבב קבוע'
 		} else {
 			$scope.currRecord.deliveryType = 'משלוח רגיל'
@@ -365,8 +430,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 	$scope.$watch('currRecord', function(obj){
 		if(obj == undefined)
 			return;
-		obj.created = new Date(obj.created);
-		//obj.created = $filter('date')(obj.created, 'dd-MM-yyyy')
+		obj.dateCreated = new Date(obj.created);
 	})
 
 	$scope.showRecord = function(event, record){

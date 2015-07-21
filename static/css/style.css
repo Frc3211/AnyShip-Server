@@ -990,7 +990,7 @@ input:focus{
 	margin: 0 5px 0px 0px;
 	text-align:center;
 	font-size:14px;
-	background:#2fafa7;
+	/*background:#2fafa7;*/
 }
 .fourth-1-2 h1{
 	float:right;
@@ -999,7 +999,7 @@ input:focus{
 	margin: 0 4px 0px 0px;
 	text-align:center;
 	font-size:14px;
-	background:#2579cf;
+	/*background:#2579cf;*/
 }
 
 .five-1 select{
@@ -1009,7 +1009,7 @@ input:focus{
 	margin: 0 4px 0px 0px;
 	text-align:center;
 	font-size:14px;
-	background:#2fb135;
+	/*background:#2fb135;*/
 }
 .five-2 select{
 	float:right;
@@ -1018,7 +1018,7 @@ input:focus{
 	margin: 0 4px 0px 0px;
 	text-align:center;
 	font-size:14px;
-	background:#FF8800;
+	/*background:#FF8800;*/
 }
 .last-timer select{
 	float:right;
@@ -1637,4 +1637,19 @@ span.ui-select-match-text span{
 }
 .hide-date-picker::-webkit-calendar-picker-indicator, .hide-date-picker::-webkit-inner-spin-button{
 	display: none;
+}
+.mark-double{
+	background: #2579cf;
+}
+.mark-double-no-charge{
+	background: #2fafa7;
+}
+.mark-double-return{
+	background: #2fafa7;
+}
+.mark-urgent{
+	background: #8AAF2F;
+}
+.mark-very-urgent{
+	background: #f83c3c;
 }
