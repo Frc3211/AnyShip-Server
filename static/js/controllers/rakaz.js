@@ -1,23 +1,23 @@
 app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter', 'ngDialog', 'tablesService', 'objectsService', function($scope, $rootScope, $http, $state, $filter, ngDialog, tablesService, objectsService){
 	//init
 	$rootScope.currMenu = 'commands';
-	$rootScope.currPage = 'main.deliveries'
+	$rootScope.currPage = 'main.deliveries';
 	$scope.records = [];
 
 	$scope.currRecordIndex = 0;
 
-	$scope.records = $scope.records.concat(objectsService.list('Delivery'))
-	$scope.records = $scope.records.concat(objectsService.list('RegularDelivery'))
-	$scope.employees = objectsService.list('Employee')
+	$scope.records = $scope.records.concat(objectsService.list('Delivery'));
+	$scope.records = $scope.records.concat(objectsService.list('RegularDelivery'));
+	$scope.employees = objectsService.list('Employee');
 
-	$scope.vehicleTypes = tablesService['VehicleTypes'].getAll()
+	$scope.vehicleTypes = tablesService['VehicleTypes'].getAll();
 
-	$rootScope.currTable = "מעקב משלוחים - מוצא / יעד"
+	$rootScope.currTable = "מעקב משלוחים - מוצא / יעד";
 
 	$scope.filterGeneral = true;
 
 	$scope.table = {}
-	$scope.table.name = 'מעקב משלוחים - מוצא / יעד'
+	$scope.table.name = 'מעקב משלוחים - מוצא / יעד';
 	$scope.table.columns = [{
 		name: 'קבלה',
 		width: 8
@@ -121,7 +121,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		$scope.filterOpenes = true;
 	}
 
-	$scope.key = function($event){
+	/*$scope.key = function($event){
 		switch($event.keyCode){
 			case 40:
 				if($scope.currRecordIndex < $scope.filteredRecords.length - 1){
@@ -134,7 +134,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 				}
 				break;
 		}
-	}
+	}*/
 
 	$scope.checkUrgency = function(value){
 		switch(value){
@@ -397,7 +397,11 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 	}
 
 	$scope.$watch('currRecordIndex', function(value){
-		$scope.currRecord = $scope.filteredRecords[$scope.currRecordIndex]
+		if($scope.filteredRecords){
+			$scope.currRecord = $scope.filteredRecords[$scope.currRecordIndex];
+		} else {
+			$scope.currRecord = null;
+		}
 	})
 
 	$scope.selectRecord = function(record, i){

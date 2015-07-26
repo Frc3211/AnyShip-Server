@@ -82,7 +82,7 @@
 					</div>
 				</div>
 				<!--<div class="tracking-list" ng-repeat="record in records | filter:filterDeliveries" data-id="{{ record.id }}" ng-click="selectRecord($index)" ng-dblclick="showRecord($event)">-->
-				<div class="tracking-list" ng-repeat="record in filteredRecords = (records | orderBy:'created' | filter:filterDeliveries)" ng-class="{'curr': currRecordIndex == $index}" data-id="{{ record.id }}" ng-click="selectRecord(record, $index)" ng-dblclick="showRecord($event, record)" ng-keydown="key($event)" tabindex="0">
+				<div class="tracking-list" ng-repeat="record in filteredRecords = (records | orderBy:'created' | filter:filterDeliveries)" ng-class="{'curr': currRecordIndex == $index}" data-id="{{ record.id }}" ng-click="selectRecord(record, $index)" ng-dblclick="showRecord($event, record)" ng-mouseover="hover = true" ng-mouseleave="hover=false">
 					<!--<div class="timing"><h1>6E +<br />07</h1></div>-->
 					<div class="second-1"><h1>{{ record.created | date : 'HH:mm' }}</h1></div>
 					<div class="third-1"><h1>{{ record.customer.name }}</h1></div>
