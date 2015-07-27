@@ -101,14 +101,14 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 			$scope.zeroFilters();
 			$scope.filterTomorrow = true;
 		}
-	}, {
+	}/*, {
 		title: 'מותאם אישית',
 		icon: 'opens.png',
 		method: function(){
 			$scope.zeroFilters()
 			$scope.popup();
 		}
-	}]
+	}*/]
 
 
 	$scope.setFilterWaitings = function(){
@@ -360,7 +360,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 			(!$scope.filterTomorrow || item.isTomorrow == true) &&
 			(!$scope.filterDones || item.status == 6) &&
 			(!$scope.filterOpenes || item.status == 0) &&
-			(!$scope.filterLates || item.status == 6 || new Date() < new Date(item.endTime)) &&
+			(!$scope.filterLates || (item.status != 6 && new Date() > new Date(item.endTime))) &&
 			(!$scope.filterWaitings || item.status == 4) &&
 			// filterLates
 			// filterSpecial
