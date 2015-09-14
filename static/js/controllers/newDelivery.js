@@ -257,12 +257,12 @@ app.controller('newDeliveryCtrl', ['$scope', '$rootScope', '$http', '$filter', '
 	}
 
 	$scope.submitDelivery = function(){
-		var date = new Date($scope.delivery.endTime)
+		/*var date = new Date($scope.delivery.endTime)
 		var now = new Date()
 		date.setDate(now.getDate())
 		date.setFullYear(now.getFullYear())
 		date.setMonth(now.getMonth())
-		$scope.delivery.endTime = date
+		$scope.delivery.endTime = date*/
 
 		if($scope.delivery.id){
 			objectsService.put('Delivery', $scope.delivery.id, $scope.delivery).success(function(data){

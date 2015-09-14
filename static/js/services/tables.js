@@ -91,6 +91,22 @@ app.service('tablesService', ['$http', '$rootScope', function($http, $rootScope)
             },
             save: saveFunc,
             deleted: []
+        },
+        VehicleCalander: {
+            name: 'VehicleCalander',
+            promise: $http.get('/api/VehicleCalander/').success(function(data){
+                angular.forEach(data, function(obj, index){
+                    obj.endTest = (obj.endTest == undefined) ? undefined : new Date(obj.endTest);
+                    obj.insuranceEnd = (obj.insuranceEnd == undefined) ? undefined : new Date(obj.insuranceEnd);
+                    obj.purchaseDate = (obj.purchaseDate == undefined) ? undefined : new Date(obj.purchaseDate);
+                })
+                tablesData['VehicleCalander'] = data;
+            }),
+            getAll: function(){
+                return tablesData['VehicleCalander']
+            },
+            save: saveFunc,
+            deleted: []
         }
     }
     return service;

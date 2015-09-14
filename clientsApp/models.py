@@ -408,6 +408,16 @@ class VehicleType(models.Model):
 	def __unicode__(self):
 		return self.name
 
+class VehicleCalander(models.Model):
+	client = models.ForeignKey('Client', null=True, blank=True)
+	vehicleId = models.CharField(max_length=10, null=True, blank=True)
+	vehicleType = models.ForeignKey('VehicleType', null=True, blank=True)
+	status = models.ForeignKey('Status', null=True, blank=True)
+	driver = models.ForeignKey('Employee', null=True, blank=True)
+	endTest = models.DateTimeField(null=True, blank=True)
+	insuranceEnd = models.DateTimeField(null=True, blank=True)
+	purchaseDate = models.DateTimeField(null=True, blank=True)
+
 class RegularSite(models.Model):
 	client = models.ForeignKey('Client', null=True)
 	name = models.CharField(max_length=75, null=True)

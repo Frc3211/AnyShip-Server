@@ -1,5 +1,5 @@
 app.service('objectsService', ['$http', '$filter', function($http, $filter){
-    var objectTypes = ['Customers', 'Delivery', 'Employee', 'UrgencyList', 'DoubleTypeList', 'RegularDelivery', 'RegularSite']
+    var objectTypes = ['Customers', 'Delivery', 'Employee', 'UrgencyList', 'DoubleTypeList', 'RegularDelivery', 'RegularSite', 'Status']
     var objects = {}
     var objectsService = this;
 
@@ -50,21 +50,6 @@ app.service('objectsService', ['$http', '$filter', function($http, $filter){
 		return null;
     }
 
-    /*this.put = function(type, id, data){
-        $http({
-            method: 'PUT',
-            url: '/api/' + type + '/' + id,
-            data: data
-        }).success(function(data){
-            var obj = $filter('getById')(type, id);
-            obj = data;
-            console.log("success")
-            return true;
-        }).error(function(data){
-            return false;
-        })
-    }*/
-
     this.put = function(type, id, data){
         var promise = $http({
             method: 'PUT',
@@ -72,13 +57,15 @@ app.service('objectsService', ['$http', '$filter', function($http, $filter){
             data: data
         })
 
-        promise.success(function(cbData){
-            /*var obj = objectsService.getById(type, id);
+        promise.success(function(data){
+            var obj = objectsService.getById(type, id);
             var index = objects[type].indexOf(obj);
-            for(i in data){
-                console.log("setting", i, "from", objects[type][index][i], "to", data[i])
-                objects[type][index][i] = data[i];
-            }*/
+            $http({
+                method: 'GET',
+                url: '/api/' + type + "/" + data.id
+            }).success(function(data){
+                objects[type][index] = data;
+            })
         })
         return promise;
     }

@@ -1195,7 +1195,7 @@ input:focus{
 	width: 1150px;*/
 }
 .table-page-left-area{
-	max-width: 988px;
+	max-width: calc(100% - 150px);
 	min-width: 420px;
 	float: right;
 }
@@ -1665,4 +1665,7 @@ span.ui-select-match-text span{
 	background: #f83c3c;
 	color:#fff;
 	border-radius: 8px;
+}
+.container{
+	width: 92% !important;
 }

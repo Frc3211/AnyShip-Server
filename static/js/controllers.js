@@ -89,6 +89,11 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', '$mo
 							click: function(){
 								$scope.currMenu = $scope.menus.tables;
 							}
+						}, {
+							title: 'ניהול',
+							click: function(){
+								$scope.currMenu = $scope.menus.manage;
+							}
 						}],
 						priceLists: [{
 							title: 'חזור',
@@ -137,6 +142,13 @@ app.controller('dashboardCtrl', ['$scope', '$rootScope', '$http', '$state', '$mo
 							click: function(){
 								$modalInstance.close()
 								$rootScope.gotoPage('main.tables', {tableName: 'Jobs'})
+							}
+						}],
+						manage: [{
+							title: 'צי רכב',
+							click: function(){
+								$modalInstance.close();
+								$rootScope.gotoPage('main.tables', {tableName: 'VehicleCalander'})
 							}
 						}]
 					}

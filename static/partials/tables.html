@@ -14,11 +14,21 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="row in rows">
+			<tr ng-repeat="row in rows" data-id="{{$index}}">
 				<td style="width: 40px;" ng-if="table.isAdded">
 					<span class="button minus" ng-click="deleteEntry($index)"></span>
 				</td>
-				<td ng-repeat="field in table.fields"><input type="text" class="form-control" ng-model="row[field.name]" ng-change="changed($parent.$index)"></td>
+				<td ng-repeat="field in table.fields">
+					<input ng-if="field.type=='input'" type="{{field.input}}" class="form-control" ng-model="row[field.name]" ng-change="changed($parent.$parent.$index)">
+					
+					<select ng-if="field.type=='object'" ng-options="object.id as object.name for object in objects[field.object]" ng-model="row[field.name]" ng-change="changed($parent.$parent.$index)">
+
+					</select>
+
+					<select ng-if="field.type=='table'" ng-options="table.id as table.name for table in tables[field.table]" ng-model="row[field.name]" ng-change="changed($parent.$parent.$index)">
+
+					</select>
+				</td>
 			</tr>
 		</tbody>
 	</table>

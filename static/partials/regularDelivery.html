@@ -21,11 +21,11 @@
 				<label>מספר סבב</label>
 			</div>
 			<div class="col-sm-2 form-field">
-				<input type="time" ng-model="regularDelivery.startTime">
+				<input type="time" ng-model="regularDelivery.startTime" disabled>
 				<label>שעת קבלה</label>
 			</div>
 			<div class="col-sm-2 form-field">
-				<select ng-model="regularDelivery.customer" ng-change="customerSelected()">
+				<select ng-model="regularDelivery.customer" ng-change="customerSelected()" required>
 					<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
 				</select>
 				<label>לקוח</label>
@@ -33,16 +33,13 @@
 		</div>
 		<div class="row">
 			<div class="col-sm-2 form-field">
-				<select ng-options="item.id as item.name for item in contactMans" ng-model="regularDelivery.contactMan">
+				<select ng-options="item.id as item.name for item in contactMans" ng-model="regularDelivery.contactMan" required>
 
 				</select>
-				<!--<select ng-model="regularDelivery.contactMan">
-					<option ng-repeat="contactMan in contactMans" value="{{contactMan.id}}">{{ contactMan.name }}</option>
-				</select>-->
 				<label>מזמין</label>
 			</div>
 			<div class="col-sm-2 form-field">
-				<select ng-model="regularDelivery.type" ng-change="typeCallback()">
+				<select ng-model="regularDelivery.type" ng-change="typeCallback()" required>
 					<option value="0">שליחות</option>
 					<option value="1">איסוף</option>
 					<option value="2">העברה</option>
@@ -77,8 +74,8 @@
 				<label>תאריך סיום</label>
 			</div>
 			<div class="col-sm-2 form-field">
-				<input type="time" ng-model="regularDelivery.endTime">
-				<label>שעת סיום</label>
+				<input type="time" ng-model="regularDelivery.endTime" required>
+				<label>שעת ביצוע</label>
 			</div>
 		</div>
 		<hr>
@@ -90,7 +87,7 @@
 				<!--<select ng-model="regularDelivery.sourceCustomer">
 					<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
 				</select>-->
-				<ui-select tagging="addTagging" ng-change="senderChanged()" tagging-tokens="ENTER" ng-model="regularDelivery.senderObj" theme="bootstrap" sortable="true" ng-disabled="disabled">
+				<ui-select tagging="addTagging" ng-change="senderChanged()" tagging-tokens="ENTER" ng-model="regularDelivery.senderObj" theme="bootstrap" sortable="true" ng-disabled="disabled" required>
 					<ui-select-match>{{$select.selected.name}}</ui-select-match>
 					<ui-select-choices repeat="item in regularSites | filter:$select.search">
 						{{item.name}}
@@ -99,15 +96,15 @@
 				<label>לקוח</label>
 			</div>
 			<div class="col-sm-3 form-field">
-				<input type="text" ng-model="regularDelivery.sourceStreet">
+				<input type="text" ng-model="regularDelivery.sourceStreet" required>
 				<label>רחוב</label>
 			</div>
 			<div class="col-sm-2 form-field">
-				<input type="text" ng-model="regularDelivery.sourceHomeNum">
+				<input type="text" ng-model="regularDelivery.sourceHomeNum" required>
 				<label>מספר</label>
 			</div>
 			<div class="col-sm-2 form-field">
-				<select ng-model="regularDelivery.sourceCity">
+				<select ng-model="regularDelivery.sourceCity" required>
 					<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
 				</select>
 				<label>עיר</label>
@@ -121,7 +118,7 @@
 				<!--<select ng-model="regularDelivery.destCustomer">
 					<option ng-repeat="customer in customers" value="{{customer.id}}">{{ customer.name }}</option>
 				</select>-->
-				<ui-select tagging="addTagging" ng-change="receiverChanged()" tagging-tokens="ENTER" ng-model="regularDelivery.receiverObj" theme="bootstrap" sortable="true" ng-disabled="disabled">
+				<ui-select tagging="addTagging" ng-change="receiverChanged()" tagging-tokens="ENTER" ng-model="regularDelivery.receiverObj" theme="bootstrap" sortable="true" ng-disabled="disabled" required>
 					<ui-select-match>{{$select.selected.name}}</ui-select-match>
 					<ui-select-choices repeat="item in regularSites | filter:$select.search">
 						{{item.name}}
@@ -130,15 +127,15 @@
 				<label>לקוח</label>
 			</div>
 			<div class="col-sm-3 form-field">
-				<input type="text" ng-model="regularDelivery.destStreet">
+				<input type="text" ng-model="regularDelivery.destStreet" required>
 				<label>רחוב</label>
 			</div>
 			<div class="col-sm-2 form-field">
-				<input type="text" ng-model="regularDelivery.destHomeNum">
+				<input type="text" ng-model="regularDelivery.destHomeNum" required>
 				<label>מספר</label>
 			</div>
 			<div class="col-sm-2 form-field">
-				<select ng-model="regularDelivery.destCity">
+				<select ng-model="regularDelivery.destCity" required>
 					<option ng-repeat="city in cities" value="{{city.id}}">{{ city.name }}</option>
 				</select>
 				<label>עיר</label>
@@ -147,19 +144,19 @@
 		<hr>
 		<div class="row">
 			<div class="col-sm-2 form-field">
-				<select ng-model="regularDelivery.urgency">
+				<select ng-model="regularDelivery.urgency" required>
 					<option ng-repeat="urg in urgs" value="{{urg.id}}">{{ urg.name }}</option>
 				</select>
-				<label>דחף</label>
+				<label>דחיפות</label>
 			</div>
 			<div class="col-sm-2 form-field">
-				<select type="text" ng-model="regularDelivery.doubleType">
+				<select type="text" ng-model="regularDelivery.doubleType" required>
 					<option ng-repeat="double in doubles" value="{{double.id}}">{{ double.name }}</option>
 				</select>
 				<label>סוג כפולה</label>
 			</div>
 			<div class="col-sm-2 form-field">
-				<select type="text" ng-model="regularDelivery.vehicleType">
+				<select type="text" ng-model="regularDelivery.vehicleType" required>
 					<option ng-repeat="vehicle in vehicles" value="{{vehicle.id}}">{{ vehicle.name }}</option>
 				</select>
 				<label>רכב</label>

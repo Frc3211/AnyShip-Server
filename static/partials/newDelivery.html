@@ -180,7 +180,7 @@
 				<select ng-model="delivery.urgency" required>
 					<option ng-repeat="urg in urgs" value="{{ urg.id }}">{{ urg.name }}</option>
 				</select>
-				<label>דחף</label>
+				<label>דחיפות</label>
 			</div>
 			<div class="col-sm-2 form-field">
 				<select name="double" ng-model="delivery.doubleType" ng-options="double.id as double.name for double in doubles" required>
@@ -246,7 +246,7 @@
 				<label>ביצוע בפועל</label>
 			</div>
 			<div class="col-sm-2 form-field">
-				<input type="time" ng-model="delivery.endTime">
+				<input type="time" ng-model="delivery.endTime" required>
 				<label>ביצוע משוער</label>
 			</div>
 			<div class="col-sm-2 form-field">
@@ -307,4 +307,5 @@
 	<button ng-click="submitDelivery()" class="btn btn-primary" ng-disabled="form.$invalid">שלח</button>
 	<button ng-click="getPrice()" class="btn">עדכן מחיר</button>
 	<button ng-click="showPriceInfo()" class="btn">הצג פירוט מחיר</button>
+	<button ng-click="gotoPage('main.searchDelivery')" class="btn">חיפוש</button>
 </div>

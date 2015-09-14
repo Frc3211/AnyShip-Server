@@ -41,4 +41,6 @@ urlpatterns = [
 	url(r'^LastDeliveries/$', views.LastDeliveryList.as_view()),
 	url(r'^LastRegularDeliveries/$', views.LastRegularDeliveries.as_view()),
 	url(r'^RegularSitesForCustomer/(?P<customer>[0-9]+)$', views.RegularSitesForCustomer.as_view()),
+    url(r'^VehicleCalander/$', views.VehicleCalanderList.as_view()),
+    url(r'^VehicleCalander/(?P<pk>[0-9]+)$', views.VehicleCalanderUpdate.as_view())
 ]

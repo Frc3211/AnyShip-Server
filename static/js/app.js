@@ -81,6 +81,10 @@ app.config([ '$stateProvider', '$urlRouterProvider', '$httpProvider', '$interpol
 				url: '/tables/:tableName',
 				templateUrl: 'static/partials/tables.html'
 			})
+			.state('main.searchDelivery', {
+				url: '/searchDelivery',
+				templateUrl: 'static/partials/searchDelivery.html'
+			})
 	}
 ])
 

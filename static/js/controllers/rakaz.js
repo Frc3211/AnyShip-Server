@@ -348,10 +348,57 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 		}
 	}
 
+	$scope.isLate = function(item){
+		var endTime = new Date(item.endTime);
+		endTime.setDate(1);
+		endTime.setMonth(0);
+		endTime.setFullYear(1970);
+		var createdTime = new Date(item.created);
+		var now = new Date();
+		now.setDate(1);
+		now.setMonth(0);
+		now.setFullYear(1970);
+		var yesterday = new Date();
+		yesterday.setDate(yesterday.getDate() - 1);
+
+		if(item.status == 6){
+			return false;
+		}
+
+		if(item.hasOwnProperty('isSunday')){
+			return (now > endTime);
+		} else {
+			if(createdTime.toDateString() == new Date().toDateString()){
+				// is today
+				if(item.isTomorrow){
+					return false;
+				} else if(now > endTime){
+					return true;
+				} else {
+					return false;
+				}
+			} else if(createdTime.toDateString() == yesterday.toDateString()){
+				// is yesterday
+				if(item.isTomorrow){
+					if(now > endTime){
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return true;
+				}
+			} else {
+				return true;
+			}
+		}
+	}
+
 	$scope.filterDeliveries = function(item){
 		if(!item.status){
 		//	return false;
 		}
+		$scope.isLate(item);
 		//console.log(item)
 		return (!$scope.filterUrgency || item.urgency.name != 'רגיל') &&
 			(!$scope.filterGeneral || item.status != 6) &&
@@ -360,7 +407,7 @@ app.controller('rakazCtrl', ['$scope', '$rootScope', '$http', '$state', '$filter
 			(!$scope.filterTomorrow || item.isTomorrow == true) &&
 			(!$scope.filterDones || item.status == 6) &&
 			(!$scope.filterOpenes || item.status == 0) &&
-			(!$scope.filterLates || (item.status != 6 && new Date() > new Date(item.endTime))) &&
+			(!$scope.filterLates || $scope.isLate(item) ) &&
 			(!$scope.filterWaitings || item.status == 4) &&
 			// filterLates
 			// filterSpecial

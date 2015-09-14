@@ -624,3 +624,35 @@ class RegularSitesForCustomer(generics.ListAPIView):
 		except:
 			return None
 		return RegularSite.objects.filter(client=client).filter(customer=customer)
+
+class VehicleCalanderList(generics.ListCreateAPIView):
+	serializer_class = VehicleCalanderSerializer
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return VehicleCalander.objects.filter(client=client)
+
+	def perform_create(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)
+
+class VehicleCalanderUpdate(generics.RetrieveUpdateDestroyAPIView):
+	serializer_class = VehicleCalanderSerializer
+
+	def get_queryset(self):
+		user = self.request.user
+		try:
+			client = Client.objects.get(anyshipuser=user.anyshipuser)
+		except:
+			return None
+		return VehicleCalander.objects.filter(client=client)
+
+	def perform_update(self, serializer):
+		user = self.request.user
+		client = Client.objects.get(anyshipuser=user.anyshipuser)
+		serializer.save(client=client)

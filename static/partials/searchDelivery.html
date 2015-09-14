@@ -1,0 +1,12 @@
+﻿<div class="form-area-iner scrollbar" ng-controller="searchDeliveryCtrl">
+    <div class="row">
+        <div class="col-sm-2 form-field">
+            <select ng-options="customer.id for customer in customers" ng-model="customerId"></select>
+            <label>מס' לקוח</label>
+        </div>
+        <div class="col-sm-2 form-field">
+            <select ng-options="customer.id as customer.name for customer in customers"></select>
+            <label>שם לקוח</label>
+        </div>
+    </div>
+</div>
